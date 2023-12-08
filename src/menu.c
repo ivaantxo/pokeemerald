@@ -4,6 +4,7 @@
 #include "blit.h"
 #include "dma3.h"
 #include "event_data.h"
+#include "field_message_box.h" //Incluimos el header donde hemos definido la función que vamos a usar (HacerWindowTransparente).
 #include "graphics.h"
 #include "main.h"
 #include "menu.h"
@@ -211,6 +212,7 @@ void LoadMessageBoxAndBorderGfx(void)
 {
     LoadMessageBoxGfx(0, DLG_WINDOW_BASE_TILE_NUM, BG_PLTT_ID(DLG_WINDOW_PALETTE_NUM));
     LoadUserWindowBorderGfx(0, STD_WINDOW_BASE_TILE_NUM, BG_PLTT_ID(STD_WINDOW_PALETTE_NUM));
+    HacerWindowTransparente(); //Llamamos la función en la que va a cargar los gráficos a los que queremos hacer blend.
 }
 
 void DrawDialogueFrame(u8 windowId, bool8 copyToVram)

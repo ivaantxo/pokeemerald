@@ -1,4 +1,5 @@
 #include "global.h"
+#include "gpu_regs.h" //Al hacer uso de los registros (REG_OFFSET_), que son los que activan el blend (la mezcla de colores) entre backgrounds (las diferentes capas de video de la GBA), necesitamos incluir el header para que el compilador pueda "leer" la función SetGpuReg.
 #include "menu.h"
 #include "string_util.h"
 #include "task.h"
@@ -18,6 +19,13 @@ void InitFieldMessageBox(void)
     gTextFlags.useAlternateDownArrow = FALSE;
     gTextFlags.autoScroll = FALSE;
     gTextFlags.forceMidTextSpeed = FALSE;
+}
+
+void HacerWindowTransparente(void) //Definimos la función.
+{ //Bibliografía fundamental: http://problemkaputt.de/gbatek-lcd-i-o-color-special-effects.htm, y https://www.coranac.com/tonc/text/gfx.htm#sec-blend.
+    SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_EFFECT_BLEND | BLDCNT_TGT1_BG0 | BLDCNT_TGT2_ALL); //Activamos los registros: REG_OFFSET_BLDCNT se encarga del control del blend (BLDCNT_EFFECT_BLEND); BLDCNT_TGT1_BG0 sitúa al background 0 (que es el background en el que Pokémon suele dibujar las ventanas de texto y el start menú) como target 1, y BLDCNT_TGT2_ALL sitúa al resto de backgrounds como target 2. Para que se produzca el blend, es necesario que el target 1 (lo que es semitransparente) esté por encima del target 2 (lo que se ve detrás de la semitransparencia). Lo que hace que se dibuje un background por encima de otros es su prioridad, que se define en el BgTemplate correspondiente.
+    SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(15, 6)); //Estos registros llevan a cabo el blend con los targets que hemos establecido antes, y lo hace con los valores de BLDALPHA_BLEND: Cada valor establece la "fuerza" de cada target en el blend final. Se puede probar desde mGBA, en Tools -> Game State Views -> Registros I/O -> BLDALPHA.
+    SetGpuRegBits(REG_OFFSET_WININ, WININ_WIN0_CLR); //Al ser ventanas a lo que queremos hacer blend y no al background 0 al completo, especificamos que es REG_OFFSET_WININ.
 }
 
 #define tState data[0]

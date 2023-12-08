@@ -18,5 +18,6 @@ bool8 IsFieldMessageBoxHidden(void);
 u8 GetFieldMessageBoxMode(void);
 void StopFieldMessage(void);
 void InitFieldMessageBox(void);
+void HacerWindowTransparente(void); //Enunciamos la función en el header (.h) del src (.c) en el que se va a definir.
 
 #endif // GUARD_FIELD_MESSAGE_BOX_H
