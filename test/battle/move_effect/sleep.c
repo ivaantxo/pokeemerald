@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Hypnosis inflicts 1-3 turns of sleep")
     PARAMETRIZE { turns = 1; }
     PARAMETRIZE { turns = 2; }
     PARAMETRIZE { turns = 3; }
-    PASSES_RANDOMLY(1, 3, RNG_SLEEP_TURNS);
+    PASSES_RANDOMLY(1, 3, RNG_SLEEP);
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

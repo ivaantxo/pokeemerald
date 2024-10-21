@@ -963,7 +963,7 @@ static void CleanUpAiInfoWindow(u8 taskId)
     u32 i;
     struct BattleDebugMenu *data = GetStructPtr(taskId);
 
-    FreeMonIconPalettes();
+    //FreeMonIconPalettes();
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         if (data->spriteIds.aiIconSpriteIds[i] != 0xFF)
@@ -996,7 +996,7 @@ static void Task_ShowAiPoints(u8 taskId)
         }
         data->battlerId = data->aiBattlerId;
 
-        LoadMonIconPalettes();
+        //LoadMonIconPalettes();
         for (count = 0, i = 0; i < MAX_BATTLERS_COUNT; i++)
         {
             if (i != data->aiBattlerId && IsBattlerAlive(i))
@@ -1177,7 +1177,7 @@ static void Task_ShowAiKnowledge(u8 taskId)
                 data->aiBattlerId = 0;
         }
 
-        LoadMonIconPalettes();
+        //LoadMonIconPalettes();
         for (count = 0, i = 0; i < MAX_BATTLERS_COUNT; i++)
         {
             if (GetBattlerSide(i) == B_SIDE_PLAYER && IsBattlerAlive(i))
@@ -1239,7 +1239,7 @@ static void Task_ShowAiParty(u8 taskId)
         HideBg(0);
         ShowBg(1);
 
-        LoadMonIconPalettes();
+        //LoadMonIconPalettes();
         LoadPartyMenuAilmentGfx();
         data->aiBattlerId = data->battlerId;
         aiMons = AI_PARTY->mons[GetBattlerSide(data->aiBattlerId)];
@@ -1305,7 +1305,7 @@ static void SwitchToDebugViewFromAiParty(u8 taskId)
     u32 i;
     struct BattleDebugMenu *data = GetStructPtr(taskId);
 
-    FreeMonIconPalettes();
+    //FreeMonIconPalettes();
     for (i = 0; i < PARTY_SIZE; i++)
     {
         if (data->spriteIds.aiPartyIcons[i] != 0xFF)

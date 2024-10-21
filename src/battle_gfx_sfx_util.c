@@ -1097,7 +1097,7 @@ void SetBattlerSpriteAffineMode(u8 affineMode)
 
 void CreateEnemyShadowSprite(u32 battler)
 {
-    if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
+    if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4)
     {
         u16 species = SanitizeSpeciesId(gBattleMons[battler].species);
         u8 size = gSpeciesInfo[species].enemyShadowSize;
@@ -1148,7 +1148,7 @@ void LoadAndCreateEnemyShadowSprites(void)
     u8 battler;
     u32 i;
 
-    if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
+    if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4)
     {
         LoadCompressedSpriteSheet(&gSpriteSheet_EnemyShadowsSized);
 
@@ -1201,11 +1201,11 @@ void SpriteCB_EnemyShadow(struct Sprite *shadowSprite)
         xOffset = gSpeciesInfo[transformSpecies].enemyShadowXOffset;
         yOffset = gSpeciesInfo[transformSpecies].enemyShadowYOffset;
 
-        invisible = (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
+        invisible = (B_ENEMY_MON_SHADOW_STYLE >= GEN_4)
                   ? gSpeciesInfo[transformSpecies].suppressEnemyShadow
                   : gSpeciesInfo[transformSpecies].enemyMonElevation == 0;
     }
-    else if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
+    else if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4)
     {
         u16 species = SanitizeSpeciesId(gBattleMons[battler].species);
         xOffset = gSpeciesInfo[species].enemyShadowXOffset + (shadowSprite->tSpriteSide == SPRITE_SIDE_LEFT ? -16 : 16);
@@ -1234,7 +1234,7 @@ void SpriteCB_SetInvisible(struct Sprite *sprite)
 
 void SetBattlerShadowSpriteCallback(u8 battler, u16 species)
 {
-    if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
+    if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4)
     {
         if (GetBattlerSide(battler) == B_SIDE_PLAYER || gBattleScripting.monCaught)
         {
@@ -1285,7 +1285,7 @@ void SetBattlerShadowSpriteCallback(u8 battler, u16 species)
 void HideBattlerShadowSprite(u8 battler)
 {
     gSprites[gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary].callback = SpriteCB_SetInvisible;
-    if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
+    if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4)
         gSprites[gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdSecondary].callback = SpriteCB_SetInvisible;
 }
 

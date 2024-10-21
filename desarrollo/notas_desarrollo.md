@@ -79,8 +79,10 @@
 
 porytiles compile-primary -Wall -o /Users/ivanmartinez/Desktop/Decompilación/pokeemerald/data/tilesets/primary/principal /Users/ivanmartinez/Desktop/Decompilación/pokeemerald/desarrollo/graficos /Users/ivanmartinez/Desktop/Decompilación/pokeemerald/include/constants/metatile_behaviors.h
 
-*Eliminar Obstagoon y formas galar. Cada roedor (Furret, Linoone, Diggersby, Raticate, Bidoof) tiene un stat más dominante (PS-Raticate, At-Diggersby, Df-Bidoof, Df. Esp-Furret, Vel-Linoone)
-*Hacer limpieza final: objetivo unos 500 Pokémon. NO son necesarias todas las combinaciones de tipos, especialmente Normal-LoQueSea
-*Meter a Pachirisu como Elect-Normal
-*Spoink & Grumpig como Psychic-Poison en vez de G-Slow
-*Limpiar paletteSlot de ObjectEvent
+*Cada roedor (Furret, Linoone, Diggersby, Raticate, Bidoof) tiene un stat más dominante (PS-Raticate, At-Diggersby, Df-Bidoof, Df. Esp-Furret, Vel-Linoone)
+
+* Chequear GetDynamicMoveType
+* En metálico toca rehacerla (y muy probablemente otras Habilidades que cambien el tipo)
+* Bello plumaje y Adivino, y Cero absoluto, y Baño de barro toca rehacer (al menos IA)
+* Rehacer Mago (la entrada -> Trace)
+* Rehacer Globo y Alas hidrófobas.

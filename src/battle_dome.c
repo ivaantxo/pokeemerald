@@ -2697,7 +2697,7 @@ static void Task_ShowTourneyInfoCard(u8 taskId)
         sInfoCard = AllocZeroed(sizeof(*sInfoCard));
         for (i = 0; i < NUM_INFOCARD_SPRITES; i++)
             sInfoCard->spriteIds[i] = SPRITE_NONE;
-        LoadMonIconPalettes();
+        //LoadMonIconPalettes();
         i = CreateTask(Task_HandleInfoCardInput, 0);
         gTasks[i].data[0] = 0;
         gTasks[i].data[2] = 0;
@@ -3730,7 +3730,7 @@ static void Task_HandleInfoCardInput(u8 taskId)
                 }
             }
 
-            FreeMonIconPalettes();
+            //FreeMonIconPalettes();
             FREE_AND_SET_NULL(sInfoCard);
             FreeAllWindowBuffers();
 

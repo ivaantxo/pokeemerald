@@ -42,7 +42,7 @@ static const u8 *const sBirchDexRatingTexts[BIRCH_DEX_STRINGS] =
 // This shows your Hoenn Pokédex rating and not your National Dex.
 const u8 *GetPokedexRatingText(u32 count)
 {
-    u16 maxDex = NATIONAL_DEX_COUNT - 1;
+    u16 maxDex = DEX_COUNT - 1;
     return sBirchDexRatingTexts[(count * (BIRCH_DEX_STRINGS - 1)) / maxDex];
 }
 

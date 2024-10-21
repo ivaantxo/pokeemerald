@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Zen Mode switches Darmanitan's form when HP is half or less 
 {
     u16 standardSpecies, zenSpecies;
     PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_STANDARD_MODE;          zenSpecies = SPECIES_DARMANITAN_ZEN_MODE; }
-    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_GALARIAN_STANDARD_MODE; zenSpecies = SPECIES_DARMANITAN_GALARIAN_ZEN_MODE; }
+    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_GALAR_STANDARD_MODE; zenSpecies = SPECIES_DARMANITAN_GALAR_ZEN_MODE; }
 
     GIVEN {
         ASSUME(gSpeciesInfo[standardSpecies].baseHP == 105);
@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Zen Mode switches Darmanitan's form when HP is half or less 
 {
     u16 standardSpecies, zenSpecies;
     PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_STANDARD_MODE;          zenSpecies = SPECIES_DARMANITAN_ZEN_MODE; }
-    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_GALARIAN_STANDARD_MODE; zenSpecies = SPECIES_DARMANITAN_GALARIAN_ZEN_MODE; }
+    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_GALAR_STANDARD_MODE; zenSpecies = SPECIES_DARMANITAN_GALAR_ZEN_MODE; }
 
     GIVEN {
         ASSUME(gSpeciesInfo[standardSpecies].baseHP == 105);
@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Zen Mode switches Darmanitan's form when HP is healed above 
 {
     u16 standardSpecies, zenSpecies;
     PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_STANDARD_MODE;          zenSpecies = SPECIES_DARMANITAN_ZEN_MODE; }
-    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_GALARIAN_STANDARD_MODE; zenSpecies = SPECIES_DARMANITAN_GALARIAN_ZEN_MODE; }
+    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_GALAR_STANDARD_MODE; zenSpecies = SPECIES_DARMANITAN_GALAR_ZEN_MODE; }
 
     GIVEN {
         ASSUME(gSpeciesInfo[standardSpecies].baseHP == 105);

@@ -9,9 +9,9 @@
 #define SIIRTCINFO_24HOUR 0x40 // 0: 12-hour mode, 1: 24-hour mode
 #define SIIRTCINFO_POWER  0x80 // power on or power failure occurred
 
-#define HOURS_PER_DAY       24
+#define HORAS_POR_DIA       24
 #define MINUTOS_POR_HORA    60
-#define SECONDS_PER_MINUTE  60
+#define SEGUNDOS_POR_MINUTO  60
 
 enum
 {

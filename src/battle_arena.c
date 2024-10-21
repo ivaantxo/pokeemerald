@@ -381,38 +381,7 @@ void BattleArena_AddMindPoints(u8 battler)
 
 void BattleArena_AddSkillPoints(u8 battler)
 {
-    s8 *skillPoints = gBattleStruct->arenaSkillPoints;
-
-    if (gHitMarker & HITMARKER_OBEYS)
-    {
-        u8 *failedMoveBits = &gBattleStruct->alreadyStatusedMoveAttempt;
-        if (*failedMoveBits & (1u << battler))
-        {
-            *failedMoveBits &= ~((1u << battler));
-            skillPoints[battler] -= 2;
-        }
-        else if (gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
-        {
-            if (!(gMoveResultFlags & MOVE_RESULT_MISSED) || gBattleCommunication[MISS_TYPE] != B_MSG_PROTECTED)
-                skillPoints[battler] -= 2;
-        }
-        else if ((gMoveResultFlags & MOVE_RESULT_SUPER_EFFECTIVE) && (gMoveResultFlags & MOVE_RESULT_NOT_VERY_EFFECTIVE))
-        {
-            skillPoints[battler] += 1;
-        }
-        else if (gMoveResultFlags & MOVE_RESULT_SUPER_EFFECTIVE)
-        {
-            skillPoints[battler] += 2;
-        }
-        else if (gMoveResultFlags & MOVE_RESULT_NOT_VERY_EFFECTIVE)
-        {
-            skillPoints[battler] -= 1;
-        }
-        else if (!gProtectStructs[battler].protected)
-        {
-            skillPoints[battler] += 1;
-        }
-    }
+    
 }
 
 void BattleArena_DeductSkillPoints(u8 battler, u16 stringId)

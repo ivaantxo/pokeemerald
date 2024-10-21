@@ -642,7 +642,7 @@ static bool8 ShowPartyMenu(void)
         gMain.state++;
         break;
     case 14:
-        LoadMonIconPalettes();
+        //LoadMonIconPalettes();
         gMain.state++;
         break;
     case 15:

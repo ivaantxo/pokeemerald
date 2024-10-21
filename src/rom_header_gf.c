@@ -26,7 +26,6 @@ struct GFRomHeader
     const struct CompressedSpritePalette * monShinyPalettes;
     const u8 *const * monIcons;
     const u8 *monIconPaletteIds;
-    const struct SpritePalette * monIconPalettes;
     const u8 (* monSpeciesNames)[];
     const u8 (* moveNames)[];
     const struct Decoration * decorations;
@@ -76,7 +75,6 @@ static const struct GFRomHeader sGFRomHeader = {
     .version = GAME_VERSION,
     .language = GAME_LANGUAGE,
     .gameName = "pokemon emerald version",
-    .monIconPalettes = gMonIconPaletteTable,
     .decorations = gDecorations,
     .flagsOffset = offsetof(struct SaveBlock1, flags),
     .varsOffset = offsetof(struct SaveBlock1, vars),
@@ -84,7 +82,7 @@ static const struct GFRomHeader sGFRomHeader = {
     .seenOffset = offsetof(struct SaveBlock1, dexSeen),
     .pokedexFlag = FLAG_RECEIVED_POKEDEX_FROM_BIRCH,
     .mysteryEventFlag = FLAG_SYS_MYSTERY_EVENT_ENABLE,
-    .pokedexCount = NATIONAL_DEX_COUNT,
+    .pokedexCount = DEX_COUNT,
     .playerNameLength = PLAYER_NAME_LENGTH,
     .trainerNameLength = TRAINER_NAME_LENGTH,
     .pokemonNameLength1 = POKEMON_NAME_LENGTH,

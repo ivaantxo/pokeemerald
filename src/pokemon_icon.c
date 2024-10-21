@@ -23,17 +23,6 @@ struct MonIconSpriteTemplate
 static u8 CreateMonIconSprite(struct MonIconSpriteTemplate *, s16, s16, u8);
 static void FreeAndDestroyMonIconSprite_(struct Sprite *sprite);
 
-const struct SpritePalette gMonIconPaletteTable[] =
-{
-    { gMonIconPalettes[0], POKE_ICON_BASE_PAL_TAG + 0 },
-    { gMonIconPalettes[1], POKE_ICON_BASE_PAL_TAG + 1 },
-    { gMonIconPalettes[2], POKE_ICON_BASE_PAL_TAG + 2 },
-    // There are only 3 actual palettes, but we repurpose the last 3 as duplicates for the new icon system
-    { gMonIconPalettes[3 % 3], POKE_ICON_BASE_PAL_TAG + 3 },
-    { gMonIconPalettes[4 % 3], POKE_ICON_BASE_PAL_TAG + 4 },
-    { gMonIconPalettes[5 % 3], POKE_ICON_BASE_PAL_TAG + 5 },
-};
-
 static const struct OamData sMonIconOamData =
 {
     .y = 0,
@@ -207,20 +196,6 @@ const u32 *GetMonIconPtr(u16 species, u32 personality)
 void FreeAndDestroyMonIconSprite(struct Sprite *sprite)
 {
     FreeAndDestroyMonIconSprite_(sprite);
-}
-
-void LoadMonIconPalettes(void)
-{
-    u8 i;
-    for (i = 0; i < ARRAY_COUNT(gMonIconPaletteTable); i++)
-        LoadSpritePalette(&gMonIconPaletteTable[i]);
-}
-
-void FreeMonIconPalettes(void)
-{
-    u8 i;
-    for (i = 0; i < ARRAY_COUNT(gMonIconPaletteTable); i++)
-        FreeSpritePaletteByTag(gMonIconPaletteTable[i].tag);
 }
 
 void SpriteCB_MonIcon(struct Sprite *sprite)

@@ -4441,7 +4441,7 @@ F_TRAINER_FEMALE |
         {
             {
 #line 1849
-            .species = SPECIES_SKARMORY,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 1851
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
@@ -4776,7 +4776,7 @@ F_TRAINER_FEMALE |
         {
             {
 #line 1976
-            .species = SPECIES_BANETTE,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 1978
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -4832,7 +4832,7 @@ F_TRAINER_FEMALE |
             },
             {
 #line 1997
-            .species = SPECIES_SHUPPET,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 1999
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -4877,7 +4877,7 @@ F_TRAINER_FEMALE |
             },
             {
 #line 2014
-            .species = SPECIES_SHUPPET,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 2016
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -4945,7 +4945,7 @@ F_TRAINER_FEMALE |
         {
             {
 #line 2040
-            .species = SPECIES_SHUPPET,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 2042
             .iv = TRAINER_PARTY_IVS(6, 6, 6, 6, 6, 6),
@@ -11541,7 +11541,7 @@ F_TRAINER_FEMALE |
             },
             {
 #line 4657
-            .species = SPECIES_BANETTE,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 4659
             .iv = TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30),
@@ -11577,7 +11577,7 @@ F_TRAINER_FEMALE |
             },
             {
 #line 4673
-            .species = SPECIES_BANETTE,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 4675
             .iv = TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30),
@@ -12385,7 +12385,7 @@ F_TRAINER_FEMALE |
             },
             {
 #line 5019
-            .species = SPECIES_SKARMORY,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 5021
             .iv = TRAINER_PARTY_IVS(26, 26, 26, 26, 26, 26),
@@ -12916,7 +12916,7 @@ F_TRAINER_FEMALE |
             },
             {
 #line 5238
-            .species = SPECIES_BANETTE,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 5240
             .iv = TRAINER_PARTY_IVS(6, 6, 6, 6, 6, 6),
@@ -18289,7 +18289,7 @@ F_TRAINER_FEMALE |
             },
             {
 #line 7356
-            .species = SPECIES_SKARMORY,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 7358
             .iv = TRAINER_PARTY_IVS(12, 12, 12, 12, 12, 12),
@@ -18332,7 +18332,7 @@ F_TRAINER_FEMALE |
         {
             {
 #line 7373
-            .species = SPECIES_SKARMORY,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 7375
             .iv = TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30),
@@ -31449,7 +31449,7 @@ F_TRAINER_FEMALE |
             },
             {
 #line 12540
-            .species = SPECIES_SKARMORY,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 12542
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -32991,7 +32991,7 @@ F_TRAINER_FEMALE |
         {
             {
 #line 13164
-            .species = SPECIES_SKARMORY,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 13166
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -34287,7 +34287,7 @@ F_TRAINER_FEMALE |
         {
             {
 #line 13675
-            .species = SPECIES_SKARMORY,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 13677
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -34298,7 +34298,7 @@ F_TRAINER_FEMALE |
             },
             {
 #line 13679
-            .species = SPECIES_SKARMORY,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 13681
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),
@@ -37981,7 +37981,7 @@ F_TRAINER_FEMALE |
             },
             {
 #line 15190
-            .species = SPECIES_SKARMORY,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 15192
             .iv = TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31),
@@ -38118,7 +38118,7 @@ F_TRAINER_FEMALE |
             },
             {
 #line 15248
-            .species = SPECIES_SKARMORY,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 15250
             .iv = TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31),
@@ -38255,7 +38255,7 @@ F_TRAINER_FEMALE |
             },
             {
 #line 15306
-            .species = SPECIES_SKARMORY,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 15308
             .iv = TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31),
@@ -38392,7 +38392,7 @@ F_TRAINER_FEMALE |
             },
             {
 #line 15364
-            .species = SPECIES_SKARMORY,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 15366
             .iv = TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31),
@@ -39574,7 +39574,7 @@ F_TRAINER_FEMALE |
         {
             {
 #line 15866
-            .species = SPECIES_SKARMORY,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 15868
             .iv = TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31),
@@ -42007,7 +42007,7 @@ F_TRAINER_FEMALE |
         {
             {
 #line 16809
-            .species = SPECIES_BANETTE,
+            .species = SPECIES_MEW,
             .gender = TRAINER_MON_RANDOM_GENDER,
 #line 16811
             .iv = TRAINER_PARTY_IVS(0, 0, 0, 0, 0, 0),

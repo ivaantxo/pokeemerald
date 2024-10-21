@@ -8,7 +8,6 @@ void MarkApproachingPyramidTrainersAsBattled(void);
 void GenerateBattlePyramidWildMon(void);
 u8 GetPyramidRunMultiplier(void);
 u8 InBattlePyramid(void);
-bool8 InBattlePyramid_(void);
 void PausePyramidChallenge(void);
 void SoftResetInBattlePyramid(void);
 void CopyPyramidTrainerSpeechBefore(u16 trainerId);
