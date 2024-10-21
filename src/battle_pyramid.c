@@ -2,6 +2,7 @@
 #include "battle_pyramid.h"
 #include "battle_pyramid_bag.h"
 #include "event_data.h"
+#include "frontier_util.h"
 #include "battle.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
@@ -931,7 +932,6 @@ static void SetBattlePyramidData(void)
 
 static void SavePyramidChallenge(void)
 {
-
 }
 
 static void SetBattlePyramidPrize(void)
@@ -1633,12 +1633,6 @@ u8 InBattlePyramid(void)
         return 2;
     else
         return FALSE;
-}
-
-bool8 InBattlePyramid_(void)
-{
-    return gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR
-        || gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_TOP;
 }
 
 void PausePyramidChallenge(void)

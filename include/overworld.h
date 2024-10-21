@@ -25,10 +25,13 @@ extern u16 *gOverworldTilemapBuffer_Bg1;
 extern u16 *gOverworldTilemapBuffer_Bg3;
 extern void (*gFieldCallback)(void);
 extern bool8 (*gFieldCallback2)(void);
+
 extern u8 gTimeOfDay;
 extern u16 gTimeUpdateCounter;
 
 extern struct TimeBlendSettings currentTimeBlend;
+
+extern bool8 gExitStairsMovementDisabled;
 
 extern const struct UCoords32 gDirectionToVectors[];
 
@@ -121,5 +124,13 @@ void CB2_ReturnToFieldContinueScript(void);
 void CB2_ReturnToFieldContinueScriptPlayMapMusic(void);
 void CB2_ReturnToFieldFadeFromBlack(void);
 void CB2_ContinueSavedGame(void);
+
+// Item Description Headers
+enum ItemObtainFlags
+{
+    FLAG_GET_ITEM_OBTAINED,
+    FLAG_SET_ITEM_OBTAINED,
+};
+bool8 GetSetItemObtained(u16 item, enum ItemObtainFlags caseId);
 
 #endif // GUARD_OVERWORLD_H

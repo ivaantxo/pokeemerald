@@ -103,18 +103,6 @@ struct TrainerClass
 
 #define TRAINER_ENCOUNTER_MUSIC(trainer)((gTrainers[trainer].encounterMusic_gender & 127))
 
-struct FollowerMsgInfo {
-    const u8 *text;
-    const u8 *script;
-};
-
-struct FollowerMessagePool
-{
-    const struct FollowerMsgInfo * messages;
-    const u8 * script;
-    u16 length;
-};
-
 struct TypeInfo
 {
     u8 name[TYPE_NAME_LENGTH + 1];
@@ -141,6 +129,19 @@ struct TypeInfo
 // Egg palette tables
 extern const struct CompressedSpritePalette gEgg1PaletteTable[];
 extern const struct CompressedSpritePalette gEgg2PaletteTable[];
+
+struct FollowerMsgInfo
+{
+    const u8 *text;
+    const u8 *script;
+};
+
+struct FollowerMessagePool
+{
+    const struct FollowerMsgInfo *messages;
+    const u8 *script;
+    u16 length;
+};
 
 extern const u16 gMinigameDigits_Pal[];
 extern const u32 gMinigameDigits_Gfx[];

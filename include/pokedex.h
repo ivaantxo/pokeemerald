@@ -3,14 +3,6 @@
 
 extern void (*gPokedexVBlankCB)(void);
 
-enum
-{
-    FLAG_GET_SEEN,
-    FLAG_GET_CAUGHT,
-    FLAG_SET_SEEN,
-    FLAG_SET_CAUGHT
-};
-
 void ResetPokedex(void);
 u16 GetNationalPokedexCount(u8);
 u8 DisplayCaughtMonDexPage(u16 species, bool32 isShiny, u32 personality);
