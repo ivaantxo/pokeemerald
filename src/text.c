@@ -5,6 +5,7 @@
 #include "palette.h"
 #include "sound.h"
 #include "constants/songs.h"
+#include "strings.h"
 #include "string_util.h"
 #include "window.h"
 #include "text.h"
@@ -1466,7 +1467,7 @@ s32 GetStringLineWidth(u8 fontId, const u8 *str, s16 letterSpacing, u32 lineNum,
             StringCopyN(strCopy, str, strLen);
             strWidth = GetStringWidth(fontId, strCopy, letterSpacing);
             strLen = StringLineLength(strCopy);
-            StringAppend(strCopy, gText_EmptyString3);
+            StringAppend(strCopy, gText_EmptyString);
         #ifndef NDEBUG
             if (printDebug && strWidth != 0)
                 DebugPrintf("  Line %d, len:%d, width:%d, \"%S\"", currLine, strLen, strWidth, strCopy);

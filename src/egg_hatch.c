@@ -389,24 +389,15 @@ bool8 CheckDaycareMonReceivedMail(void)
     return _CheckDaycareMonReceivedMail(&gSaveBlock1Ptr->daycare, gSpecialVar_0x8004);
 }
 
-static u8 EggHatchCreateMonSprite(u8 useAlt, u8 state, u8 partyId, u16 *speciesLoc)
+static u8 EggHatchCreateMonSprite(u8 state, u8 partyId, u16 *speciesLoc)
 {
     u8 position = 0;
     u8 spriteId = 0;
     struct Pokemon *mon = NULL;
     u16 species = SPECIES_NONE;
 
-    if (useAlt == FALSE)
-    {
-        mon = &gPlayerParty[partyId];
-        position = B_POSITION_OPPONENT_LEFT;
-    }
-    if (useAlt == TRUE)
-    {
-        // Alternate sprite allocation position. Never reached.
-        mon = &gPlayerParty[partyId];
-        position = B_POSITION_OPPONENT_RIGHT;
-    }
+    mon = &gPlayerParty[partyId];
+    position = B_POSITION_OPPONENT_LEFT;
     species = GetMonData(mon, MON_DATA_SPECIES);
     switch (state)
     {
@@ -415,9 +406,9 @@ static u8 EggHatchCreateMonSprite(u8 useAlt, u8 state, u8 partyId, u16 *speciesL
         {
             u32 pid = GetMonData(mon, MON_DATA_PERSONALITY);
             HandleLoadSpecialPokePic(TRUE,
-                                     gMonSpritesGfxPtr->spritesGfx[(useAlt * 2) + B_POSITION_OPPONENT_LEFT],
+                                     gMonSpritesGfxPtr->spritesGfx[B_POSITION_OPPONENT_LEFT],
                                      species, pid);
-            LoadCompressedSpritePaletteWithTagHueShifted(GetMonFrontSpritePal(mon), species, &mon->box);
+            LoadCompressedSpritePaletteWithTagHueShifted(GetMonFrontSpritePal(mon), species, pid);
             *speciesLoc = species;
         }
         break;
@@ -521,11 +512,11 @@ static void CB2_LoadEggHatch(void)
         gMain.state++;
         break;
     case 5:
-        EggHatchCreateMonSprite(FALSE, 0, sEggHatchData->eggPartyId, &sEggHatchData->species);
+        EggHatchCreateMonSprite(0, sEggHatchData->eggPartyId, &sEggHatchData->species);
         gMain.state++;
         break;
     case 6:
-        sEggHatchData->monSpriteId = EggHatchCreateMonSprite(FALSE, 1, sEggHatchData->eggPartyId, &sEggHatchData->species);
+        sEggHatchData->monSpriteId = EggHatchCreateMonSprite(1, sEggHatchData->eggPartyId, &sEggHatchData->species);
         gMain.state++;
         break;
     case 7:

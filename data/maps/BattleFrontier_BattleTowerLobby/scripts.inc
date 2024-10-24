@@ -545,7 +545,6 @@ BattleFrontier_BattleTowerLobby_EventScript_LoadPartyCancelChallenge::
 	special LoadPlayerParty
 	callnative UpdateFollowingPokemon
 BattleFrontier_BattleTowerLobby_EventScript_CancelChallenge::
-	special CloseLink
 	msgbox BattleFrontier_BattleTowerLobby_Text_LookForwardToAnotherChallenge, MSGBOX_DEFAULT
 BattleFrontier_BattleTowerLobby_EventScript_EndCancelChallenge::
 	release

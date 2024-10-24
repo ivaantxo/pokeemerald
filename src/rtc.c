@@ -210,7 +210,7 @@ u16 RtcCheckInfo(struct SiiRtcInfo *rtc)
 
     value = ConvertBcdToBinary(rtc->hour);
 
-    if (value > HOURS_PER_DAY)
+    if (value > HORAS_POR_DIA)
         errorFlags |= RTC_ERR_INVALID_HOUR;
 
     value = ConvertBcdToBinary(rtc->minute);
@@ -220,7 +220,7 @@ u16 RtcCheckInfo(struct SiiRtcInfo *rtc)
 
     value = ConvertBcdToBinary(rtc->second);
 
-    if (value > SECONDS_PER_MINUTE)
+    if (value > SEGUNDOS_POR_MINUTO)
         errorFlags |= RTC_ERR_INVALID_SECOND;
 
     return errorFlags;
@@ -294,7 +294,7 @@ void RtcCalcTimeDifference(struct SiiRtcInfo *rtc, struct Time *result, struct T
 
     if (result->seconds < 0)
     {
-        result->seconds += SECONDS_PER_MINUTE;
+        result->seconds += SEGUNDOS_POR_MINUTO;
         --result->minutes;
     }
 
@@ -306,7 +306,7 @@ void RtcCalcTimeDifference(struct SiiRtcInfo *rtc, struct Time *result, struct T
 
     if (result->hours < 0)
     {
-        result->hours += HOURS_PER_DAY;
+        result->hours += HORAS_POR_DIA;
         --result->days;
     }
 }
@@ -361,7 +361,7 @@ void CalcTimeDifference(struct Time *result, struct Time *t1, struct Time *t2)
 
     if (result->seconds < 0)
     {
-        result->seconds += SECONDS_PER_MINUTE;
+        result->seconds += SEGUNDOS_POR_MINUTO;
         --result->minutes;
     }
 
@@ -373,7 +373,7 @@ void CalcTimeDifference(struct Time *result, struct Time *t1, struct Time *t2)
 
     if (result->hours < 0)
     {
-        result->hours += HOURS_PER_DAY;
+        result->hours += HORAS_POR_DIA;
         --result->days;
     }
 }
@@ -381,7 +381,7 @@ void CalcTimeDifference(struct Time *result, struct Time *t1, struct Time *t2)
 u32 RtcGetMinuteCount(void)
 {
     RtcGetInfo(&sRtc);
-    return (HOURS_PER_DAY * MINUTOS_POR_HORA) * RtcGetDayCount(&sRtc) + MINUTOS_POR_HORA * sRtc.hour + sRtc.minute;
+    return (HORAS_POR_DIA * MINUTOS_POR_HORA) * RtcGetDayCount(&sRtc) + MINUTOS_POR_HORA * sRtc.hour + sRtc.minute;
 }
 
 u32 RtcGetLocalDayCount(void)

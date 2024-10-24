@@ -524,7 +524,7 @@ static const u8 *const sPassAreaDescriptions[CURSOR_AREA_COUNT + 1] =
     [CURSOR_AREA_SYMBOL_FACTORY] = gText_BattleFactoryKnowledgeSymbol,
     [CURSOR_AREA_SYMBOL_PIKE]    = gText_BattlePikeLuckSymbol,
     [CURSOR_AREA_SYMBOL_PYRAMID] = gText_BattlePyramidBraveSymbol,
-    [CURSOR_AREA_COUNT]          = gText_EmptyString7,
+    [CURSOR_AREA_COUNT]          = gText_EmptyString,
 };
 
 struct

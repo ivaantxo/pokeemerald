@@ -167,7 +167,7 @@ u8 SetMonIconPalette(struct Pokemon *mon, struct Sprite *sprite, u8 paletteNum)
         if (!GetMonData(mon, MON_DATA_IS_EGG))
         {
             LoadCompressedPalette(GetMonFrontSpritePal(mon), OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
-            UniquePalette(OBJ_PLTT_ID(paletteNum), &mon->box);
+            UniquePalette(OBJ_PLTT_ID(paletteNum), GetMonData(mon, MON_DATA_PERSONALITY));
             CpuCopy32(&gPlttBufferFaded[OBJ_PLTT_ID(paletteNum)], &gPlttBufferUnfaded[OBJ_PLTT_ID(paletteNum)], PLTT_SIZE_4BPP);
             if (sprite)
                 sprite->oam.paletteNum = paletteNum;

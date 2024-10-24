@@ -401,7 +401,7 @@ Edit [include/constants/pokedex.h](https://github.com/rh-hideout/pokeemerald-exp
 ```diff
 // National Pokedex order
 enum {
-    NATIONAL_DEX_NONE,
+    DEX_NONE,
     // Kanto
     NATIONAL_DEX_BULBASAUR,
 ...
@@ -414,8 +414,8 @@ enum {
  #define KANTO_DEX_COUNT     NATIONAL_DEX_MEW
  #define JOHTO_DEX_COUNT     NATIONAL_DEX_CELEBI
 #if P_GEN_8_POKEMON == TRUE
--   #define NATIONAL_DEX_COUNT  NATIONAL_DEX_ENAMORUS
-+   #define NATIONAL_DEX_COUNT  NATIONAL_DEX_MEWTHREE
+-   #define DEX_COUNT  NATIONAL_DEX_ENAMORUS
++   #define DEX_COUNT  NATIONAL_DEX_MEWTHREE
 ```
 
 Do keep in mind that if you intend to add your new species to the Hoenn Dex, you'll also want to add a `HOENN_DEX` constant for it, like this:

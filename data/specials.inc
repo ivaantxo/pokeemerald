@@ -31,7 +31,6 @@ gSpecials::
 	def_special EnterNewlyCreatedSecretBase
 	def_special SetBattledOwnerFromResult
 	def_special DoSecretBasePCTurnOffEffect
-	def_special CloseLink
 	def_special GetLinkPartnerNames
 	def_special SpawnLinkPartnerObjectEvent
 	def_special SavePlayerParty

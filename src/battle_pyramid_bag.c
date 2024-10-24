@@ -179,7 +179,7 @@ static const struct MenuAction sMenuActions[] =
     [ACTION_GIVE] =         { gMenuText_Give, {BagAction_Give} },
     [ACTION_CANCEL] =       { gText_Salir, {BagAction_Cancel} },
     [ACTION_USE_BATTLE] =   { gMenuText_Use, {BagAction_UseInBattle} },
-    [ACTION_DUMMY] =        { gText_EmptyString2, {NULL} },
+    [ACTION_DUMMY] =        { gText_EmptyString, {NULL} },
 };
 
 static const u8 sMenuActionIds_Field[] = {ACTION_USE_FIELD, ACTION_GIVE, ACTION_TOSS, ACTION_CANCEL};

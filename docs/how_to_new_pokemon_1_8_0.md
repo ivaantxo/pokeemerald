@@ -347,7 +347,7 @@ Edit [include/constants/pokedex.h](https://github.com/rh-hideout/pokeemerald-exp
 ```diff
 // National Pokedex order
 enum {
-    NATIONAL_DEX_NONE,
+    DEX_NONE,
     // Kanto
     NATIONAL_DEX_BULBASAUR,
 ...
@@ -361,8 +361,8 @@ enum {
  #define JOHTO_DEX_COUNT     NATIONAL_DEX_CELEBI
 
 #if P_GEN_9_POKEMON == TRUE
--   #define NATIONAL_DEX_COUNT  NATIONAL_DEX_PECHARUNT
-+   #define NATIONAL_DEX_COUNT  NATIONAL_DEX_MEWTHREE
+-   #define DEX_COUNT  NATIONAL_DEX_PECHARUNT
++   #define DEX_COUNT  NATIONAL_DEX_MEWTHREE
 ```
 
 Do keep in mind that if you intend to add your new species to the Hoenn Dex, you'll also want to add a `HOENN_DEX` constant for it, like this:
@@ -963,7 +963,7 @@ We register the table each form entry in `gSpeciesInfo`.
         .teachableLearnset = sPikachuTeachableLearnset,
 +       .formSpeciesIdTable = sPikachuFormSpeciesIdTable,
         .evolutions = EVOLUTION({EVO_ITEM, ITEM_THUNDER_STONE, SPECIES_RAICHU},
-                                {EVO_NONE, 0, SPECIES_RAICHU_ALOLAN}),
+                                {EVO_NONE, 0, SPECIES_RAICHU_ALOLA}),
     },
 
     [SPECIES_PIKACHU_COSPLAY] =

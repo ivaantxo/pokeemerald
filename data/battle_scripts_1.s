@@ -6970,62 +6970,22 @@ BattleScript_FocusPunchSetUp::
 	end3
 
 BattleScript_MegaEvolution::
-	flushtextbox
-	trytrainerslidemegaevolutionmsg
-	printstring STRINGID_MEGAEVOREACTING
 BattleScript_MegaEvolutionAfterString:
-	waitmessage B_WAIT_TIME_LONG
-	setbyte gIsCriticalHit, 0
-	handlemegaevo BS_SCRIPTING, 0
-	playanimation BS_SCRIPTING, B_ANIM_MEGA_EVOLUTION
-	waitanimation
-	handlemegaevo BS_SCRIPTING, 1
-	printstring STRINGID_MEGAEVOEVOLVED
-	waitmessage B_WAIT_TIME_LONG
-	switchinabilities BS_SCRIPTING
 	end3
 
 BattleScript_WishMegaEvolution::
-	flushtextbox
-	trytrainerslidemegaevolutionmsg
-	printstring STRINGID_FERVENTWISHREACHED
-	goto BattleScript_MegaEvolutionAfterString
+	end3
 
 BattleScript_PrimalReversion::
-	call BattleScript_PrimalReversionRet
 	end3
 
 BattleScript_PrimalReversionRestoreAttacker::
-	call BattleScript_PrimalReversionRet
-	copybyte gBattlerAttacker, sSAVED_BATTLER
 	end3
 
 BattleScript_PrimalReversionRet::
-	flushtextbox
-	setbyte gIsCriticalHit, 0
-	handleprimalreversion BS_ATTACKER, 0
-	handleprimalreversion BS_ATTACKER, 1
-	playanimation BS_ATTACKER, B_ANIM_PRIMAL_REVERSION
-	waitanimation
-	handleprimalreversion BS_ATTACKER, 2
-	printstring STRINGID_PKMNREVERTEDTOPRIMAL
-	waitmessage B_WAIT_TIME_LONG
-	switchinabilities BS_ATTACKER
 	return
 
 BattleScript_UltraBurst::
-	flushtextbox
-	trytrainerslidezmovemsg
-	printstring STRINGID_ULTRABURSTREACTING
-	waitmessage B_WAIT_TIME_LONG
-	setbyte gIsCriticalHit, 0
-	handleultraburst BS_SCRIPTING, 0
-	playanimation BS_SCRIPTING, B_ANIM_ULTRA_BURST
-	waitanimation
-	handleultraburst BS_SCRIPTING, 1
-	printstring STRINGID_ULTRABURSTCOMPLETED
-	waitmessage B_WAIT_TIME_LONG
-	switchinabilities BS_SCRIPTING
 	end3
 
 BattleScript_GulpMissileFormChange::
@@ -7484,7 +7444,6 @@ BattleScript_MoveEffectSleep::
 BattleScript_UpdateEffectStatusIconRet::
 	updatestatusicon BS_EFFECT_BATTLER
 	waitstate
-	trytriggerstatusform
 	flushtextbox
 	return
 
