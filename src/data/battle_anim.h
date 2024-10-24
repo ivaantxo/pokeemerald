@@ -1917,6 +1917,7 @@ const struct CompressedSpritePalette gBattleAnimPaletteTable[] =
     {gBattleAnimSpritePal_RedExplosion, ANIM_TAG_RED_EXPLOSION},
     {gBattleAnimSpritePal_Beam, ANIM_TAG_BEAM},
     {gBattleAnimSpritePal_PurpleChain, ANIM_TAG_PURPLE_CHAIN},
+    {gBattleAnimSpritePal_PinkVioletOrb, ANIM_TAG_PINKVIO_ORB},
 };
 
 const struct BattleAnimBackground gBattleAnimBackgroundTable[] =
@@ -2004,4 +2005,5 @@ const struct BattleAnimBackground gBattleAnimBackgroundTable[] =
     [BG_STEEL_BEAM_PLAYER]         = {gBattleAnimBgImage_Highspeed,               gBattleAnimBgPalette_SteelBeam,               gBattleAnimBgTilemap_HighspeedPlayer},
     [BG_CHLOROBLAST]               = {gBattleAnimBgImage_HydroCannon,             gBattleAnimBgPalette_Chloroblast,             gBattleAnimBgTilemap_HydroCannon},
     [BG_RAINBOW]                   = {gBattleAnimBgImage_Rainbow,                 gBattleAnimBGPalette_Rainbow,                 gBattleAnimBgTilemap_Rainbow},
+    [BG_SWAMP]                     = {gBattleAnimBgImage_Swamp,                   gBattleAnimBGPalette_Swamp,                   gBattleAnimBgTilemap_Swamp},
 };

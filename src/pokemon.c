@@ -19,7 +19,7 @@
 #include "field_weather.h"
 #include "graphics.h"
 #include "item.h"
-#include "level_caps.h"
+#include "caps.h"
 #include "link.h"
 #include "main.h"
 #include "overworld.h"
@@ -61,7 +61,7 @@
 #include "constants/weather.h"
 #include "wild_encounter.h"
 
-#define FRIENDSHIP_EVO_THRESHOLD ((P_FRIENDSHIP_EVO_THRESHOLD >= GEN_9) ? 160 : 220)
+#define FRIENDSHIP_EVO_THRESHOLD ((P_FRIENDSHIP_EVO_THRESHOLD >= GEN_8) ? 160 : 220)
 
 struct SpeciesItem
 {
@@ -160,26 +160,7 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
 #include "data/pokemon/trainer_class_lookups.h"
 #include "data/pokemon/experience_tables.h"
 
-#if P_LVL_UP_LEARNSETS >= GEN_9
-#include "data/pokemon/level_up_learnsets/gen_9.h" // Scarlet/Violet
-#elif P_LVL_UP_LEARNSETS >= GEN_8
-#include "data/pokemon/level_up_learnsets/gen_8.h" // Sword/Shield
-#elif P_LVL_UP_LEARNSETS >= GEN_7
-#include "data/pokemon/level_up_learnsets/gen_7.h" // Ultra Sun/Ultra Moon
-#elif P_LVL_UP_LEARNSETS >= GEN_6
-#include "data/pokemon/level_up_learnsets/gen_6.h" // Omega Ruby/Alpha Sapphire
-#elif P_LVL_UP_LEARNSETS >= GEN_5
-#include "data/pokemon/level_up_learnsets/gen_5.h" // Black 2/White 2
-#elif P_LVL_UP_LEARNSETS >= GEN_4
-#include "data/pokemon/level_up_learnsets/gen_4.h" // HeartGold/SoulSilver
-#elif P_LVL_UP_LEARNSETS >= GEN_3
-#include "data/pokemon/level_up_learnsets/gen_3.h" // Ruby/Sapphire/Emerald
-#elif P_LVL_UP_LEARNSETS >= GEN_2
-#include "data/pokemon/level_up_learnsets/gen_2.h" // Crystal
-#elif P_LVL_UP_LEARNSETS >= GEN_1
-#include "data/pokemon/level_up_learnsets/gen_1.h" // Yellow
-#endif
-
+#include "data/pokemon/level_up_learnsets.h"
 #include "data/pokemon/teachable_learnsets.h"
 #include "data/pokemon/egg_moves.h"
 #include "data/pokemon/form_species_tables.h"
@@ -1071,29 +1052,19 @@ void CalculateMonStats(struct Pokemon *mon)
     CALC_STAT(baseSpAttack, spAttackIV, spAttackEV, STAT_SPATK, MON_DATA_SPATK)
     CALC_STAT(baseSpDefense, spDefenseIV, spDefenseEV, STAT_SPDEF, MON_DATA_SPDEF)
 
-    if (species == SPECIES_SHEDINJA)
-    {
-        if (currentHP != 0 || oldMaxHP == 0)
-            currentHP = 1;
-        else
-            return;
-    }
-    else
-    {
-        if (currentHP == 0 && oldMaxHP == 0)
-            currentHP = newMaxHP;
-        else if (currentHP != 0)
-        {
-            if (newMaxHP > oldMaxHP)
-                currentHP += newMaxHP - oldMaxHP;
-            if (currentHP <= 0)
-                currentHP = 1;
-            if (currentHP > newMaxHP)
-                currentHP = newMaxHP;
-        }
-        else
-            return;
-    }
+    // Since a pokemon's maxHP data could either not have
+    // been initialized at this point or this pokemon is
+    // just fainted, the check for oldMaxHP is important.
+    if (currentHP == 0 && oldMaxHP != 0)
+        return;
+
+    // Only add to currentHP if newMaxHP went up.
+    if (newMaxHP > oldMaxHP)
+        currentHP += newMaxHP - oldMaxHP;
+
+    // Ensure currentHP does not surpass newMaxHP.
+    if (currentHP > newMaxHP)
+        currentHP = newMaxHP;
 
     SetMonData(mon, MON_DATA_HP, &currentHP);
 }
@@ -2430,10 +2401,12 @@ void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst)
     dst->status2 = 0;
 }
 
-void CopyPlayerPartyMonToBattleData(u8 battlerId, u8 partyIndex)
+void CopyPartyMonToBattleData(u32 battlerId, u32 partyIndex)
 {
-    PokemonToBattleMon(&gPlayerParty[partyIndex], &gBattleMons[battlerId]);
-    gBattleStruct->hpOnSwitchout[GetBattlerSide(battlerId)] = gBattleMons[battlerId].hp;
+    u32 side = GetBattlerSide(battlerId);
+    struct Pokemon *party = GetSideParty(side);
+    PokemonToBattleMon(&party[partyIndex], &gBattleMons[battlerId]);
+    gBattleStruct->hpOnSwitchout[side] = gBattleMons[battlerId].hp;
     UpdateSentPokesToOpponentValue(battlerId);
     ClearTemporarySpeciesSpriteData(battlerId, FALSE);
 }
@@ -2497,6 +2470,9 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
     u8 effectFlags;
     s8 evChange;
     u16 evCount;
+
+    // Determine the EV cap to use
+    u32 maxAllowedEVs = !B_EV_ITEMS_CAP ? MAX_TOTAL_EVS : GetCurrentEVCap();
 
     // Get item hold effect
     heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, NULL);
@@ -2618,27 +2594,31 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
 
                         if (evChange > 0) // Increasing EV (HP or Atk)
                         {
-                            // Has EV increase limit already been reached?
-                            if (evCount >= MAX_TOTAL_EVS)
+                            // Check if the total EV limit is reached
+                            if (evCount >= maxAllowedEVs)
                                 return TRUE;
 
-                            if (itemEffect[10] & ITEM10_IS_VITAMIN)
-                                evCap = EV_ITEM_RAISE_LIMIT;
-                            else
-                                evCap = MAX_PER_STAT_EVS;
+                            // Ensure the increase does not exceed the max EV per stat (252)
+                            evCap = (itemEffect[10] & ITEM10_IS_VITAMIN) ? EV_ITEM_RAISE_LIMIT : MAX_PER_STAT_EVS;
 
+                            // Check if the per-stat limit is reached
                             if (dataSigned >= evCap)
-                                break;
+                                return TRUE;  // Prevents item use if the per-stat cap is already reached
 
-                            // Limit the increase
                             if (dataSigned + evChange > evCap)
-                                temp2 = evCap - (dataSigned + evChange) + evChange;
+                                temp2 = evCap - dataSigned;
                             else
                                 temp2 = evChange;
 
-                            if (evCount + temp2 > MAX_TOTAL_EVS)
-                                temp2 += MAX_TOTAL_EVS - (evCount + temp2);
+                            // Ensure the total EVs do not exceed the maximum allowed (510)
+                            if (evCount + temp2 > maxAllowedEVs)
+                                temp2 = maxAllowedEVs - evCount;
 
+                            // Prevent item use if no EVs can be increased
+                            if (temp2 == 0)
+                                return TRUE;
+
+                            // Apply the EV increase
                             dataSigned += temp2;
                         }
                         else if (evChange < 0) // Decreasing EV (HP or Atk)
@@ -2803,27 +2783,31 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
                         evChange = temp2;
                         if (evChange > 0) // Increasing EV
                         {
-                            // Has EV increase limit already been reached?
-                            if (evCount >= MAX_TOTAL_EVS)
+                            // Check if the total EV limit is reached
+                            if (evCount >= maxAllowedEVs)
                                 return TRUE;
 
-                            if (itemEffect[10] & ITEM10_IS_VITAMIN)
-                                evCap = EV_ITEM_RAISE_LIMIT;
-                            else
-                                evCap = MAX_PER_STAT_EVS;
+                            // Ensure the increase does not exceed the max EV per stat (252)
+                            evCap = (itemEffect[10] & ITEM10_IS_VITAMIN) ? EV_ITEM_RAISE_LIMIT : MAX_PER_STAT_EVS;
 
+                            // Check if the per-stat limit is reached
                             if (dataSigned >= evCap)
-                                break;
+                                return TRUE;  // Prevents item use if the per-stat cap is already reached
 
-                            // Limit the increase
                             if (dataSigned + evChange > evCap)
-                                temp2 = evCap - (dataSigned + evChange) + evChange;
+                                temp2 = evCap - dataSigned;
                             else
                                 temp2 = evChange;
 
-                            if (evCount + temp2 > MAX_TOTAL_EVS)
-                                temp2 += MAX_TOTAL_EVS - (evCount + temp2);
+                            // Ensure the total EVs do not exceed the maximum allowed (510)
+                            if (evCount + temp2 > maxAllowedEVs)
+                                temp2 = maxAllowedEVs - evCount;
 
+                            // Prevent item use if no EVs can be increased
+                            if (temp2 == 0)
+                                return TRUE;
+
+                            // Apply the EV increase
                             dataSigned += temp2;
                         }
                         else if (evChange < 0) // Decreasing EV
@@ -3573,7 +3557,7 @@ u16 NationalPokedexNumToSpecies(u16 nationalNum)
         species++;
 
     if (species == NUM_SPECIES)
-        return NATIONAL_DEX_NONE;
+        return DEX_NONE;
 
     return GET_BASE_SPECIES_ID(species);
 }
@@ -3582,7 +3566,7 @@ u16 SpeciesToNationalPokedexNum(u16 species)
 {
     species = SanitizeSpeciesId(species);
     if (!species)
-        return NATIONAL_DEX_NONE;
+        return DEX_NONE;
 
     return gSpeciesInfo[species].natDexNum;
 }
@@ -3733,6 +3717,7 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
     int i, multiplier;
     u8 stat;
     u8 bonus;
+    u32 currentEVCap = GetCurrentEVCap();
 
     heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
     holdEffect = ItemId_GetHoldEffect(heldItem);
@@ -3748,7 +3733,7 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
 
     for (i = 0; i < NUM_STATS; i++)
     {
-        if (totalEVs >= MAX_TOTAL_EVS)
+        if (totalEVs >= currentEVCap)
             break;
 
         if (CheckPartyHasHadPokerus(mon, 0))
@@ -3799,8 +3784,8 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
         if (holdEffect == HOLD_EFFECT_MACHO_BRACE)
             evIncrease *= 2;
 
-        if (totalEVs + (s16)evIncrease > MAX_TOTAL_EVS)
-            evIncrease = ((s16)evIncrease + MAX_TOTAL_EVS) - (totalEVs + evIncrease);
+        if (totalEVs + (s16)evIncrease > currentEVCap)
+            evIncrease = ((s16)evIncrease + currentEVCap) - (totalEVs + evIncrease);
 
         if (evs[i] + (s16)evIncrease > MAX_PER_STAT_EVS)
         {
@@ -4456,7 +4441,7 @@ void SetMonPreventsSwitchingString(void)
 
     PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff2, gBattlerInMenuId, GetPartyIdFromBattlePartyId(gBattlerPartyIndexes[gBattlerInMenuId]))
 
-    BattleStringExpandPlaceholders(gText_PkmnsXPreventsSwitching, gStringVar4);
+    BattleStringExpandPlaceholders(gText_PkmnsXPreventsSwitching, gStringVar4, sizeof(gStringVar4));
 }
 
 static s32 GetWildMonTableIdInAlteringCave(u16 species)
@@ -4637,8 +4622,7 @@ void DoMonFrontSpriteAnimation(struct Sprite *sprite, u16 species, bool8 noCry, 
         if (!noCry)
         {
             PlayCry_Normal(species, pan);
-            if (HasTwoFramesAnimation(species))
-                StartSpriteAnim(sprite, 1);
+            StartSpriteAnim(sprite, 1);
         }
         if (gSpeciesInfo[species].frontAnimDelay != 0)
         {
@@ -4659,7 +4643,7 @@ void DoMonFrontSpriteAnimation(struct Sprite *sprite, u16 species, bool8 noCry, 
 
 void PokemonSummaryDoMonAnimation(struct Sprite *sprite, u16 species, bool8 oneFrame)
 {
-    if (!oneFrame && HasTwoFramesAnimation(species))
+    if (!oneFrame)
         StartSpriteAnim(sprite, 1);
     if (gSpeciesInfo[species].frontAnimDelay != 0)
     {
@@ -4741,11 +4725,6 @@ void HandleSetPokedexFlag(u16 nationalNum, u8 caseId)
     {
         GetSetPokedexFlag(nationalNum, caseId);
     }
-}
-
-bool8 HasTwoFramesAnimation(u16 species)
-{
-    return P_TWO_FRAME_FRONT_SPRITES;
 }
 
 static bool8 ShouldSkipFriendshipChange(void)
@@ -5089,8 +5068,8 @@ void TrySpecialOverworldEvo(void)
 bool32 SpeciesHasGenderDifferences(u16 species)
 {
     if (gSpeciesInfo[species].frontPicFemale != NULL
-     || gSpeciesInfo[species].paletteFemale != NULL
      || gSpeciesInfo[species].backPicFemale != NULL
+     || gSpeciesInfo[species].paletteFemale != NULL
      || gSpeciesInfo[species].shinyPaletteFemale != NULL
      || gSpeciesInfo[species].iconSpriteFemale != NULL)
         return TRUE;
@@ -5276,79 +5255,15 @@ const u8 *GetMoveAnimationScript(u16 moveId)
     if (gMovesInfo[moveId].battleAnimScript == NULL)
     {
         DebugPrintfLevel(MGBA_LOG_WARN, "No animation for moveId=%u", moveId);
-        return Move_TACKLE;
+        return gMovesInfo[MOVE_NONE].battleAnimScript;
     }
     return gMovesInfo[moveId].battleAnimScript;
 }
 
-static inline u32 CalculateHiddenPowerType(struct Pokemon *mon)
-{
-    u32 typehp;
-    u32 type;
-    u8 typeBits  = ((GetMonData(mon, MON_DATA_HP_IV) & 1) << 0)
-                 | ((GetMonData(mon, MON_DATA_ATK_IV) & 1) << 1)
-                 | ((GetMonData(mon, MON_DATA_DEF_IV) & 1) << 2)
-                 | ((GetMonData(mon, MON_DATA_SPEED_IV) & 1) << 3)
-                 | ((GetMonData(mon, MON_DATA_SPATK_IV) & 1) << 4)
-                 | ((GetMonData(mon, MON_DATA_SPDEF_IV) & 1) << 5);
-
-    type = (15 * typeBits) / 63 + 2;
-    if (type >= TYPE_MYSTERY)
-        type++;
-    type |= 192;
-    typehp = type & 63;
-    return typehp;
-}
-
 u32 CheckDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler)
 {
-    u32 type = gMovesInfo[move].type;
-    //u32 species = GetMonData(mon, MON_DATA_SPECIES);
-    u32 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
-    u32 heldItemEffect = ItemId_GetHoldEffect(heldItem);
-    u32 ability = GetMonAbility(mon);
-    u32 effect = gMovesInfo[move].effect;
-
-    if (effect == EFFECT_WEATHER_BALL)
-    {
-        if (gMain.inBattle && WEATHER_HAS_EFFECT)
-        {
-            if (gBattleWeather & B_WEATHER_RAIN && heldItemEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
-                return TYPE_WATER;
-            else if (gBattleWeather & B_WEATHER_SANDSTORM)
-                return TYPE_ROCK;
-            else if (gBattleWeather & B_WEATHER_SUN && heldItemEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
-                return TYPE_FIRE;
-            else if (gBattleWeather & (B_WEATHER_SNOW | B_WEATHER_HAIL))
-                return TYPE_ICE;
-            else
-                return TYPE_NORMAL;
-        }
-        else
-        {
-            switch (gWeatherPtr->currWeather)
-            {
-            case WEATHER_SUNNY:
-                if (heldItem != ITEM_UTILITY_UMBRELLA)
-                    return TYPE_FIRE;
-                break;
-            case WEATHER_RAIN:
-                if (heldItem != ITEM_UTILITY_UMBRELLA)
-                    return TYPE_WATER;
-                break;
-            case WEATHER_SNOW:
-                return TYPE_ICE;
-                break;
-            case WEATHER_SANDSTORM:
-                return TYPE_ROCK;
-                break;
-            }
-            return TYPE_NORMAL;
-        }
-    }
-    //if move == MOVE_PAY_DAY
-    if (ability == ABILITY_LIQUID_VOICE && gMovesInfo[move].soundMove == TRUE)
-        return TYPE_WATER;
-
-    return type;
+    u32 moveType = GetDynamicMoveType(mon, move, battler, NULL);
+    if (moveType != TYPE_NONE)
+        return moveType;
+    return gMovesInfo[move].type;
 }

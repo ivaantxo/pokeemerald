@@ -48,24 +48,6 @@
 static void ZMoveSelectionDisplayPpNumber(u32 battler);
 static void ZMoveSelectionDisplayPower(u16 move, u16 zMove);
 
-// Const Data
-static const struct SignatureZMove sSignatureZMoves[] =
-{
-    {SPECIES_RAICHU_ALOLAN,           ITEM_ALORAICHIUM_Z,        MOVE_THUNDERBOLT,         MOVE_STOKED_SPARKSURFER},
-    {SPECIES_DECIDUEYE,               ITEM_DECIDIUM_Z,           MOVE_SPIRIT_SHACKLE,      MOVE_SINISTER_ARROW_RAID},
-    {SPECIES_INCINEROAR,              ITEM_INCINIUM_Z,           MOVE_DARKEST_LARIAT,      MOVE_MALICIOUS_MOONSAULT},
-    {SPECIES_LYCANROC_MIDDAY,         ITEM_LYCANIUM_Z,           MOVE_STONE_EDGE,          MOVE_SPLINTERED_STORMSHARDS},
-    {SPECIES_LYCANROC_MIDNIGHT,       ITEM_LYCANIUM_Z,           MOVE_STONE_EDGE,          MOVE_SPLINTERED_STORMSHARDS},
-    {SPECIES_LYCANROC_DUSK,           ITEM_LYCANIUM_Z,           MOVE_STONE_EDGE,          MOVE_SPLINTERED_STORMSHARDS},
-    {SPECIES_MIMIKYU_DISGUISED,       ITEM_MIMIKIUM_Z,           MOVE_PLAY_ROUGH,          MOVE_LETS_SNUGGLE_FOREVER},
-    {SPECIES_MIMIKYU_BUSTED,          ITEM_MIMIKIUM_Z,           MOVE_PLAY_ROUGH,          MOVE_LETS_SNUGGLE_FOREVER},
-    {SPECIES_PRIMARINA,               ITEM_PRIMARIUM_Z,          MOVE_SPARKLING_ARIA,      MOVE_OCEANIC_OPERETTA},
-    {SPECIES_MEW,                     ITEM_MEWNIUM_Z,            MOVE_PSYCHIC,             MOVE_GENESIS_SUPERNOVA},
-    {SPECIES_PIKACHU,                 ITEM_PIKANIUM_Z,           MOVE_VOLT_TACKLE,         MOVE_CATASTROPIKA},
-    {SPECIES_EEVEE,                   ITEM_EEVIUM_Z,             MOVE_LAST_RESORT,         MOVE_EXTREME_EVOBOOST},
-    {SPECIES_SNORLAX,                 ITEM_SNORLIUM_Z,           MOVE_GIGA_IMPACT,         MOVE_PULVERIZING_PANCAKE},
-};
-
 static const u8 sText_ResetStats[] = _("Reset Lowered Stats");
 static const u8 sText_StatsPlus[] = _("+ All Stats");
 static const u8 sText_StatsPlus2[] = _("++ All Stats");
@@ -113,19 +95,6 @@ bool32 CanUseZMove(u32 battler)
 
 u32 GetUsableZMove(u32 battler, u32 move)
 {
-    u32 item = gBattleMons[battler].item;
-    u32 holdEffect = GetBattlerHoldEffect(battler, FALSE);
-
-    if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
-    {
-        u16 zMove = GetSignatureZMove(move, gBattleMons[battler].species, item);
-        if (zMove != MOVE_NONE)
-            return zMove;  // Signature z move exists
-
-        if (move != MOVE_NONE && zMove != MOVE_Z_STATUS && gMovesInfo[move].type == ItemId_GetSecondaryId(item))
-            return GetTypeBasedZMove(move);
-    }
-
     return MOVE_NONE;
 }
 
@@ -137,39 +106,6 @@ void ActivateZMove(u32 battler)
 
 bool32 IsViableZMove(u32 battler, u32 move)
 {
-    u32 item;
-    u32 holdEffect = GetBattlerHoldEffect(battler, FALSE);
-    int moveSlotIndex;
-
-    item = gBattleMons[battler].item;
-
-    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_Z_MOVE)
-        return FALSE;
-
-    for (moveSlotIndex = 0; moveSlotIndex < MAX_MON_MOVES; moveSlotIndex++)
-    {
-        if (gBattleMons[battler].moves[moveSlotIndex] == move && gBattleMons[battler].pp[moveSlotIndex] == 0)
-            return FALSE;
-    }
-
-    // Check if Player has Z-Power Ring.
-    if ((battler == B_POSITION_PLAYER_LEFT || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && battler == B_POSITION_PLAYER_RIGHT))
-        && !CheckBagHasItem(ITEM_Z_POWER_RING, 1))
-    {
-        return FALSE;
-    }
-
-    // Check for signature Z-Move or type-based Z-Move.
-    if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
-    {
-        u16 zMove = GetSignatureZMove(move, gBattleMons[battler].species, item);
-        if (zMove != MOVE_NONE)
-            return TRUE;
-
-        if (move != MOVE_NONE && gMovesInfo[move].type == ItemId_GetSecondaryId(item))
-            return TRUE;
-    }
-
     return FALSE;
 }
 
@@ -194,20 +130,6 @@ bool32 TryChangeZTrigger(u32 battler, u32 moveIndex)
     gBattleStruct->zmove.viable = viableZMove;
 
     return viableZMove;
-}
-
-u32 GetSignatureZMove(u32 move, u32 species, u32 item)
-{
-    u32 i;
-
-    // Check signature z move
-    for (i = 0; i < ARRAY_COUNT(sSignatureZMoves); ++i)
-    {
-        if (sSignatureZMoves[i].item == item && sSignatureZMoves[i].species == species &&  sSignatureZMoves[i].move == move)
-            return sSignatureZMoves[i].zmove;
-    }
-
-    return MOVE_NONE;
 }
 
 u32 GetTypeBasedZMove(u32 move)
@@ -241,7 +163,7 @@ bool32 MoveSelectionDisplayZMove(u16 zmove, u32 battler)
         for (i = 0; i < MAX_MON_MOVES; ++i)
         {
             MoveSelectionDestroyCursor();
-            StringCopy(gDisplayedStringBattle, gText_EmptyString2);
+            StringCopy(gDisplayedStringBattle, gText_EmptyString);
             BattlePutTextOnWindow(gDisplayedStringBattle, i + 3);
         }
 

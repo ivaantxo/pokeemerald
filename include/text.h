@@ -1,7 +1,7 @@
 #ifndef GUARD_TEXT_H
 #define GUARD_TEXT_H
 
-#include "characters.h"
+#include "constants/characters.h"
 
 // Given as a text speed when all the text should be
 // loaded at once but not copied to vram yet.
@@ -155,7 +155,9 @@ bool32 TextPrinterWaitAutoMode(struct TextPrinter *textPrinter);
 bool32 TextPrinterWaitWithDownArrow(struct TextPrinter *textPrinter);
 bool32 TextPrinterWait(struct TextPrinter *textPrinter);
 void DrawDownArrow(u8 windowId, u16 x, u16 y, u8 bgColor, bool32 drawArrow, u8 *counter, u8 *yCoordIndex);
+s32 GetGlyphWidth(u16 glyphId, bool32 isJapanese, u8 fontId);
 s32 GetStringWidth(u8 fontId, const u8 *str, s16 letterSpacing);
+s32 GetStringLineWidth(u8 fontId, const u8 *str, s16 letterSpacing, u32 lineNum, u32 strSize, bool32 printDebug);
 u8 RenderTextHandleBold(u8 *pixels, u8 fontId, u8 *str);
 u8 DrawKeypadIcon(u8 windowId, u8 keypadIconId, u16 x, u16 y);
 u8 GetKeypadIconTileOffset(u8 keypadIconId);

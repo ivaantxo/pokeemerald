@@ -151,7 +151,7 @@ enum
 };
 
 // IWRAM common
-bool8 (*gMenuCallback)(void);
+COMMON_DATA bool8 (*gMenuCallback)(void) = NULL;
 
 // EWRAM
 EWRAM_DATA static u8 sSafariBallsWindowId = 0;
@@ -783,10 +783,11 @@ static bool8 StartMenuDebugCallback(void)
     RemoveExtraStartMenuWindows();
     HideStartMenuDebug(); // Hide start menu without enabling movement
 
-#if DEBUG_OVERWORLD_MENU == TRUE
-    FreezeObjectEvents();
-    Debug_ShowMainMenu();
-#endif
+    if (DEBUG_OVERWORLD_MENU)
+    {
+        FreezeObjectEvents();
+        Debug_ShowMainMenu();
+    }
 
 return TRUE;
 }

@@ -3,6 +3,8 @@
 
 // Movement config
 #define OW_RUNNING_INDOORS          GEN_LATEST  // In Gen4+, players are allowed to run indoors.
+#define OW_AUTO_SIGNPOST            FALSE       // When enabled, if the tile that the player is facing has MB_SIGNPOST, MB_POKEMART_SIGN, or MB_POKEMON_CENTER_SIGN, the player will automatically read the signpost, as seen in FRLG.
+#define SLOW_MOVEMENT_ON_STAIRS     FALSE       // If enabled, the player will move slower up/down stairs like in FR
 
 // Other settings
 #define OW_POISON_DAMAGE                GEN_LATEST // In Gen4, Pokémon no longer faint from Poison in the overworld. In Gen5+, they no longer take damage at all.
@@ -10,8 +12,13 @@
 #define OW_HIDE_REPEAT_MAP_POPUP        TRUE      // If enabled, map popups will not appear if entering a map with the same Map Section Id as the last.
 #define OW_FRLG_WHITEOUT                TRUE      // If enabled, shows an additional whiteout message and post whiteout event script with healing NPC.
 
-// Berry settings
-// These generational defines only make a distinction for Berries!
+// Item Obtain Description Box
+#define OW_ITEM_DESCRIPTIONS_OFF        0   // never show descriptions
+#define OW_ITEM_DESCRIPTIONS_FIRST_TIME 1   // show first time (** SAVE-BREAKING - see struct SaveBlock3 **)
+#define OW_ITEM_DESCRIPTIONS_ALWAYS     2   // always show description
+#define OW_SHOW_ITEM_DESCRIPTIONS       OW_ITEM_DESCRIPTIONS_OFF    // If enabled, item descriptions/images will be shown when finding items.
+
+// These generational defines only make a distinction for Berries and the OW_PC_MOVE_ORDER
 #define GEN_6_XY GEN_6
 #define GEN_6_ORAS GEN_LATEST + 1
 
@@ -32,6 +39,7 @@
 #define OW_BERRY_GROWTH_RATE           GEN_3      // Presets for how long each Berry plant takes to grow.
 #define OW_BERRY_YIELD_RATE            GEN_3      // Presets for how many Berries each plant can yield.
 #define OW_BERRY_DRAIN_RATE            GEN_6_ORAS // If OW_BERRY_MOISTURE is enabled, this setting changes how fast the soil dries out. GEN_4 uses a Berry-dependent drain rate, GEN_6_XY dries out in 24 hours (4 hours with the relevant Mulch) and GEN_6_ORAS dries out in 4 hours. Other values are illegal.
+#define OW_BERRY_IMMORTAL              FALSE      // If enabled, once a Berry tree has grown a Berry, the tree will not disappear until picked by the player.
 
 // Out-of-battle Ability effects
 #define OW_SYNCHRONIZE_NATURE       GEN_LATEST // In Gen8+, if a Pokémon with Synchronize leads the party, wild Pokémon will always have their same Nature as opposed to the 50% chance in previous games. Gift Pokémon excluded.

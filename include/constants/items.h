@@ -1082,5 +1082,6 @@
 #define EFFECT_ITEM_REVIVE                  9
 #define EFFECT_ITEM_RESTORE_PP              10
 #define EFFECT_ITEM_INCREASE_ALL_STATS      11
+#define EFFECT_ITEM_USE_POKE_FLUTE          12
 
 #endif  // GUARD_CONSTANTS_ITEMS_H

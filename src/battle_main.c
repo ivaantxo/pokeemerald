@@ -23,6 +23,7 @@
 #include "dma3.h"
 #include "event_data.h"
 #include "evolution_scene.h"
+#include "field_weather.h"
 #include "graphics.h"
 #include "gpu_regs.h"
 #include "international_string_util.h"
@@ -66,6 +67,7 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "constants/trainers.h"
+#include "constants/weather.h"
 
 extern const struct BgTemplate gBattleBgTemplates[];
 extern const struct WindowTemplate *const gBattleWindowTemplates[];
@@ -227,13 +229,13 @@ EWRAM_DATA u8 gPartyCriticalHits[PARTY_SIZE] = {0};
 EWRAM_DATA static u8 sTriedEvolving = 0;
 EWRAM_DATA u8 gCategoryIconSpriteId = 0;
 
-void (*gPreBattleCallback1)(void);
-void (*gBattleMainFunc)(void);
-struct BattleResults gBattleResults;
-u8 gLeveledUpInBattle;
-u8 gHealthboxSpriteIds[MAX_BATTLERS_COUNT];
-u8 gMultiUsePlayerCursor;
-u8 gNumberOfMovesToChoose;
+COMMON_DATA void (*gPreBattleCallback1)(void) = NULL;
+COMMON_DATA void (*gBattleMainFunc)(void) = NULL;
+COMMON_DATA struct BattleResults gBattleResults = {0};
+COMMON_DATA u8 gLeveledUpInBattle = 0;
+COMMON_DATA u8 gHealthboxSpriteIds[MAX_BATTLERS_COUNT] = {0};
+COMMON_DATA u8 gMultiUsePlayerCursor = 0;
+COMMON_DATA u8 gNumberOfMovesToChoose = 0;
 
 static const struct ScanlineEffectParams sIntroScanlineParams16Bit =
 {
@@ -482,9 +484,7 @@ static void CB2_InitBattleInternal(void)
     gBattle_BG3_X = 0;
     gBattle_BG3_Y = 0;
 
-#if DEBUG_OVERWORLD_MENU == TRUE
-    if (!gIsDebugBattle)
-#endif
+    if (!DEBUG_OVERWORLD_MENU || (DEBUG_OVERWORLD_MENU && !gIsDebugBattle))
     {
         gBattleTerrain = BattleSetup_GetTerrainId();
     }
@@ -517,9 +517,7 @@ static void CB2_InitBattleInternal(void)
     else
         SetMainCallback2(CB2_HandleStartBattle);
 
-#if DEBUG_OVERWORLD_MENU == TRUE
-    if (!gIsDebugBattle)
-#endif
+    if (!DEBUG_OVERWORLD_MENU || (DEBUG_OVERWORLD_MENU && !gIsDebugBattle))
     {
         if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED)))
         {
@@ -1124,15 +1122,9 @@ static void CB2_HandleStartMultiBattle(void)
     case 8:
         if (IsLinkTaskFinished())
         {
-            #if HQ_RANDOM == TRUE
             struct BattleVideo *ptr = &gBattleStruct->multiBuffer.battleVideo;
             ptr->battleTypeFlags = gBattleTypeFlags;
             ptr->rngSeed = gRecordedBattleRngSeed;
-            #else
-            u32 *ptr = gBattleStruct->multiBuffer.battleVideo;
-            ptr[0] = gBattleTypeFlags;
-            ptr[1] = gRecordedBattleRngSeed; // UB: overwrites berry data
-            #endif
 
             SendBlock(BitmaskAllOtherLinkPlayers(), ptr, sizeof(gBattleStruct->multiBuffer.battleVideo));
             gBattleCommunication[MULTIUSE_STATE]++;
@@ -2078,10 +2070,7 @@ void SpriteCB_OpponentMonFromBall(struct Sprite *sprite)
     if (sprite->affineAnimEnded)
     {
         if (!(gHitMarker & HITMARKER_NO_ANIMATIONS) || gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
-        {
-            if (HasTwoFramesAnimation(sprite->sSpeciesId))
-                StartSpriteAnim(sprite, 1);
-        }
+            StartSpriteAnim(sprite, 1);
         BattleAnimateFrontSprite(sprite, sprite->sSpeciesId, TRUE, 1);
     }
 }
@@ -2551,6 +2540,10 @@ void SwitchInClearSetData(u32 battler)
     gSpecialStatuses[battler].specialDmg = 0;
     gBattleStruct->enduredDamage &= ~(1u << battler);
 
+    // Reset Eject Button / Eject Pack switch detection
+    AI_DATA->ejectButtonSwitch = FALSE;
+    AI_DATA->ejectPackSwitch = FALSE;
+
     // Reset G-Max Chi Strike boosts.
     gBattleStruct->bonusCritStages[battler] = 0;
 
@@ -2657,6 +2650,16 @@ const u8* FaintClearSetData(u32 battler)
     gBattleStruct->palaceFlags &= ~(1u << battler);
     gBattleStruct->boosterEnergyActivates &= ~(1u << battler);
 
+    if (gBattleStruct->commanderActive[battler] != SPECIES_NONE)
+    {
+        u32 partner = BATTLE_PARTNER(battler);
+        if (IsBattlerAlive(partner))
+        {
+            BtlController_EmitSpriteInvisibility(partner, BUFFER_A, FALSE);
+            MarkBattlerForControllerExec(partner);
+        }
+    }
+
     for (i = 0; i < ARRAY_COUNT(gSideTimers); i++)
     {
         // User of sticky web fainted, so reset the stored battler ID
@@ -2732,26 +2735,25 @@ static void DoBattleIntro(void)
 {
     s32 i;
     u32 battler;
-    u8 *state = &gBattleStruct->introState;
 
-    switch (*state)
+    switch (gBattleStruct->introState)
     {
-    case 0: // Get Data of all battlers.
+    case BATTLE_INTRO_STATE_GET_MON_DATA:
         battler = gBattleCommunication[1];
         BtlController_EmitGetMonData(battler, BUFFER_A, REQUEST_ALL_BATTLE, 0);
         MarkBattlerForControllerExec(battler);
-        (*state)++;
+        gBattleStruct->introState++;
         break;
-    case 1: // Loop through all battlers.
+    case BATTLE_INTRO_STATE_LOOP_BATTLER_DATA:
         if (!gBattleControllerExecFlags)
         {
             if (++gBattleCommunication[1] == gBattlersCount)
-                (*state)++;
+                gBattleStruct->introState++;
             else
-                *state = 0;
+                gBattleStruct->introState = BATTLE_INTRO_STATE_GET_MON_DATA;
         }
         break;
-    case 2: // Start graphical intro slide.
+    case BATTLE_INTRO_STATE_PREPARE_BG_SLIDE:
         if (!gBattleControllerExecFlags)
         {
             battler = GetBattlerAtPosition(0);
@@ -2759,14 +2761,14 @@ static void DoBattleIntro(void)
             MarkBattlerForControllerExec(battler);
             gBattleCommunication[0] = 0;
             gBattleCommunication[1] = 0;
-            (*state)++;
+            gBattleStruct->introState++;
         }
         break;
-    case 3: // Wait for intro slide.
+    case BATTLE_INTRO_STATE_WAIT_FOR_BG_SLIDE:
         if (!gBattleControllerExecFlags)
-            (*state)++;
+            gBattleStruct->introState++;
         break;
-    case 4: // Copy battler data gotten in cases 0 and 1. Draw trainer/mon sprite.
+    case BATTLE_INTRO_STATE_DRAW_SPRITES:
         for (battler = 0; battler < gBattlersCount; battler++)
         {
             if ((gBattleTypeFlags & BATTLE_TYPE_SAFARI) && GetBattlerSide(battler) == B_SIDE_PLAYER)
@@ -2846,17 +2848,17 @@ static void DoBattleIntro(void)
 
         if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
         {
-            (*state)++;
+            gBattleStruct->introState++;
         }
         else // Skip party summary since it is a wild battle.
         {
             if (B_FAST_INTRO == TRUE)
-                *state = 7; // Don't wait for sprite, print message at the same time.
+                gBattleStruct->introState = BATTLE_INTRO_STATE_INTRO_TEXT; // Don't wait for sprite, print message at the same time.
             else
-                *state = 6; // Wait for sprite to load.
+                gBattleStruct->introState++; // Wait for sprite to load.
         }
         break;
-    case 5: // draw party summary in trainer battles
+    case BATTLE_INTRO_STATE_DRAW_PARTY_SUMMARY:
         if (!gBattleControllerExecFlags)
         {
             struct HpAndStatus hpStatus[PARTY_SIZE];
@@ -2899,48 +2901,48 @@ static void DoBattleIntro(void)
             BtlController_EmitDrawPartyStatusSummary(battler, BUFFER_A, hpStatus, PARTY_SUMM_SKIP_DRAW_DELAY);
             MarkBattlerForControllerExec(battler);
 
-            (*state)++;
+            gBattleStruct->introState++;
         }
         break;
-    case 6: // wait for previous action to complete
+    case BATTLE_INTRO_STATE_WAIT_FOR_PARTY_SUMMARY:
         if (!gBattleControllerExecFlags)
-            (*state)++;
+            gBattleStruct->introState++;
         break;
-    case 7: // print battle intro message
+    case BATTLE_INTRO_STATE_INTRO_TEXT:
         if (!IsBattlerMarkedForControllerExec(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
         {
             PrepareStringBattle(STRINGID_INTROMSG, GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
-            (*state)++;
+            gBattleStruct->introState++;
         }
         break;
-    case 8: // wait for intro message to be printed
+    case BATTLE_INTRO_STATE_WAIT_FOR_INTRO_TEXT:
         if (!IsBattlerMarkedForControllerExec(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
         {
             if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
             {
-                (*state)++;
+                gBattleStruct->introState++;
             }
             else
             {
                 if (B_FAST_INTRO == TRUE)
-                    *state = 15; // Wait for text to be printed.
+                    gBattleStruct->introState = BATTLE_INTRO_STATE_WAIT_FOR_WILD_BATTLE_TEXT;
                 else
-                    *state = 14; // Wait for text and sprite.
+                    gBattleStruct->introState = BATTLE_INTRO_STATE_WAIT_FOR_TRAINER_2_SEND_OUT_ANIM;
             }
         }
         break;
-    case 9: // print opponent sends out
+    case BATTLE_INTRO_STATE_TRAINER_SEND_OUT_TEXT:
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && !(gBattleTypeFlags & BATTLE_TYPE_RECORDED_IS_MASTER))
             PrepareStringBattle(STRINGID_INTROSENDOUT, GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
         else
             PrepareStringBattle(STRINGID_INTROSENDOUT, GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT));
-        (*state)++;
+        gBattleStruct->introState++;
         break;
-    case 10: // wait for opponent sends out text
+    case BATTLE_INTRO_STATE_WAIT_FOR_TRAINER_SEND_OUT_TEXT:
         if (!gBattleControllerExecFlags)
-            (*state)++;
+            gBattleStruct->introState++;
         break;
-    case 11: // first opponent's mon send out animation
+    case BATTLE_INTRO_STATE_TRAINER_1_SEND_OUT_ANIM:
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && !(gBattleTypeFlags & BATTLE_TYPE_RECORDED_IS_MASTER))
             battler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
         else
@@ -2948,11 +2950,9 @@ static void DoBattleIntro(void)
 
         BtlController_EmitIntroTrainerBallThrow(battler, BUFFER_A);
         MarkBattlerForControllerExec(battler);
-        (*state)++;
+        gBattleStruct->introState++;
         break;
-    case 12: // nothing
-        (*state)++;
-    case 13: // second opponent's mon send out
+    case BATTLE_INTRO_STATE_TRAINER_2_SEND_OUT_ANIM:
         if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT)
         {
             if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && !(gBattleTypeFlags & BATTLE_TYPE_RECORDED_IS_MASTER))
@@ -2965,19 +2965,19 @@ static void DoBattleIntro(void)
         }
         if (B_FAST_INTRO == TRUE
           && !(gBattleTypeFlags & (BATTLE_TYPE_RECORDED | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_LINK)))
-            *state = 15; // Print at the same time as trainer sends out second mon.
+            gBattleStruct->introState = BATTLE_INTRO_STATE_WAIT_FOR_WILD_BATTLE_TEXT; // Print at the same time as trainer sends out second mon.
         else
-            (*state)++;
+            gBattleStruct->introState++;
         break;
-    case 14: // wait for opponent 2 send out
+    case BATTLE_INTRO_STATE_WAIT_FOR_TRAINER_2_SEND_OUT_ANIM:
         if (!gBattleControllerExecFlags)
-            (*state)++;
+            gBattleStruct->introState++;
         break;
-    case 15: // wait for wild battle message
+    case BATTLE_INTRO_STATE_WAIT_FOR_WILD_BATTLE_TEXT:
         if (!IsBattlerMarkedForControllerExec(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
-            (*state)++;
+            gBattleStruct->introState++;
         break;
-    case 16: // print player sends out
+    case BATTLE_INTRO_STATE_PRINT_PLAYER_SEND_OUT_TEXT:
         if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
         {
             if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && !(gBattleTypeFlags & BATTLE_TYPE_RECORDED_IS_MASTER))
@@ -2996,9 +2996,9 @@ static void DoBattleIntro(void)
 
             PrepareStringBattle(STRINGID_INTROSENDOUT, battler);
         }
-        (*state)++;
+        gBattleStruct->introState++;
         break;
-    case 17: // wait for player send out message
+    case BATTLE_INTRO_STATE_WAIT_FOR_PLAYER_SEND_OUT_TEXT:
         if (!(gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleControllerExecFlags))
         {
             if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && !(gBattleTypeFlags & BATTLE_TYPE_RECORDED_IS_MASTER))
@@ -3007,10 +3007,10 @@ static void DoBattleIntro(void)
                 battler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
 
             if (!IsBattlerMarkedForControllerExec(battler))
-                (*state)++;
+                gBattleStruct->introState++;
         }
         break;
-    case 18: // player 1 send out
+    case BATTLE_INTRO_STATE_PRINT_PLAYER_1_SEND_OUT_TEXT:
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && !(gBattleTypeFlags & BATTLE_TYPE_RECORDED_IS_MASTER))
             battler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
         else
@@ -3018,9 +3018,9 @@ static void DoBattleIntro(void)
 
         BtlController_EmitIntroTrainerBallThrow(battler, BUFFER_A);
         MarkBattlerForControllerExec(battler);
-        (*state)++;
+        gBattleStruct->introState++;
         break;
-    case 19: // player 2 send out
+    case BATTLE_INTRO_STATE_PRINT_PLAYER_2_SEND_OUT_TEXT:
         if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
         {
             if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && !(gBattleTypeFlags & BATTLE_TYPE_RECORDED_IS_MASTER))
@@ -3031,9 +3031,9 @@ static void DoBattleIntro(void)
             BtlController_EmitIntroTrainerBallThrow(battler, BUFFER_A);
             MarkBattlerForControllerExec(battler);
         }
-        (*state)++;
+        gBattleStruct->introState++;
         break;
-    case 20: // set dex and battle vars
+    case BATTLE_INTRO_STATE_SET_DEX_AND_BATTLE_VARS:
         if (!gBattleControllerExecFlags)
         {
             for (battler = 0; battler < gBattlersCount; battler++)
@@ -3052,7 +3052,6 @@ static void DoBattleIntro(void)
             gBattleStruct->eventsBeforeFirstTurnState = 0;
             gBattleStruct->switchInBattlerCounter = 0;
             gBattleStruct->overworldWeatherDone = FALSE;
-            SetAiLogicDataForTurn(AI_DATA); // get assumed abilities, hold effects, etc of all battlers
             Ai_InitPartyStruct(); // Save mons party counts, and first 2/4 mons on the battlefield.
 
             // Try to set a status to start the battle with
@@ -3177,11 +3176,11 @@ static void TryDoEventsBeforeFirstTurn(void)
     case FIRST_TURN_EVENTS_SWITCH_IN_ABILITIES:
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount) // From fastest to slowest
         {
-            gBattlerAttacker = gBattlerByTurnOrder[gBattleStruct->switchInBattlerCounter++];
+            i = gBattlerByTurnOrder[gBattleStruct->switchInBattlerCounter++];
 
-            if (TryPrimalReversion(gBattlerAttacker))
+            if (TryPrimalReversion(i))
                 return;
-            if (AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, gBattlerAttacker, 0, 0, 0) != 0)
+            if (AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, i, 0, 0, 0) != 0)
                 return;
         }
         gBattleStruct->switchInBattlerCounter = 0;
@@ -3216,8 +3215,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         TurnValuesCleanUp(FALSE);
         SpecialStatusesClear();
         *(&gBattleStruct->absentBattlerFlags) = gAbsentBattlerFlags;
-        BattlePutTextOnWindow(gText_EmptyString3, B_WIN_MSG);
-        AssignUsableGimmicks();
+        BattlePutTextOnWindow(COMPOUND_STRING(""), B_WIN_MSG);
         gBattleMainFunc = HandleTurnActionSelectionState;
         ResetSentPokesToOpponentValue();
 
@@ -3339,8 +3337,7 @@ void BattleTurnPassed(void)
         *(gBattleStruct->monToSwitchIntoId + i) = PARTY_SIZE;
 
     *(&gBattleStruct->absentBattlerFlags) = gAbsentBattlerFlags;
-    BattlePutTextOnWindow(gText_EmptyString3, B_WIN_MSG);
-    AssignUsableGimmicks();
+    BattlePutTextOnWindow(gText_EmptyString, B_WIN_MSG);
     SetShellSideArmCategory();
     SetAiLogicDataForTurn(AI_DATA); // get assumed abilities, hold effects, etc of all battlers
     gBattleMainFunc = HandleTurnActionSelectionState;
@@ -3492,11 +3489,16 @@ static void HandleTurnActionSelectionState(void)
             if ((gBattleTypeFlags & BATTLE_TYPE_HAS_AI || IsWildMonSmart())
                     && (BattlerHasAi(battler) && !(gBattleTypeFlags & BATTLE_TYPE_PALACE)))
             {
+                AI_DATA->aiCalcInProgress = TRUE;
+                if (ShouldSwitch(battler, FALSE))
+                    AI_DATA->shouldSwitch |= (1u << battler);
                 if (AI_THINKING_STRUCT->aiFlags[battler] & AI_FLAG_RISKY) // Risky AI switches aggressively even mid battle
                     AI_DATA->mostSuitableMonId[battler] = GetMostSuitableMonToSwitchInto(battler, TRUE);
                 else
                     AI_DATA->mostSuitableMonId[battler] = GetMostSuitableMonToSwitchInto(battler, FALSE);
+
                 gBattleStruct->aiMoveOrAction[battler] = ComputeBattleAiScores(battler);
+                AI_DATA->aiCalcInProgress = FALSE;
             }
             // fallthrough
         case STATE_BEFORE_ACTION_CHOSEN: // Choose an action.
@@ -3506,7 +3508,7 @@ static void HandleTurnActionSelectionState(void)
                 || gBattleStruct->absentBattlerFlags & (1u << GetBattlerAtPosition(BATTLE_PARTNER(position)))
                 || gBattleCommunication[GetBattlerAtPosition(BATTLE_PARTNER(position))] == STATE_WAIT_ACTION_CONFIRMED)
             {
-                if (gBattleStruct->absentBattlerFlags & (1u << battler))
+                if ((gBattleStruct->absentBattlerFlags & (1u << battler)) || (gBattleStruct->commandingDondozo & (1u << battler)))
                 {
                     gChosenActionByBattler[battler] = B_ACTION_NOTHING_FAINTED;
                     if (!(gBattleTypeFlags & BATTLE_TYPE_MULTI))
@@ -3721,8 +3723,9 @@ static void HandleTurnActionSelectionState(void)
                     BattleScriptExecute(BattleScript_PrintCantRunFromTrainer);
                     gBattleCommunication[battler] = STATE_BEFORE_ACTION_CHOSEN;
                 }
-                else if (IsRunningFromBattleImpossible(battler) != BATTLE_RUN_SUCCESS
+                else if ((IsRunningFromBattleImpossible(battler) != BATTLE_RUN_SUCCESS
                          && gBattleResources->bufferB[battler][1] == B_ACTION_RUN)
+                         || (FlagGet(B_FLAG_NO_RUNNING) == TRUE && gBattleResources->bufferB[battler][1] == B_ACTION_RUN))
                 {
                     gSelectionBattleScripts[battler] = BattleScript_PrintCantEscapeFromBattle;
                     gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
@@ -4459,6 +4462,9 @@ static void TurnValuesCleanUp(bool8 var0)
         if (gDisableStructs[i].substituteHP == 0)
             gBattleMons[i].status2 &= ~STATUS2_SUBSTITUTE;
 
+        if (!(gStatuses3[i] & STATUS3_COMMANDER))
+            gBattleStruct->commandingDondozo &= ~(1u << i);
+
         gSpecialStatuses[i].parentalBondState = PARENTAL_BOND_OFF;
     }
 
@@ -4467,6 +4473,7 @@ static void TurnValuesCleanUp(bool8 var0)
     gSideTimers[B_SIDE_PLAYER].followmeTimer = 0;
     gSideTimers[B_SIDE_OPPONENT].followmeTimer = 0;
 
+    gBattleStruct->usedEjectItem = 0;
     gBattleStruct->pledgeMove = FALSE; // combined pledge move may not have been used due to a canceller
 }
 
@@ -4530,15 +4537,15 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
             {
                 gBattleStruct->focusPunchBattlers |= 1u << battlers[i];
                 gBattlerAttacker = battlers[i];
-                switch (gChosenMoveByBattler[gBattlerAttacker])
+                switch (gMovesInfo[gChosenMoveByBattler[gBattlerAttacker]].effect)
                 {
-                case MOVE_FOCUS_PUNCH:
+                case EFFECT_FOCUS_PUNCH:
                     BattleScriptExecute(BattleScript_FocusPunchSetUp);
                     return TRUE;
-                case MOVE_BEAK_BLAST:
+                case EFFECT_BEAK_BLAST:
                     BattleScriptExecute(BattleScript_BeakBlastSetUp);
                     return TRUE;
-                case MOVE_SHELL_TRAP:
+                case EFFECT_SHELL_TRAP:
                     BattleScriptExecute(BattleScript_ShellTrapSetUp);
                     return TRUE;
                 }
@@ -5044,55 +5051,163 @@ void RunBattleScriptCommands(void)
         gBattleScriptingCommandsTable[gBattlescriptCurrInstr[0]]();
 }
 
-void SetTypeBeforeUsingMove(u32 move, u32 battlerAtk)
+// Returns TYPE_NONE if type doesn't change.
+// NULL can be passed to ateBoost to avoid applying ate-ability boosts when opening the summary screen in-battle.
+u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost)
 {
-    u32 moveType;
-    u16 holdEffect = GetBattlerHoldEffect(battlerAtk, TRUE);
-    u32 attackerAbility = GetBattlerAbility(battlerAtk);
+    u32 moveType = gMovesInfo[move].type;
+    u32 moveEffect = gMovesInfo[move].effect;
+    u32 heldItem, holdEffect, ability;
 
     if (move == MOVE_STRUGGLE)
-        return;
+        return TYPE_NORMAL;
 
-    gBattleStruct->dynamicMoveType = 0;
-    gSpecialStatuses[battlerAtk].gemBoost = FALSE;
-
-    if (gMovesInfo[move].effect == EFFECT_WEATHER_BALL)
+    if (gMain.inBattle)
     {
-        if (WEATHER_HAS_EFFECT)
+        heldItem = gBattleMons[battler].item;
+        holdEffect = GetBattlerHoldEffect(battler, TRUE);
+        ability = GetBattlerAbility(battler);
+    }
+    else
+    {
+        heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
+        holdEffect = ItemId_GetHoldEffect(heldItem);
+        ability = GetMonAbility(mon);
+    }
+
+    switch (moveEffect)
+    {
+    case EFFECT_WEATHER_BALL:
+        if (gMain.inBattle && WEATHER_HAS_EFFECT)
         {
             if (gBattleWeather & B_WEATHER_RAIN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
-                gBattleStruct->dynamicMoveType = TYPE_WATER | F_DYNAMIC_TYPE_SET;
+                return TYPE_WATER;
             else if (gBattleWeather & B_WEATHER_SANDSTORM)
-                gBattleStruct->dynamicMoveType = TYPE_ROCK | F_DYNAMIC_TYPE_SET;
+                return TYPE_ROCK;
             else if (gBattleWeather & B_WEATHER_SUN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
-                gBattleStruct->dynamicMoveType = TYPE_FIRE | F_DYNAMIC_TYPE_SET;
-            else if (gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW))
-                gBattleStruct->dynamicMoveType = TYPE_ICE | F_DYNAMIC_TYPE_SET;
+                return TYPE_FIRE;
+            else if (gBattleWeather & (B_WEATHER_SNOW | B_WEATHER_HAIL))
+                return TYPE_ICE;
             else
-                gBattleStruct->dynamicMoveType = TYPE_NORMAL | F_DYNAMIC_TYPE_SET;
+                return moveType;
         }
+        else
+        {
+            switch (gWeatherPtr->currWeather)
+            {
+            case WEATHER_DROUGHT:
+                if (holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
+                    return TYPE_FIRE;
+                break;
+            case WEATHER_RAIN:
+            case WEATHER_RAIN_THUNDERSTORM:
+                if (holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
+                    return TYPE_WATER;
+                break;
+            case WEATHER_SNOW:
+                return TYPE_ICE;
+            case WEATHER_SANDSTORM:
+                return TYPE_ROCK;
+            }
+            return moveType;
+        }
+        break;
+    case EFFECT_HIDDEN_POWER:
+        {
+            u32 typeBits = 0;
+            if (gMain.inBattle)
+            {
+                typeBits = ((gBattleMons[battler].hpIV & 1) << 0)
+                        | ((gBattleMons[battler].attackIV & 1) << 1)
+                        | ((gBattleMons[battler].defenseIV & 1) << 2)
+                        | ((gBattleMons[battler].speedIV & 1) << 3)
+                        | ((gBattleMons[battler].spAttackIV & 1) << 4)
+                        | ((gBattleMons[battler].spDefenseIV & 1) << 5);
+            }
+            else
+            {
+                typeBits = ((GetMonData(mon, MON_DATA_HP_IV) & 1) << 0)
+                        | ((GetMonData(mon, MON_DATA_ATK_IV) & 1) << 1)
+                        | ((GetMonData(mon, MON_DATA_DEF_IV) & 1) << 2)
+                        | ((GetMonData(mon, MON_DATA_SPEED_IV) & 1) << 3)
+                        | ((GetMonData(mon, MON_DATA_SPATK_IV) & 1) << 4)
+                        | ((GetMonData(mon, MON_DATA_SPDEF_IV) & 1) << 5);
+            }
+
+            // Subtract 6 instead of 1 below because 5 types are excluded (TYPE_NONE, TYPE_NORMAL, TYPE_MYSTERY, TYPE_FAIRY and TYPE_STELLAR)
+            // The final + 2 skips past TYPE_NONE and Normal.
+            moveType = ((NUMBER_OF_MON_TYPES - 6) * typeBits) / 63 + 2;
+            if (moveType >= TYPE_MYSTERY)
+                moveType++;
+            return ((moveType | F_DYNAMIC_TYPE_IGNORE_PHYSICALITY) & 0x3F);
+        }
+        break;
+    case EFFECT_CHANGE_TYPE_ON_ITEM:
+        if (holdEffect == gMovesInfo[move].argument)
+            return ItemId_GetSecondaryId(heldItem);
+        break;
+    case EFFECT_REVELATION_DANCE:
+    case EFFECT_RAGING_BULL:
+    case EFFECT_IVY_CUDGEL:
+    case EFFECT_NATURAL_GIFT:
+    case EFFECT_TERRAIN_PULSE:
+    case EFFECT_TERA_BLAST:
+    case EFFECT_TERA_STARSTORM:
+        break;
     }
-    else if (move == MOVE_PAY_DAY && attackerAbility == ABILITY_EN_METALICO)
+
+    if (moveType == TYPE_NORMAL
+     && ((!gMain.inBattle)
+     && GetActiveGimmick(battler) != GIMMICK_DYNAMAX))
     {
-        gBattleStruct->dynamicMoveType = TYPE_STEEL | F_DYNAMIC_TYPE_SET;
+        if (gMain.inBattle && ateBoost != NULL)
+            *ateBoost = TRUE;
     }
-    else if (gMovesInfo[move].soundMove && attackerAbility == ABILITY_LIQUID_VOICE)
+    else if (moveType != TYPE_NORMAL
+          && moveEffect != EFFECT_HIDDEN_POWER
+          && moveEffect != EFFECT_WEATHER_BALL
+          && ability == ABILITY_NORMALIZE
+          && GetActiveGimmick(battler) != GIMMICK_Z_MOVE)
     {
-        gBattleStruct->dynamicMoveType = TYPE_WATER | F_DYNAMIC_TYPE_SET;
+        if (gMain.inBattle && ateBoost != NULL && GetActiveGimmick(battler) != GIMMICK_DYNAMAX)
+            *ateBoost = TRUE;
+        return TYPE_NORMAL;
     }
+    else if (gMovesInfo[move].soundMove && ability == ABILITY_LIQUID_VOICE)
+    {
+        return TYPE_WATER;
+    }
+
+    return TYPE_NONE;
+}
+
+void SetTypeBeforeUsingMove(u32 move, u32 battler)
+{
+    u32 moveType;
+    u32 heldItem = gBattleMons[battler].item;
+    u32 holdEffect = GetBattlerHoldEffect(battler, TRUE);
+
+    gBattleStruct->dynamicMoveType = 0;
+    gBattleStruct->ateBoost[battler] = FALSE;
+    gSpecialStatuses[battler].gemBoost = FALSE;
+
+    moveType = GetDynamicMoveType(&GetBattlerParty(battler)[gBattlerPartyIndexes[battler]],
+                                  move,
+                                  battler,
+                                  &gBattleStruct->ateBoost[battler]);
+    if (moveType != TYPE_NONE)
+        gBattleStruct->dynamicMoveType = moveType | F_DYNAMIC_TYPE_SET;
 
     moveType = GetMoveType(move);
     if ((gFieldStatuses & STATUS_FIELD_ION_DELUGE && moveType == TYPE_NORMAL)
-        || gStatuses4[battlerAtk] & STATUS4_ELECTRIFIED)
+        || gStatuses4[battler] & STATUS4_ELECTRIFIED)
         gBattleStruct->dynamicMoveType = TYPE_ELECTRIC | F_DYNAMIC_TYPE_SET;
 
     // Check if a gem should activate.
-    moveType = GetMoveType(move);
-    if (holdEffect == HOLD_EFFECT_GEMS
-        && moveType == ItemId_GetSecondaryId(gBattleMons[battlerAtk].item))
+    if (holdEffect == HOLD_EFFECT_GEMS && GetMoveType(move) == ItemId_GetSecondaryId(heldItem))
     {
-        gSpecialStatuses[battlerAtk].gemParam = GetBattlerHoldEffectParam(battlerAtk);
-        gSpecialStatuses[battlerAtk].gemBoost = TRUE;
+        gSpecialStatuses[battler].gemParam = GetBattlerHoldEffectParam(battler);
+        gSpecialStatuses[battler].gemBoost = TRUE;
     }
 }
 

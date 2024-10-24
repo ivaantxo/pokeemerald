@@ -52,10 +52,10 @@ static u16 sLastTextBgColor;
 static u16 sLastTextFgColor;
 static u16 sLastTextShadowColor;
 
-const struct FontInfo *gFonts;
-bool8 gDisableTextPrinters;
-struct TextGlyph gCurGlyph;
-TextFlags gTextFlags;
+COMMON_DATA const struct FontInfo *gFonts = NULL;
+COMMON_DATA bool8 gDisableTextPrinters = 0;
+COMMON_DATA struct TextGlyph gCurGlyph = {0};
+COMMON_DATA TextFlags gTextFlags = {0};
 
 static const u8 sFontHalfRowOffsets[] =
 {
@@ -867,8 +867,9 @@ bool32 TextPrinterWaitAutoMode(struct TextPrinter *textPrinter)
 {
     struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
 
-    if (subStruct->autoScrollDelay == 49)
+    if (subStruct->autoScrollDelay == NUM_FRAMES_AUTO_SCROLL_DELAY)
     {
+        subStruct->autoScrollDelay = 0;
         return TRUE;
     }
     else
@@ -878,21 +879,29 @@ bool32 TextPrinterWaitAutoMode(struct TextPrinter *textPrinter)
     }
 }
 
+void SetResultWithButtonPress(bool32 *result)
+{
+    if (JOY_NEW(A_BUTTON | B_BUTTON))
+    {
+        *result = TRUE;
+        PlaySE(SE_SELECT);
+    }
+}
+
 bool32 TextPrinterWaitWithDownArrow(struct TextPrinter *textPrinter)
 {
     bool32 result = FALSE;
-    if (gTextFlags.autoScroll != 0)
+    if (gTextFlags.autoScroll != 0 || AUTO_SCROLL_TEXT)
     {
         result = TextPrinterWaitAutoMode(textPrinter);
+
+        if (AUTO_SCROLL_TEXT)
+            SetResultWithButtonPress(&result);
     }
     else
     {
         TextPrinterDrawDownArrow(textPrinter);
-        if (JOY_NEW(A_BUTTON | B_BUTTON))
-        {
-            result = TRUE;
-            PlaySE(SE_SELECT);
-        }
+        SetResultWithButtonPress(&result);
     }
     return result;
 }
@@ -900,17 +909,16 @@ bool32 TextPrinterWaitWithDownArrow(struct TextPrinter *textPrinter)
 bool32 TextPrinterWait(struct TextPrinter *textPrinter)
 {
     bool32 result = FALSE;
-    if (gTextFlags.autoScroll != 0)
+    if (gTextFlags.autoScroll != 0 || AUTO_SCROLL_TEXT)
     {
         result = TextPrinterWaitAutoMode(textPrinter);
+
+        if (AUTO_SCROLL_TEXT)
+            SetResultWithButtonPress(&result);
     }
     else
     {
-        if (JOY_NEW(A_BUTTON | B_BUTTON))
-        {
-            result = TRUE;
-            PlaySE(SE_SELECT);
-        }
+        SetResultWithButtonPress(&result);
     }
     return result;
 }
@@ -1261,6 +1269,16 @@ static u32 (*GetFontWidthFunc(u8 fontId))(u16, bool32)
     return NULL;
 }
 
+s32 GetGlyphWidth(u16 glyphId, bool32 isJapanese, u8 fontId)
+{
+    u32 (*func)(u16 fontId, bool32 isJapanese);
+
+    func = GetFontWidthFunc(fontId);
+    if (func == NULL)
+        return 0;
+    return func(glyphId, isJapanese);
+}
+
 s32 GetStringWidth(u8 fontId, const u8 *str, s16 letterSpacing)
 {
     bool32 isJapanese;
@@ -1431,6 +1449,32 @@ s32 GetStringWidth(u8 fontId, const u8 *str, s16 letterSpacing)
     if (lineWidth > width)
         return lineWidth;
     return width;
+}
+
+s32 GetStringLineWidth(u8 fontId, const u8 *str, s16 letterSpacing, u32 lineNum, u32 strSize, bool32 printDebug)
+{
+    u32 strWidth = 0, strLen, currLine;
+    u8 strCopy[strSize];
+
+    for (currLine = 1; currLine <= lineNum; currLine++)
+    {
+        strWidth = GetStringWidth(fontId, str, letterSpacing);
+        strLen = StringLineLength(str);
+        memset(strCopy, EOS, strSize);
+        if (currLine == lineNum && strLen != 0)
+        {
+            StringCopyN(strCopy, str, strLen);
+            strWidth = GetStringWidth(fontId, strCopy, letterSpacing);
+            strLen = StringLineLength(strCopy);
+            StringAppend(strCopy, gText_EmptyString3);
+        #ifndef NDEBUG
+            if (printDebug && strWidth != 0)
+                DebugPrintf("  Line %d, len:%d, width:%d, \"%S\"", currLine, strLen, strWidth, strCopy);
+        #endif
+        }
+        str += strLen + 1;
+    }
+    return strWidth;
 }
 
 u8 RenderTextHandleBold(u8 *pixels, u8 fontId, u8 *str)

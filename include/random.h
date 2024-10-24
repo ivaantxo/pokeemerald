@@ -6,22 +6,19 @@
 #define ISO_RANDOMIZE1(val) (1103515245 * (val) + 24691)
 #define ISO_RANDOMIZE2(val) (1103515245 * (val) + 12345)
 
-/* Some functions have been added to support HQ_RANDOM.
+/* Some functions have been added to support Expansion's RNG implementation.
 *
-* If using HQ_RANDOM, you cannot call Random() in interrupt handlers safely.
-* AdvanceRandom() is provided to handle burning numbers in the VBlank handler
-* if you choose to do that, and can be used regardless of HQ_RANDOM setting.
+* LocalRandom(*val) provides a higher-quality replacement for uses of
+* ISO_RANDOMIZE in vanilla Emerald. You can use LocalRandomSeed(u32) to
+* create a local state.
+*
+* It is no longer possible to call Random() in interrupt handlers safely.
+* AdvanceRandom() is provided to handle burning numbers in VBlank handlers.
 * If you need to use random numbers in the VBlank handler, a local state
 * should be used instead.
 *
-* LocalRandom(*val) allows you to have local random states that are the same
-* type as the global states regardless of HQ_RANDOM setting, which is useful
-* if you want to be able to set them from or assign them to gRngValue.
-* LocalRandomSeed(u32) returns a properly seeded rng_value_t.
-*
-* Random2_32() was added to HQ_RANDOM because the output of the generator is
-* always 32 bits and Random()/Random2() are just wrappers in that mode. It is
-* also available in non-HQ mode for consistency.
+* Random2_32() was added, even though it is not used directly, because the
+* underlying RNG always outputs 32 bits.
 */
 
 struct Sfc32State {
@@ -168,7 +165,13 @@ enum RandomTag
     RNG_AI_ABILITY,
     RNG_AI_SWITCH_HASBADODDS,
     RNG_AI_SWITCH_WONDER_GUARD,
+    RNG_AI_SWITCH_BADLY_POISONED,
+    RNG_AI_SWITCH_CURSED,
+    RNG_AI_SWITCH_NIGHTMARE,
+    RNG_AI_SWITCH_SEEDED,
     RNG_SHELL_SIDE_ARM,
+    RNG_RANDOM_TARGET,
+    RNG_HEALER,
 };
 
 #define RandomWeighted(tag, ...) \

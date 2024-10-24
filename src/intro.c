@@ -110,6 +110,13 @@ extern const struct CompressedSpriteSheet gBattleAnimPicTable[];
 extern const struct CompressedSpritePalette gBattleAnimPaletteTable[];
 extern const struct SpriteTemplate gAncientPowerRockSpriteTemplate[];
 
+enum {
+    COPYRIGHT_INITIALIZE,
+    COPYRIGHT_EMULATOR_BLEND,
+    COPYRIGHT_START_FADE = 140,
+    COPYRIGHT_START_INTRO,
+};
+
 #define TAG_VOLBEAT   1500
 #define TAG_TORCHIC   1501
 #define TAG_MANECTRIC 1502
@@ -169,7 +176,7 @@ extern const struct SpriteTemplate gAncientPowerRockSpriteTemplate[];
 static EWRAM_DATA u16 sIntroCharacterGender = 0;
 static EWRAM_DATA u16 sFlygonYOffset = 0;
 
-u32 gIntroFrameCounter;
+COMMON_DATA u32 gIntroFrameCounter = 0;
 
 static const u16 sIntroDrops_Pal[]            = INCBIN_U16("graphics/intro/scene_1/drops.gbapal");
 static const u16 sIntroLogo_Pal[]             = INCBIN_U16("graphics/intro/scene_1/logo.gbapal");
@@ -1053,7 +1060,7 @@ static u8 SetUpCopyrightScreen(void)
 {
     switch (gMain.state)
     {
-    case 0:
+    case COPYRIGHT_INITIALIZE:
         SetVBlankCallback(NULL);
         SetGpuReg(REG_OFFSET_BLDCNT, 0);
         SetGpuReg(REG_OFFSET_BLDALPHA, 0);
@@ -1082,17 +1089,17 @@ static u8 SetUpCopyrightScreen(void)
         REG_DISPCNT = DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON;
     // REG_DISPCNT needs to be overwritten the second time, because otherwise the intro won't show up on VBA 1.7.2 and John GBA Lite emulators.
     // The REG_DISPCNT overwrite is NOT needed in m-GBA, No$GBA, VBA 1.8.0, My Boy and Pizza Boy GBA emulators.
-    case 1:
+    case COPYRIGHT_EMULATOR_BLEND:
         REG_DISPCNT = DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON;
     default:
         UpdatePaletteFade();
         gMain.state++;
         break;
-    case 140:
+    case COPYRIGHT_START_FADE:
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK); //ojo
         gMain.state++;
         break;
-    case 141:
+    case COPYRIGHT_START_INTRO:
         if (UpdatePaletteFade())
             break;
 #if EXPANSION_INTRO == TRUE

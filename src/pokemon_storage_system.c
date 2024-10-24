@@ -56,6 +56,9 @@
 
 #define BOX_SCROLL_SPEED(input) ((input) * 6 * BOX_SCROLL_SPEED_FACTOR)
 
+#define PARTY_MENU_SCROLL_DELTA 2
+#define PARTY_MENU_ADJUSTED_SCROLL_TIMER (20 / PARTY_MENU_SCROLL_DELTA)
+
 #define COMPACT_PARTY_SPRITES_DELTA 2
 
 #define MON_HAND_DELTA 2
@@ -661,18 +664,21 @@ static void TilemapUtil_Draw(u8);
 void SetMonFormPSS(struct BoxPokemon *boxMon);
 void UpdateSpeciesSpritePSS(struct BoxPokemon *boxmon);
 
-struct 
-{
+static const u8 gText_JustOnePkmn[] = _("There is just one POKéMON with you.");
+static const u8 gText_PartyFull[] = _("Your party is full!");
+static const u8 gText_Box[] = _("BOX");
+
+struct {
     const u8 *text;
     const u8 *desc;
 }
 
 static const sMainMenuTexts[OPTIONS_COUNT] =
 {
-    [OPTION_MOVE_MONS]  = {gText_MovePokemon,     gText_MoveMonDescription},
-    [OPTION_WITHDRAW]   = {gText_WithdrawPokemon, gText_WithdrawMonDescription},
-    [OPTION_DEPOSIT]    = {gText_DepositPokemon,  gText_DepositMonDescription},
-    [OPTION_MOVE_ITEMS] = {gText_MoveItems,       gText_MoveItemsDescription},
+    [OPTION_MOVE_MONS]  = {COMPOUND_STRING("MOVE POKéMON"),     COMPOUND_STRING("Organize the POKéMON in BOXES and\nin your party.")},
+    [OPTION_WITHDRAW]   = {COMPOUND_STRING("WITHDRAW POKéMON"), COMPOUND_STRING("Move POKéMON stored in BOXES to\nyour party.")},
+    [OPTION_DEPOSIT]    = {COMPOUND_STRING("DEPOSIT POKéMON"),  COMPOUND_STRING("Store POKéMON in your party in BOXES.")},
+    [OPTION_MOVE_ITEMS] = {COMPOUND_STRING("MOVE ITEMS"),       COMPOUND_STRING("Move items held by any POKéMON\nin a BOX or your party.")}
 };
 
 static const struct WindowTemplate sWindowTemplate_MainMenu =
@@ -827,34 +833,36 @@ static const struct SpriteTemplate sSpriteTemplate_DisplayMon =
     .callback = SpriteCallbackDummy,
 };
 
+static const u8 gText_PkmnIsSelected[] = _("{DYNAMIC 0} is selected.");
+
 static const struct StorageMessage sMessages[] =
 {
-    [MSG_WHAT_YOU_DO]          = {gText_WhatDoYouWantToDo,       MSG_VAR_NONE},
-    [MSG_PICK_A_THEME]         = {gText_PleasePickATheme,        MSG_VAR_NONE},
-    [MSG_IS_SELECTED]          = {gText_PkmnIsSelected,          MSG_VAR_MON_NAME},
-    [MSG_JUMP_TO_WHICH_BOX]    = {gText_JumpToWhichBox,          MSG_VAR_NONE},
-    [MSG_DEPOSIT_IN_WHICH_BOX] = {gText_DepositInWhichBox,       MSG_VAR_NONE},
-    [MSG_WAS_DEPOSITED]        = {gText_PkmnWasDeposited,        MSG_VAR_MON_NAME},
-    [MSG_BOX_IS_FULL]          = {gText_BoxIsFull2,              MSG_VAR_NONE},
-    [MSG_RELEASE_POKE]         = {gText_ReleaseThisPokemon,      MSG_VAR_NONE},
-    [MSG_WAS_RELEASED]         = {gText_PkmnWasReleased,         MSG_VAR_RELEASE_MON},
-    [MSG_LAST_POKE]            = {gText_ThatsYourLastPkmn,       MSG_VAR_NONE},
-    [MSG_PARTY_FULL]           = {gText_YourPartysFull,          MSG_VAR_NONE},
-    [MSG_HOLDING_POKE]         = {gText_YoureHoldingAPkmn,       MSG_VAR_NONE},
-    [MSG_WHICH_ONE_WILL_TAKE]  = {gText_WhichOneWillYouTake,     MSG_VAR_NONE},
-    [MSG_CANT_RELEASE_EGG]     = {gText_YouCantReleaseAnEgg,     MSG_VAR_NONE},
-    [MSG_CONTINUE_BOX]         = {gText_ContinueBoxOperations,   MSG_VAR_NONE},
-    [MSG_CAME_BACK]            = {gText_PkmnCameBack,            MSG_VAR_MON_NAME},
-    [MSG_SURPRISE]             = {gText_FourEllipsesExclamation, MSG_VAR_NONE},
-    [MSG_PLEASE_REMOVE_MAIL]   = {gText_PleaseRemoveTheMail,     MSG_VAR_NONE},
-    [MSG_IS_SELECTED2]         = {gText_PkmnIsSelected,          MSG_VAR_ITEM_NAME},
-    [MSG_GIVE_TO_MON]          = {gText_GiveToAPkmn,             MSG_VAR_NONE},
-    [MSG_PLACED_IN_BAG]        = {gText_PlacedItemInBag,         MSG_VAR_ITEM_NAME},
-    [MSG_BAG_FULL]             = {gText_BagIsFull2,              MSG_VAR_NONE},
-    [MSG_PUT_IN_BAG]           = {gText_PutItemInBag,            MSG_VAR_NONE},
-    [MSG_ITEM_IS_HELD]         = {gText_ItemIsNowHeld,           MSG_VAR_ITEM_NAME},
-    [MSG_CHANGED_TO_ITEM]      = {gText_ChangedToNewItem,        MSG_VAR_ITEM_NAME},
-    [MSG_CANT_STORE_MAIL]      = {gText_MailCantBeStored,        MSG_VAR_NONE},
+    [MSG_WHAT_YOU_DO]          = {COMPOUND_STRING("What do you want to do?"),    MSG_VAR_NONE},
+    [MSG_PICK_A_THEME]         = {COMPOUND_STRING("Please pick a theme."),       MSG_VAR_NONE},
+    [MSG_IS_SELECTED]          = {gText_PkmnIsSelected,                          MSG_VAR_MON_NAME},
+    [MSG_JUMP_TO_WHICH_BOX]    = {COMPOUND_STRING("Jump to which BOX?"),         MSG_VAR_NONE},
+    [MSG_DEPOSIT_IN_WHICH_BOX] = {COMPOUND_STRING("Deposit in which BOX?"),      MSG_VAR_NONE},
+    [MSG_WAS_DEPOSITED]        = {COMPOUND_STRING("{DYNAMIC 0} was deposited."), MSG_VAR_MON_NAME},
+    [MSG_BOX_IS_FULL]          = {COMPOUND_STRING("The BOX is full."),           MSG_VAR_NONE},
+    [MSG_RELEASE_POKE]         = {COMPOUND_STRING("Release this POKéMON?"),      MSG_VAR_NONE},
+    [MSG_WAS_RELEASED]         = {COMPOUND_STRING("{DYNAMIC 0} was released."),  MSG_VAR_RELEASE_MON},
+    [MSG_LAST_POKE]            = {COMPOUND_STRING("That's your last POKéMON!"),  MSG_VAR_NONE},
+    [MSG_PARTY_FULL]           = {gText_YourPartysFull,                          MSG_VAR_NONE},
+    [MSG_HOLDING_POKE]         = {COMPOUND_STRING("You're holding a POKéMON!"),  MSG_VAR_NONE},
+    [MSG_WHICH_ONE_WILL_TAKE]  = {COMPOUND_STRING("Which one will you take?"),   MSG_VAR_NONE},
+    [MSG_CANT_RELEASE_EGG]     = {COMPOUND_STRING("You can't release an EGG."),  MSG_VAR_NONE},
+    [MSG_CONTINUE_BOX]         = {COMPOUND_STRING("Continue BOX operations?"),   MSG_VAR_NONE},
+    [MSG_CAME_BACK]            = {COMPOUND_STRING("{DYNAMIC 0} came back!"),     MSG_VAR_MON_NAME},
+    [MSG_SURPRISE]             = {COMPOUND_STRING("… … … … !"),                  MSG_VAR_NONE},
+    [MSG_PLEASE_REMOVE_MAIL]   = {COMPOUND_STRING("Please remove the MAIL."),    MSG_VAR_NONE},
+    [MSG_IS_SELECTED2]         = {gText_PkmnIsSelected,                          MSG_VAR_ITEM_NAME},
+    [MSG_GIVE_TO_MON]          = {COMPOUND_STRING("GIVE to a POKéMON?"),         MSG_VAR_NONE},
+    [MSG_PLACED_IN_BAG]        = {COMPOUND_STRING("Placed item in the BAG."),    MSG_VAR_ITEM_NAME},
+    [MSG_BAG_FULL]             = {COMPOUND_STRING("The BAG is full."),           MSG_VAR_NONE},
+    [MSG_PUT_IN_BAG]           = {COMPOUND_STRING("Put this item in the BAG?"),  MSG_VAR_NONE},
+    [MSG_ITEM_IS_HELD]         = {COMPOUND_STRING("{DYNAMIC 0} is now held."),   MSG_VAR_ITEM_NAME},
+    [MSG_CHANGED_TO_ITEM]      = {COMPOUND_STRING("Changed to {DYNAMIC 0}."),    MSG_VAR_ITEM_NAME},
+    [MSG_CANT_STORE_MAIL]      = {COMPOUND_STRING("MAIL can't be stored!"),      MSG_VAR_NONE},
 };
 
 static const struct WindowTemplate sYesNoWindowTemplate =
@@ -3367,7 +3375,7 @@ static void LoadDisplayMonGfx(u16 species, u32 pid)
         LoadSpecialPokePic(sStorage->tileBuffer, species, pid, TRUE);
         CpuFastCopy(sStorage->tileBuffer, sStorage->displayMonTilePtr, MON_PIC_SIZE);
         LoadCompressedPaletteFast(sStorage->displayMonPalette, sStorage->displayMonPalOffset, PLTT_SIZE_4BPP);
-        UniquePaletteByPersonality(sStorage->displayMonPalOffset, species, pid);
+        UniquePalette(sStorage->displayMonPalOffset, pid);
         CpuFastCopy(&gPlttBufferFaded[sStorage->displayMonPalOffset], &gPlttBufferUnfaded[sStorage->displayMonPalOffset], PLTT_SIZE_4BPP);
         sStorage->displayMonSprite->invisible = FALSE;
     }
@@ -3428,35 +3436,33 @@ static void SetUpShowPartyMenu(void)
 
 static bool8 ShowPartyMenu(void)
 {
-    if (sStorage->partyMenuMoveTimer == 20)
+    if (sStorage->partyMenuMoveTimer == PARTY_MENU_ADJUSTED_SCROLL_TIMER)
         return FALSE;
 
-    sStorage->partyMenuY++;
-    TilemapUtil_Move(1);
+    sStorage->partyMenuY += PARTY_MENU_SCROLL_DELTA;
+    TilemapUtil_Move(PARTY_MENU_SCROLL_DELTA);
     TilemapUtil_Update(TILEMAPID_PARTY_MENU);
     ScheduleBgCopyTilemapToVram(1);
-    MovePartySprites(8);
+    MovePartySprites(8 * PARTY_MENU_SCROLL_DELTA);
     // Disable dynamic palettes for the first 3 slots of each row
-    if (sStorage->partyMenuMoveTimer == 10) 
+    if (sStorage->partyMenuMoveTimer == 5) 
     {
         DisableBoxMonDynamicPalette(0 * 6, 3);
         DisableBoxMonDynamicPalette(1 * 6, 3);
     }
-    else if (sStorage->partyMenuMoveTimer == 16)
+    else if (sStorage->partyMenuMoveTimer == 8)
     {
         DisableBoxMonDynamicPalette(2 * 6, 3);
         DisableBoxMonDynamicPalette(3 * 6, 3);
     }
-    if (++sStorage->partyMenuMoveTimer == 20)
+    if (++sStorage->partyMenuMoveTimer == PARTY_MENU_ADJUSTED_SCROLL_TIMER)
     {
         DisableBoxMonDynamicPalette(4 * 6, 3);
         sInPartyMenu = TRUE;
         return FALSE;
     }
     else
-    {
         return TRUE;
-    }
 }
 
 static void SetUpHidePartyMenu(void)
@@ -3756,7 +3762,7 @@ static void SetBoxMonDynamicPalette(u8 boxId, u8 position)
         else
         {
             LZ77UnCompWram(palette, &sPaletteSwapBuffer[PLTT_ID(position)]);
-            UniquePaletteBuffered(&sPaletteSwapBuffer[PLTT_ID(position)], species, GetMonData(mon, MON_DATA_PERSONALITY));
+            UniquePaletteBuffered(&sPaletteSwapBuffer[PLTT_ID(position)], GetMonData(mon, MON_DATA_PERSONALITY));
         }
     }
     sStorage->boxMonsSprites[position]->oam.paletteNum = ((position/6) & 1 ? 6 : 0) + (position % 6) + 1;
@@ -3970,7 +3976,7 @@ static void CreatePartyMonsSprites(bool8 visible)
     else
     {
         LoadCompressedPaletteFast(GetMonFrontSpritePal(&gPlayerParty[0]), OBJ_PLTT_ID(1), PLTT_SIZE_4BPP);
-        UniquePaletteByPersonality(OBJ_PLTT_ID(1), species, personality);
+        UniquePalette(OBJ_PLTT_ID(1), personality);
         CpuFastCopy(&gPlttBufferFaded[OBJ_PLTT_ID(1)], &gPlttBufferUnfaded[OBJ_PLTT_ID(1)], PLTT_SIZE_4BPP);
     }
     sStorage->partySprites[0]->oam.paletteNum = 1;
@@ -4001,7 +4007,7 @@ static void CreatePartyMonsSprites(bool8 visible)
                 personality = GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY);
                 sStorage->partySprites[i] = CreateMonIconSprite(species, personality, 152,  8 * (3 * (i - 1)) + 16, 1, 12);
                 LoadCompressedPaletteFast(GetMonFrontSpritePal(&gPlayerParty[i]), OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
-                UniquePaletteByPersonality(OBJ_PLTT_ID(paletteNum), species, personality);
+                UniquePalette(OBJ_PLTT_ID(paletteNum), personality);
                 CpuFastCopy(&gPlttBufferFaded[OBJ_PLTT_ID(paletteNum)], &gPlttBufferUnfaded[OBJ_PLTT_ID(paletteNum)], PLTT_SIZE_4BPP);
                 sStorage->partySprites[i]->oam.paletteNum = paletteNum;
                 count++;
@@ -4247,7 +4253,7 @@ static void SetPlacedMonSprite(u8 boxId, u8 position)
             {
                 paletteNum = FindFreePartyPaletteSlot();
                 LoadCompressedPaletteFast(GetMonFrontSpritePal(&gPlayerParty[position]), OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
-                UniquePaletteByPersonality(OBJ_PLTT_ID(paletteNum), GetMonData(&gPlayerParty[position], MON_DATA_SPECIES), GetMonData(&gPlayerParty[position], MON_DATA_PERSONALITY));
+                UniquePalette(OBJ_PLTT_ID(paletteNum), GetMonData(&gPlayerParty[position], MON_DATA_PERSONALITY));
                 CpuFastCopy(&gPlttBufferFaded[OBJ_PLTT_ID(paletteNum)], &gPlttBufferUnfaded[OBJ_PLTT_ID(paletteNum)], PLTT_SIZE_4BPP);
                 sStorage->partySprites[position]->oam.paletteNum = paletteNum;
             }
@@ -5269,7 +5275,7 @@ static void SetShiftedMonSprites(u8 boxId, u8 position)
     }
     else
     {
-        u8 i = position/6;
+        u8 i = position / 6;
         u8 j = position % 6;
         // Copy display palette into swap buffer (at next vblank)
         // This is necessary because copying it while the screen is being drawn will cause flickering
@@ -5281,7 +5287,7 @@ static void SetShiftedMonSprites(u8 boxId, u8 position)
     // Set moving sprite palette to currently displayed pokemon's palette
     sStorage->displayMonSprite->invisible = TRUE;
     LoadCompressedPaletteFast(sStorage->displayMonPalette, sStorage->displayMonPalOffset, PLTT_SIZE_4BPP);
-    UniquePalette(sStorage->displayMonPalOffset, GetBoxedMonPtr(boxId, position));
+    UniquePalette(sStorage->displayMonPalOffset, GetBoxMonData(GetBoxedMonPtr(boxId, position), MON_DATA_PERSONALITY));
     CpuFastCopy(&gPlttBufferFaded[sStorage->displayMonPalOffset], &gPlttBufferUnfaded[sStorage->displayMonPalOffset], PLTT_SIZE_4BPP);
     sStorage->movingMonSprite->oam.paletteNum = displayIndex;
     sMovingMonOrigBoxId = boxId;
@@ -5374,7 +5380,7 @@ static void ReleaseMon(void)
         }
 
         if (sCursorArea != CURSOR_AREA_IN_PARTY)
-          DisableBoxMonDynamicPalette(sCursorPosition, 1);
+            DisableBoxMonDynamicPalette(sCursorPosition, 1);
         PurgeMonOrBoxMon(boxId, sCursorPosition);
         if (item != ITEM_NONE)
             AddBagItem(item, 1);
@@ -5609,7 +5615,7 @@ static void InitSummaryScreenData(void)
         sStorage->summaryMon.mon = &sSavedMovingMon;
         sStorage->summaryStartPos = 0;
         sStorage->summaryMaxPos = 0;
-        sStorage->summaryScreenMode = SUMMARY_MODE_NORMAL;
+        sStorage->summaryScreenMode = SUMMARY_MODE_BOX_CURSOR;
     }
     else if (sCursorArea == CURSOR_AREA_IN_PARTY)
     {
@@ -6491,24 +6497,26 @@ static void InitMenu(void)
     sStorage->menuWindow.baseBlock = 92;
 }
 
+static const u8 gPCText_Give[] = _("GIVE");
+
 static const u8 *const sMenuTexts[] =
 {
-    [MENU_CANCEL]     = gPCText_Cancel,
-    [MENU_STORE]      = gPCText_Store,
-    [MENU_WITHDRAW]   = gPCText_Withdraw,
-    [MENU_MOVE]       = gPCText_Move,
-    [MENU_SHIFT]      = gPCText_Shift,
-    [MENU_PLACE]      = gPCText_Place,
-    [MENU_SUMMARY]    = gPCText_Summary,
-    [MENU_RELEASE]    = gPCText_Release,
-    [MENU_JUMP]       = gPCText_Jump,
-    [MENU_NAME]       = gPCText_Name,
-    [MENU_TAKE]       = gPCText_Take,
+    [MENU_CANCEL]     = COMPOUND_STRING("CANCEL"),
+    [MENU_STORE]      = COMPOUND_STRING("STORE"),
+    [MENU_WITHDRAW]   = COMPOUND_STRING("WITHDRAW"),
+    [MENU_MOVE]       = COMPOUND_STRING("MOVE"),
+    [MENU_SHIFT]      = COMPOUND_STRING("SHIFT"),
+    [MENU_PLACE]      = COMPOUND_STRING("PLACE"),
+    [MENU_SUMMARY]    = COMPOUND_STRING("SUMMARY"),
+    [MENU_RELEASE]    = COMPOUND_STRING("RELEASE"),
+    [MENU_JUMP]       = COMPOUND_STRING("JUMP"),
+    [MENU_NAME]       = COMPOUND_STRING("NAME"),
+    [MENU_TAKE]       = COMPOUND_STRING("TAKE"),
     [MENU_GIVE]       = gPCText_Give,
     [MENU_GIVE_2]     = gPCText_Give,
-    [MENU_SWITCH]     = gPCText_Switch,
-    [MENU_BAG]        = gPCText_Bag,
-    [MENU_INFO]       = gPCText_Info,
+    [MENU_SWITCH]     = COMPOUND_STRING("SWITCH"),
+    [MENU_BAG]        = COMPOUND_STRING("BAG"),
+    [MENU_INFO]       = COMPOUND_STRING("INFO"),
 };
 
 static void SetMenuText(u8 textId)
