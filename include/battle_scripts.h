@@ -551,11 +551,6 @@ extern const u8 BattleScript_EffectCureStatusAllies[];
 extern const u8 BattleScript_EffectRecycleBerriesAllies[];
 extern const u8 BattleScript_RemoveGenericType[];
 
-// dynamax and max raids
-extern const u8 BattleScript_DynamaxBegins[];
-extern const u8 BattleScript_DynamaxEnds[];
-extern const u8 BattleScript_MoveBlockedByDynamax[];
-
 // Battle move scripts
 extern const u8 BattleScript_EffectSleep[];
 extern const u8 BattleScript_EffectAbsorb[];
@@ -834,7 +829,6 @@ extern const u8 BattleScript_EffectTakeHeart[];
 extern const u8 BattleScript_EffectCorrosiveGas[];
 extern const u8 BattleScript_EffectSaltCure[];
 extern const u8 BattleScript_EffectChillyReception[];
-extern const u8 BattleScript_EffectMaxMove[];
 extern const u8 BattleScript_EffectGlaiveRush[];
 extern const u8 BattleScript_EffectBrickBreak[];
 extern const u8 BattleScript_EffectDoodle[];

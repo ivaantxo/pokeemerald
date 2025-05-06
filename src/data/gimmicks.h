@@ -31,24 +31,14 @@ const struct GimmickInfo gGimmicksInfo[GIMMICKS_COUNT] =
         .CanActivate = CanUltraBurst,
         .ActivateGimmick = ActivateUltraBurst,
     },
-    [GIMMICK_DYNAMAX] =
-    {
-        .triggerSheet = &sSpriteSheet_DynamaxTrigger,
-        .triggerPal = &sSpritePalette_DynamaxTrigger,
-        .triggerTemplate = &sSpriteTemplate_GimmickTrigger,
-        .indicatorSheet = &sSpriteSheet_DynamaxIndicator,
-        .indicatorPal = &sSpritePalette_MiscIndicator,
-        .CanActivate = CanDynamax,
-        .ActivateGimmick = ActivateDynamax,
-    },
     [GIMMICK_TERA] =
     {
-        .triggerSheet = &sSpriteSheet_DynamaxTrigger,
-        .triggerPal = &sSpritePalette_DynamaxTrigger,
+        .triggerSheet = 0,
+        .triggerPal = 0,
         .triggerTemplate = &sSpriteTemplate_GimmickTrigger,
         .indicatorSheet = NULL, // handled separately
         .indicatorPal = &sSpritePalette_MiscIndicator,
-        .CanActivate = CanDynamax,
-        .ActivateGimmick = ActivateDynamax,
+        .CanActivate = 0,
+        .ActivateGimmick = 0,
     }
 };

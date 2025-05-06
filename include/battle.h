@@ -13,7 +13,6 @@
 #include "battle_bg.h"
 #include "pokeball.h"
 #include "battle_debug.h"
-#include "battle_dynamax.h"
 #include "battle_gimmick.h"
 #include "random.h" // for rng_value_t
 
@@ -482,14 +481,6 @@ struct ZMoveData
     u16 baseMoves[MAX_BATTLERS_COUNT];
 };
 
-struct DynamaxData
-{
-    u8 dynamaxTurns[MAX_BATTLERS_COUNT];
-    u16 baseMoves[MAX_BATTLERS_COUNT]; // base move of Max Move
-    u16 lastUsedBaseMove;
-    u16 levelUpHP;
-};
-
 struct BattleGimmickData
 {
     u8 usableGimmick[MAX_BATTLERS_COUNT];                // first usable gimmick that can be selected for each battler
@@ -632,7 +623,6 @@ struct BattleStruct
     u8 activeAbilityPopUps; // as bits for each battler
     u8 abilityPopUpSpriteIds[MAX_BATTLERS_COUNT][2];    // two per battler
     struct ZMoveData zmove;
-    struct DynamaxData dynamax;
     struct BattleGimmickData gimmick;
     const u8 *trainerSlideMsg;
     enum EstadosIntroBatalla estadoIntro:8;
@@ -688,7 +678,6 @@ struct BattleStruct
     u8 trainerSlideMegaEvolutionMsgDone:1;
     u8 trainerSlideZMoveMsgDone:1;
     u8 trainerSlideBeforeFirstTurnMsgDone:1;
-    u8 trainerSlideDynamaxMsgDone:1;
     u8 trainerSlideLowHpMsgDone:1;
     u8 pledgeMove:1;
     u8 isSkyBattle:1;

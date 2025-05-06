@@ -260,10 +260,6 @@ const u32 gItemIcon_ExpCandyM[] = INCBIN_U32("graphics/items/icons/exp_candy_m.4
 const u32 gItemIcon_ExpCandyL[] = INCBIN_U32("graphics/items/icons/exp_candy_l.4bpp.lz");
 const u32 gItemIcon_ExpCandyXL[] = INCBIN_U32("graphics/items/icons/exp_candy_xl.4bpp.lz");
 const u32 gItemIconPalette_ExpCandies[] = INCBIN_U32("graphics/items/icon_palettes/exp_candies.gbapal.lz");
-
-const u32 gItemIcon_DynamaxCandy[] = INCBIN_U32("graphics/items/icons/dynamax_candy.4bpp.lz");
-const u32 gItemIconPalette_DynamaxCandy[] = INCBIN_U32("graphics/items/icon_palettes/dynamax_candy.gbapal.lz");
-
 // Medicinal Flutes
 
 const u32 gItemIcon_Flute[] = INCBIN_U32("graphics/items/icons/flute.4bpp.lz");
@@ -1765,9 +1761,6 @@ const u32 gItemIconPalette_ZPowerRing[] = INCBIN_U32("graphics/items/icon_palett
 
 const u32 gItemIcon_ZRing[] = INCBIN_U32("graphics/items/icons/z_ring.4bpp.lz"); // Remove
 const u32 gItemIconPalette_ZRing[] = INCBIN_U32("graphics/items/icon_palettes/z_ring.gbapal.lz"); // Remove
-
-const u32 gItemIcon_DynamaxBand[] = INCBIN_U32("graphics/items/icons/dynamax_band.4bpp.lz");
-const u32 gItemIconPalette_DynamaxBand[] = INCBIN_U32("graphics/items/icon_palettes/dynamax_band.gbapal.lz");
 
 // Misc. Key Items
 

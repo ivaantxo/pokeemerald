@@ -1759,14 +1759,10 @@ BattleScript_EffectHitSwitchTarget::
 	jumpifability BS_TARGET, ABILITY_SUCTION_CUPS, BattleScript_AbilityPreventsPhasingOut
 	jumpifability BS_TARGET, ABILITY_GUARD_DOG, BattleScript_MoveEnd
 	jumpifstatus3 BS_TARGET, STATUS3_ROOTED, BattleScript_PrintMonIsRooted
-	jumpiftargetdynamaxed BattleScript_HitSwitchTargetDynamaxed
 	tryhitswitchtarget BattleScript_MoveEnd
 	forcerandomswitch BattleScript_HitSwitchTargetForceRandomSwitchFailed
 	goto BattleScript_MoveEnd
 
-BattleScript_HitSwitchTargetDynamaxed:
-	printstring STRINGID_MOVEBLOCKEDBYDYNAMAX
-	waitmessage B_WAIT_TIME_LONG
 BattleScript_HitSwitchTargetForceRandomSwitchFailed:
 	hitswitchtargetfailed
 	setbyte sSWITCH_CASE, B_SWITCH_NORMAL
@@ -3207,15 +3203,9 @@ BattleScript_EffectRoar::
 	jumpifability BS_TARGET, ABILITY_GUARD_DOG, BattleScript_ButItFailed
 	jumpifability BS_TARGET, ABILITY_SUCTION_CUPS, BattleScript_AbilityPreventsPhasingOut
 	jumpifstatus3 BS_TARGET, STATUS3_ROOTED, BattleScript_PrintMonIsRooted
-	jumpiftargetdynamaxed BattleScript_RoarBlockedByDynamax
 	accuracycheck BattleScript_ButItFailed, NO_ACC_CALC_CHECK_LOCK_ON
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
 	forcerandomswitch BattleScript_ButItFailed
-
-BattleScript_RoarBlockedByDynamax:
-	printstring STRINGID_MOVEBLOCKEDBYDYNAMAX
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
 
 BattleScript_MultiHitPrintStrings::
 	resultmessage
@@ -9466,247 +9456,6 @@ BattleScript_TargetAbilityStatRaiseRet::
 BattleScript_TargetAbilityStatRaiseRet_End:
 	copybyte gBattlerAttacker, sSAVED_BATTLER
 	return
-
-@@@ MAX MOVES @@@
-BattleScript_EffectMaxMove::
-	attackcanceler
-	accuracycheck BattleScript_ButItFailed, NO_ACC_CALC_CHECK_LOCK_ON
-	attackstring
-	ppreduce
-	critcalc
-	damagecalc
-	adjustdamage
-	attackanimation
-	waitanimation
-	effectivenesssound
-	hitanimation BS_TARGET
-	waitstate
-	healthbarupdate BS_TARGET
-	datahpupdate BS_TARGET
-	critmessage
-	waitmessage B_WAIT_TIME_LONG
-	resultmessage
-	waitmessage B_WAIT_TIME_LONG
-	tryfaintmon BS_TARGET
-	setmaxmoveeffect
-	moveendall
-	end
-
-BattleScript_EffectRaiseStatAllies::
-	savetarget
-	copybyte gBattlerTarget, gBattlerAttacker
-BattleScript_RaiseSideStatsLoop:
-	jumpifabsent BS_TARGET, BattleScript_RaiseSideStatsIncrement
-	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_RaiseSideStatsIncrement
-	jumpifbyte COMPARACION_IGUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_RaiseSideStatsIncrement
-	setgraphicalstatchangevalues
-	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
-	printfromtable gStatUpStringIds
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_RaiseSideStatsIncrement:
-	setbyte sSTAT_ANIM_PLAYED, FALSE
-	jumpifbytenotequal gBattlerTarget, gBattlerAttacker, BattleScript_RaiseSideStatsEnd
-	setallytonexttarget BattleScript_RaiseSideStatsLoop
-BattleScript_RaiseSideStatsEnd:
-	restoretarget
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectLowerStatFoes::
-	savetarget
-	copybyte sBATTLER, gBattlerTarget
-BattleScript_LowerSideStatsLoop:
-	jumpifabsent BS_TARGET, BattleScript_LowerSideStatsIncrement
-	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_LowerSideStatsIncrement
-	jumpifbyte COMPARACION_IGUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_DECREASE, BattleScript_LowerSideStatsIncrement
-	setgraphicalstatchangevalues
-	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
-	printfromtable gStatDownStringIds
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_LowerSideStatsIncrement:
-	setbyte sSTAT_ANIM_PLAYED, FALSE
-	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_LowerSideStatsEnd
-	setallytonexttarget BattleScript_LowerSideStatsLoop
-BattleScript_LowerSideStatsEnd:
-	restoretarget
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectSetWeather::
-	playanimation 0, B_ANIM_MAX_SET_WEATHER
-	printfromtable gMoveWeatherChangeStringIds
-	waitmessage B_WAIT_TIME_LONG
-	call BattleScript_ActivateWeatherAbilities
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectSetTerrain::
-	printfromtable gTerrainStringIds
-	waitmessage B_WAIT_TIME_LONG
-	playanimation BS_ATTACKER, B_ANIM_RESTORE_BG
-	call BattleScript_ActivateTerrainEffects
-	goto BattleScript_MoveEnd
-
-BattleScript_DamageNonTypesStarts::
-	printfromtable gDamageNonTypesStartStringIds
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_DamageNonTypesContinues::
-	printfromtable gDamageNonTypesDmgStringIds
-	waitmessage B_WAIT_TIME_LONG
-	effectivenesssound
-	hitanimation BS_SCRIPTING
-	goto BattleScript_DoTurnDmg
-
-BattleScript_EffectTryReducePP::
-	tryspiteppreduce BattleScript_MoveEnd
-	printstring STRINGID_PKMNREDUCEDPP
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectStatus1Foes::
-	savetarget
-	copybyte sBATTLER, gBattlerTarget
-BattleScript_Status1FoesLoop:
-	jumpifabsent BS_TARGET, BattleScript_Status1FoesIncrement
-	trysetstatus1 BattleScript_Status1FoesIncrement
-	statusanimation BS_TARGET
-	updatestatusicon BS_TARGET
-	printfromtable gStatusConditionsStringIds
-	waitmessage B_WAIT_TIME_LONG
-	updatestatusicon BS_EFFECT_BATTLER
-	waitstate
-BattleScript_Status1FoesIncrement:
-	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_Status1FoesEnd
-	setallytonexttarget BattleScript_Status1FoesLoop
-BattleScript_Status1FoesEnd:
-	restoretarget
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectStatus2Foes::
-	savetarget
-	copybyte sBATTLER, gBattlerTarget
-BattleScript_Status2FoesLoop:
-	jumpifabsent BS_TARGET, BattleScript_Status2FoesIncrement
-	trysetstatus2 BattleScript_Status2FoesIncrement
-	jumpifbyte COMPARACION_IGUAL, gBattleCommunication, 1, BattleScript_DoConfuseAnim
-	jumpifbyte COMPARACION_IGUAL, gBattleCommunication, 2, BattleScript_DoInfatuationAnim
-BattleScript_Status2FoesPrintMessage:
-	printfromtable gStatus2StringIds
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_Status2FoesIncrement:
-	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_Status2FoesEnd
-	setallytonexttarget BattleScript_Status2FoesLoop
-BattleScript_Status2FoesEnd:
-	restoretarget
-	jumpifbyte COMPARACION_IGUAL, gBattleCommunication + 1, 1, BattleScript_PrintCoinsScattered @ Gold Rush
-	goto BattleScript_MoveEnd
-
-BattleScript_DoConfuseAnim:
-	status2animation BS_EFFECT_BATTLER, STATUS2_CONFUSION
-	goto BattleScript_Status2FoesPrintMessage
-
-BattleScript_DoInfatuationAnim:
-	status2animation BS_EFFECT_BATTLER, STATUS2_INFATUATION
-	goto BattleScript_Status2FoesPrintMessage
-
-BattleScript_PrintCoinsScattered:
-	printstring STRINGID_COINSSCATTERED
-	goto BattleScript_MoveEnd
-
-BattleScript_TormentEnds::
-	printstring STRINGID_TORMENTEDNOMORE
-	waitmessage B_WAIT_TIME_LONG
-	end2
-
-BattleScript_EffectRaiseCritAlliesAnim::
-	savetarget
-	copybyte gBattlerTarget, gBattlerAttacker
-BattleScript_RaiseCritAlliesLoop:
-	jumpifabsent BS_TARGET, BattleScript_RaiseCritAlliesIncrement
-	setstatchanger ESTADISTICA_ATAQUE, 0, FALSE @ for animation
-	setgraphicalstatchangevalues
-	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
-	printstring STRINGID_PKMNGETTINGPUMPED
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_RaiseCritAlliesIncrement:
-	setbyte sSTAT_ANIM_PLAYED, FALSE
-	jumpifbytenotequal gBattlerTarget, gBattlerAttacker, BattleScript_RaiseCritAlliesEnd
-	setallytonexttarget BattleScript_RaiseCritAlliesLoop
-BattleScript_RaiseCritAlliesEnd:
-	restoretarget
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectHealOneSixthAllies::
-	jumpifteamhealthy BS_ATTACKER, BattleScript_MoveEnd
-	savetarget
-	copybyte gBattlerTarget, gBattlerAttacker
-BattleScript_HealOneSixthAlliesLoop:
-	jumpifabsent BS_TARGET, BattleScript_HealOneSixthAlliesIncrement
-	tryhealsixthhealth BattleScript_HealOneSixthAlliesIncrement
-	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE
-	healthbarupdate BS_TARGET
-	datahpupdate BS_TARGET
-	printstring STRINGID_PKMNREGAINEDHEALTH
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_HealOneSixthAlliesIncrement:
-	jumpifbytenotequal gBattlerTarget, gBattlerAttacker, BattleScript_HealOneSixthAlliesEnd
-	setallytonexttarget BattleScript_HealOneSixthAlliesLoop
-BattleScript_HealOneSixthAlliesEnd:
-	restoretarget
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectCureStatusAllies::
-	jumpifteamhealthy BS_ATTACKER, BattleScript_MoveEnd
-	savetarget
-	copybyte gBattlerTarget, gBattlerAttacker
-BattleScript_CureStatusAlliesLoop:
-	jumpifabsent BS_TARGET, BattleScript_CureStatusAlliesIncrement
-	jumpifstatus BS_TARGET, STATUS1_ANY, BattleScript_CureStatusActivate
-BattleScript_CureStatusAlliesIncrement:
-	jumpifbytenotequal gBattlerTarget, gBattlerAttacker, BattleScript_CureStatusAlliesEnd
-	setallytonexttarget BattleScript_CureStatusAlliesLoop
-BattleScript_CureStatusAlliesEnd:
-	restoretarget
-	goto BattleScript_MoveEnd
-
-BattleScript_CureStatusActivate:
-	curestatus BS_TARGET
-	updatestatusicon BS_TARGET
-	swapattackerwithtarget
-	printstring STRINGID_PKMNSTATUSNORMAL
-	waitmessage B_WAIT_TIME_LONG
-	swapattackerwithtarget
-	goto BattleScript_CureStatusAlliesIncrement
-
-BattleScript_EffectRecycleBerriesAllies::
-	savetarget
-	copybyte gBattlerTarget, gBattlerAttacker
-BattleScript_RecycleBerriesAlliesLoop:
-	jumpifabsent BS_TARGET, BattleScript_RecycleBerriesAlliesIncrement
-	tryrecycleberry BattleScript_RecycleBerriesAlliesIncrement
-	swapattackerwithtarget
-	printstring STRINGID_XFOUNDONEY
-	waitmessage B_WAIT_TIME_LONG
-	swapattackerwithtarget
-BattleScript_RecycleBerriesAlliesIncrement:
-	jumpifbytenotequal gBattlerTarget, gBattlerAttacker, BattleScript_RecycleBerriesAlliesEnd
-	setallytonexttarget BattleScript_RecycleBerriesAlliesLoop
-BattleScript_RecycleBerriesAlliesEnd:
-	restoretarget
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectStonesurge::
-	setstealthrock BattleScript_MoveEnd
-	printfromtable gDmgHazardsStringIds
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-BattleScript_EffectSteelsurge::
-	setsteelsurge BattleScript_MoveEnd
-	printfromtable gDmgHazardsStringIds
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
-
-@@@ END MAX MOVES @@@
 
 BattleScript_DynamaxBegins::
 	end3

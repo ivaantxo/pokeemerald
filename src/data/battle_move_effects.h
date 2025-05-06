@@ -1557,11 +1557,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectHit,
     },
 
-    [EFFECT_DYNAMAX_DOUBLE_DMG] =
-    {
-        .battleScript = BattleScript_EffectHit,
-    },
-
     [EFFECT_DECORATE] =
     {
         .battleScript = BattleScript_EffectDecorate,
@@ -1792,11 +1787,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_CHILLY_RECEPTION] =
     {
         .battleScript = BattleScript_EffectChillyReception,
-    },
-
-    [EFFECT_MAX_MOVE] =
-    {
-        .battleScript = BattleScript_EffectMaxMove,
     },
 
     [EFFECT_GLAIVE_RUSH] =

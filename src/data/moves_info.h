@@ -1,4 +1,3 @@
-#include "battle_dynamax.h"
 #include "battle_anim_scripts.h"
 #include "constants/battle.h"
 #include "constants/battle_move_effects.h"
@@ -13517,7 +13516,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT] =
             "Traps the foe in a fierce\n"
             "wind. May cause confusion."),
         .effect = EFFECT_THUNDER,
-        .power = B_UPDATED_MOVE_DATA >= GEN_6 ? 110 : 120,
+        .power = 100,
         .type = TIPO_VOLADOR,
         .accuracy = 70,
         .pp = 10,
@@ -17153,36 +17152,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT] =
         .battleAnimScript = gBattleAnimMove_DoubleIronBash,
     },
 
-    [MOVE_DYNAMAX_CANNON] =
-    {
-        .name = COMPOUND_STRING("Dynamax Cannon"),
-        .description = COMPOUND_STRING(
-            "Unleashes core energy.\n"
-            "2x against Dynamaxed foes."),
-        .effect = EFFECT_DYNAMAX_DOUBLE_DMG,
-        .power = 100,
-        .type = TIPO_DRAGON,
-        .accuracy = 100,
-        .pp = 5,
-        .target = MOVE_TARGET_SELECTED,
-        .priority = 0,
-        .category = CATEGORIA_ESPECIAL,
-        .mirrorMoveBanned = TRUE,
-        .metronomeBanned = TRUE,
-        .copycatBanned = TRUE,
-        .sleepTalkBanned = TRUE,
-        .instructBanned = TRUE,
-        .mimicBanned = TRUE,
-        .encoreBanned = TRUE,
-        .assistBanned = B_EXTRAPOLATED_MOVE_FLAGS,
-        .parentalBondBanned = TRUE,
-        .contestEffect = CONTEST_EFFECT_USER_MORE_EASILY_STARTLED,
-        .contestCategory = CONTEST_CATEGORY_SMART,
-        .contestComboStarterId = 0,
-        .contestComboMoves = {0},
-        .battleAnimScript = gBattleAnimMove_DynamaxCannon,
-    },
-
     [MOVE_SNIPE_SHOT] =
     {
         .name = COMPOUND_STRING("Disparo certero"),
@@ -20447,7 +20416,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT] =
             .moveEffect = MOVE_EFFECT_SP_ATK_PLUS_1,
             .self = TRUE,
             .onChargeTurnOnly = TRUE,
-        }, SHEER_FORCE_HACK),
+        }),
         .battleAnimScript = gBattleAnimMove_ElectroShot,
     },
 

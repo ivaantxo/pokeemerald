@@ -3461,7 +3461,7 @@ u8 CanLearnTeachableMove(u16 species, u16 move)
                 return FALSE;
             }
         }
-        for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
+        for (i = 0; teachableLearnset[i] != MOVIMIENTO_NO_DISPONIBLE; i++)
         {
             if (teachableLearnset[i] == move)
                 return TRUE;

@@ -652,7 +652,7 @@ static u8 GetEggMoves(struct Pokemon *pokemon, u16 *eggMoves)
     species = GetMonData(pokemon, MON_DATA_SPECIES);
     eggMoveLearnset = GetSpeciesEggMoves(species);
 
-    for (i = 0; eggMoveLearnset[i] != MOVE_UNAVAILABLE; i++)
+    for (i = 0; eggMoveLearnset[i] != MOVIMIENTO_NO_DISPONIBLE; i++)
     {
         eggMoves[i] = eggMoveLearnset[i];
         numEggMoves++;
@@ -670,7 +670,7 @@ u8 GetEggMovesBySpecies(u16 species, u16 *eggMoves)
     numEggMoves = 0;
     eggMoveLearnset = GetSpeciesEggMoves(species);
 
-    for (i = 0; eggMoveLearnset[i] != MOVE_UNAVAILABLE; i++)
+    for (i = 0; eggMoveLearnset[i] != MOVIMIENTO_NO_DISPONIBLE; i++)
     {
         eggMoves[i] = eggMoveLearnset[i];
         numEggMoves++;
@@ -684,7 +684,7 @@ bool8 SpeciesCanLearnEggMove(u16 species, u16 move) //Move search PokedexPlus HG
     u32 i;
     const u16 *eggMoveLearnset = GetSpeciesEggMoves(species);
 
-    for (i = 0; eggMoveLearnset[i] != MOVE_UNAVAILABLE; i++)
+    for (i = 0; eggMoveLearnset[i] != MOVIMIENTO_NO_DISPONIBLE; i++)
     {
         if (eggMoveLearnset[i] == move)
             return TRUE;

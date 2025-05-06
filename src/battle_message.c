@@ -2925,20 +2925,10 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 HANDLE_NICKNAME_STRING_CASE(gBattleScripting.battler)
                 break;
             case B_TXT_CURRENT_MOVE: // current move name
-                if (gBattleMsgDataPtr->currentMove >= MOVES_COUNT
-                 && !IsZMove(gBattleMsgDataPtr->currentMove)
-                 && !IsMaxMove(gBattleMsgDataPtr->currentMove))
-                    toCpy = gTypesInfo[gBattleStruct->stringMoveType].generic;
-                else
-                    toCpy = GetMoveName(gBattleMsgDataPtr->currentMove);
+                toCpy = GetMoveName(gBattleMsgDataPtr->currentMove);
                 break;
             case B_TXT_LAST_MOVE: // originally used move name
-                if (gBattleMsgDataPtr->originallyUsedMove >= MOVES_COUNT
-                 && !IsZMove(gBattleMsgDataPtr->currentMove)
-                 && !IsMaxMove(gBattleMsgDataPtr->currentMove))
-                    toCpy = gTypesInfo[gBattleStruct->stringMoveType].generic;
-                else
-                    toCpy = GetMoveName(gBattleMsgDataPtr->originallyUsedMove);
+                toCpy = GetMoveName(gBattleMsgDataPtr->originallyUsedMove);
                 break;
             case B_TXT_LAST_ITEM: // last used item
                 CopyItemName(gLastUsedItem, text);

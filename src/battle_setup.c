@@ -83,8 +83,6 @@ static void TryUpdateGymLeaderRematchFromTrainer(void);
 static void CB2_GiveStarter(void);
 static void CB2_StartFirstBattle(void);
 static void CB2_EndFirstBattle(void);
-static void SaveChangesToPlayerParty(void);
-static void HandleBattleVariantEndParty(void);
 static void CB2_EndTrainerBattle(void);
 static bool32 IsPlayerDefeated(u32 battleOutcome);
 static void RegisterTrainerInMatchCall(void);
@@ -1276,33 +1274,8 @@ void BattleSetup_StartTrainerBattle_Debug(void)
     ScriptContext_Stop();
 }
 
-static void SaveChangesToPlayerParty(void)
-{
-    u8 i = 0, j = 0;
-    u8 participatedPokemon = VarGet(B_VAR_SKY_BATTLE);
-    for (i = 0; i < PARTY_SIZE; i++)
-    {
-        if ((participatedPokemon >> i & 1) == 1)
-        {
-            gSaveBlockPtr->playerParty[i] = gPlayerParty[j];
-            j++;
-        }
-    }
-}
-
-static void HandleBattleVariantEndParty(void)
-{
-    if (B_FLAG_SKY_BATTLE == 0 || !FlagGet(B_FLAG_SKY_BATTLE))
-        return;
-    SaveChangesToPlayerParty();
-    LoadPlayerParty();
-    FlagClear(B_FLAG_SKY_BATTLE);
-}
-
 static void CB2_EndTrainerBattle(void)
 {
-    HandleBattleVariantEndParty();
-
     if (IsPlayerDefeated(gBattleOutcome) == TRUE)
     {
         if (!NoAliveMonsForPlayer())

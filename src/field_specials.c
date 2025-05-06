@@ -3698,50 +3698,6 @@ u8 Script_TryGainNewFanFromCounter(void)
     return TryGainNewFanFromCounter(gSpecialVar_0x8004);
 }
 
-void TrySkyBattle(void)
-{
-    int i;
-
-    if (B_VAR_SKY_BATTLE == 0 || B_FLAG_SKY_BATTLE == 0)
-    {
-        LockPlayerFieldControls();
-        ScriptContext_SetupScript(Debug_FlagsAndVarNotSetBattleConfigMessage);
-        return;
-    }
-    for (i = 0; i < CalculatePlayerPartyCount(); i++)
-    {
-        struct Pokemon* pokemon = &gPlayerParty[i];
-        if (CanMonParticipateInSkyBattle(pokemon) && GetMonData(pokemon, MON_DATA_HP, NULL) > 0)
-        {
-            PreparePartyForSkyBattle();
-            gSpecialVar_Result = TRUE;
-            return;
-        }
-    }
-    gSpecialVar_Result = FALSE;
-}
-
-void PreparePartyForSkyBattle(void)
-{
-    int i, participatingPokemonSlot = 0;
-    u8 partyCount = CalculatePlayerPartyCount();
-
-    FlagSet(B_FLAG_SKY_BATTLE);
-    SavePlayerParty();
-
-    for (i = 0; i < partyCount; i++)
-    {
-        struct Pokemon* pokemon = &gPlayerParty[i];
-
-        if (CanMonParticipateInSkyBattle(pokemon))
-            participatingPokemonSlot += 1 << i;
-        else
-            ZeroMonData(pokemon);
-    }
-    VarSet(B_VAR_SKY_BATTLE,participatingPokemonSlot);
-    CompactPartySlots();
-}
-
 void GetObjectPosition(u16* xPointer, u16* yPointer, u32 localId, u32 useTemplate)
 {
     u32 objectId;

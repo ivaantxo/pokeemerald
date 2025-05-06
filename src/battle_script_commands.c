@@ -1356,15 +1356,6 @@ static void Cmd_attackcanceler(void)
         }
     }
 
-    // Z-moves and Max Moves bypass protection, but deal reduced damage (factored in AccumulateOtherModifiers)
-    if ((IsZMove(gCurrentMove) || IsMaxMove(gCurrentMove))
-     && IS_BATTLER_PROTECTED(gBattlerTarget))
-    {
-        BattleScriptPush(cmd->nextInstr);
-        gBattlescriptCurrInstr = BattleScript_CouldntFullyProtect;
-        return;
-    }
-
     for (i = 0; i < gBattlersCount; i++)
     {
         if ((gProtectStructs[gBattlerByTurnOrder[i]].stealMove) && gMovesInfo[gCurrentMove].snatchAffected)
@@ -5147,7 +5138,7 @@ static void Cmd_moveend(void)
     u32 endMode, endState;
     u32 originallyUsedMove;
 
-    if (gChosenMove == MOVE_UNAVAILABLE)
+    if (gChosenMove == MOVIMIENTO_NO_DISPONIBLE)
         originallyUsedMove = MOVE_NONE;
     else
         originallyUsedMove = gChosenMove;
@@ -5377,7 +5368,7 @@ static void Cmd_moveend(void)
                 if (gHitMarker & HITMARKER_OBEYS
                  && (HOLD_EFFECT_CHOICE(holdEffectAtk) || GetBattlerAbility(gBattlerAttacker) == ABILITY_GORILLA_TACTICS)
                  && gChosenMove != MOVE_STRUGGLE
-                 && (*choicedMoveAtk == MOVE_NONE || *choicedMoveAtk == MOVE_UNAVAILABLE))
+                 && (*choicedMoveAtk == MOVE_NONE || *choicedMoveAtk == MOVIMIENTO_NO_DISPONIBLE))
                 {
                     if ((gMovesInfo[gChosenMove].effect == EFFECT_BATON_PASS
                      || gMovesInfo[gChosenMove].effect == EFFECT_HEALING_WISH)
@@ -5620,8 +5611,6 @@ static void Cmd_moveend(void)
                 {
                     gLastPrintedMoves[gBattlerAttacker] = gChosenMove;
                     gLastUsedMove = gCurrentMove;
-                    if (IsMaxMove(gCurrentMove))
-                        gBattleStruct->dynamax.lastUsedBaseMove = gBattleStruct->dynamax.baseMoves[gBattlerAttacker];
                 }
             }
             if (!(gAbsentBattlerFlags & (1u << gBattlerAttacker))
@@ -5641,8 +5630,8 @@ static void Cmd_moveend(void)
                 }
                 else
                 {
-                    gLastMoves[gBattlerAttacker] = MOVE_UNAVAILABLE;
-                    gLastResultingMoves[gBattlerAttacker] = MOVE_UNAVAILABLE;
+                    gLastMoves[gBattlerAttacker] = MOVIMIENTO_NO_DISPONIBLE;
+                    gLastResultingMoves[gBattlerAttacker] = MOVIMIENTO_NO_DISPONIBLE;
                     gLastUsedMoveType[gBattlerAttacker] = 0;
                 }
 
@@ -5651,7 +5640,7 @@ static void Cmd_moveend(void)
 
                 if (gHitMarker & HITMARKER_OBEYS && !(gMoveResultFlags & MOVE_RESULT_NO_EFFECT))
                 {
-                    if (gChosenMove == MOVE_UNAVAILABLE)
+                    if (gChosenMove == MOVIMIENTO_NO_DISPONIBLE)
                     {
                         gLastLandedMoves[gBattlerTarget] = gChosenMove;
                     }
@@ -5663,7 +5652,7 @@ static void Cmd_moveend(void)
                 }
                 else
                 {
-                    gLastLandedMoves[gBattlerTarget] = MOVE_UNAVAILABLE;
+                    gLastLandedMoves[gBattlerTarget] = MOVIMIENTO_NO_DISPONIBLE;
                 }
             }
             gBattleScripting.moveendState++;
@@ -7877,7 +7866,7 @@ static bool32 HasAttackerFaintedTarget(void)
         && gBattleStruct->moveTarget[gBattlerAttacker] == gBattlerTarget
         && gBattlerTarget != gBattlerAttacker
         && gCurrentTurnActionNumber == GetBattlerTurnOrderNum(gBattlerAttacker)
-        && (gChosenMove == gChosenMoveByBattler[gBattlerAttacker] || gChosenMove == gBattleMons[gBattlerAttacker].moves[gChosenMovePos] || gChosenMove == GetMaxMove(gBattlerAttacker, gChosenMoveByBattler[gBattlerAttacker])))
+        && (gChosenMove == gChosenMoveByBattler[gBattlerAttacker] || gChosenMove == gBattleMons[gBattlerAttacker].moves[gChosenMovePos]))
         return TRUE;
     else
         return FALSE;
@@ -9223,12 +9212,9 @@ static void Cmd_various(void)
     {
         VARIOUS_ARGS(const u8 *failInstr);
         u16 move = gLastPrintedMoves[gBattlerTarget];
-        if (move == MOVE_NONE || move == MOVE_UNAVAILABLE || MoveHasAdditionalEffectSelf(move, MOVE_EFFECT_RECHARGE)
+        if (move == MOVE_NONE || move == MOVIMIENTO_NO_DISPONIBLE || MoveHasAdditionalEffectSelf(move, MOVE_EFFECT_RECHARGE)
          || gMovesInfo[move].instructBanned
-         || gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect
-         || (GetActiveGimmick(gBattlerTarget) == GIMMICK_DYNAMAX)
-         || IsZMove(move)
-         || IsMaxMove(move))
+         || gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
         {
             gBattlescriptCurrInstr = cmd->failInstr;
         }
@@ -10056,7 +10042,7 @@ static void Cmd_various(void)
 static void TryResetProtectUseCounter(u32 battler)
 {
     u32 lastMove = gLastResultingMoves[battler];
-    if (lastMove == MOVE_UNAVAILABLE
+    if (lastMove == MOVIMIENTO_NO_DISPONIBLE
         || (!gBattleMoveEffects[gMovesInfo[lastMove].effect].usesProtectCounter
           && (B_ALLY_SWITCH_FAIL_CHANCE >= GEN_9 && gMovesInfo[lastMove].effect != EFFECT_ALLY_SWITCH)))
         gDisableStructs[battler].protectUses = 0;
@@ -10265,7 +10251,7 @@ static void Cmd_trymirrormove(void)
         if (i != gBattlerAttacker)
         {
             move = gBattleStruct->lastTakenMoveFrom[gBattlerAttacker][i];
-            if (move != MOVE_NONE && move != MOVE_UNAVAILABLE)
+            if (move != MOVE_NONE && move != MOVIMIENTO_NO_DISPONIBLE)
             {
                 validMoves[validMovesCount] = move;
                 validMovesCount++;
@@ -10274,7 +10260,7 @@ static void Cmd_trymirrormove(void)
     }
 
     move = gBattleStruct->lastTakenMove[gBattlerAttacker];
-    if (move != MOVE_NONE && move != MOVE_UNAVAILABLE)
+    if (move != MOVE_NONE && move != MOVIMIENTO_NO_DISPONIBLE)
     {
         SetMoveForMirrorMove(move);
     }
@@ -11538,7 +11524,7 @@ static void Cmd_transformdataexecution(void)
 {
     CMD_ARGS();
 
-    gChosenMove = MOVE_UNAVAILABLE;
+    gChosenMove = MOVIMIENTO_NO_DISPONIBLE;
     gBattlescriptCurrInstr = cmd->nextInstr;
     if (gBattleMons[gBattlerTarget].status2 & STATUS2_TRANSFORMED
         || gBattleStruct->illusion[gBattlerTarget].on
@@ -11634,7 +11620,7 @@ static void Cmd_mimicattackcopy(void)
     if ((gMovesInfo[gLastMoves[gBattlerTarget]].mimicBanned)
         || (gBattleMons[gBattlerAttacker].status2 & STATUS2_TRANSFORMED)
         || gLastMoves[gBattlerTarget] == MOVE_NONE
-        || gLastMoves[gBattlerTarget] == MOVE_UNAVAILABLE)
+        || gLastMoves[gBattlerTarget] == MOVIMIENTO_NO_DISPONIBLE)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
@@ -11795,26 +11781,15 @@ static void Cmd_trysetencore(void)
 
     s32 i;
 
-    if (IsMaxMove(gLastMoves[gBattlerTarget]) && !(GetActiveGimmick(gBattlerTarget) == GIMMICK_DYNAMAX))
+    for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        for (i = 0; i < MAX_MON_MOVES; i++)
-        {
-            if (gBattleMons[gBattlerTarget].moves[i] == gBattleStruct->dynamax.baseMoves[gBattlerTarget])
-                break;
-        }
-    }
-    else
-    {
-        for (i = 0; i < MAX_MON_MOVES; i++)
-        {
-            if (gBattleMons[gBattlerTarget].moves[i] == gLastMoves[gBattlerTarget])
-                break;
-        }
+        if (gBattleMons[gBattlerTarget].moves[i] == gLastMoves[gBattlerTarget])
+            break;
     }
 
     if ((gMovesInfo[gLastMoves[gBattlerTarget]].encoreBanned)
      || gLastMoves[gBattlerTarget] == MOVE_NONE
-     || gLastMoves[gBattlerTarget] == MOVE_UNAVAILABLE)
+     || gLastMoves[gBattlerTarget] == MOVIMIENTO_NO_DISPONIBLE)
     {
         i = MAX_MON_MOVES;
     }
@@ -11873,7 +11848,7 @@ static void Cmd_settypetorandomresistance(void)
     if (B_UPDATED_CONVERSION_2 < GEN_5)
     {
         if (gLastLandedMoves[gBattlerAttacker] == MOVE_NONE
-         || gLastLandedMoves[gBattlerAttacker] == MOVE_UNAVAILABLE)
+         || gLastLandedMoves[gBattlerAttacker] == MOVIMIENTO_NO_DISPONIBLE)
         {
             gBattlescriptCurrInstr = cmd->failInstr;
         }
@@ -11931,7 +11906,7 @@ static void Cmd_settypetorandomresistance(void)
     else
     {
         if (gLastResultingMoves[gBattlerTarget] == MOVE_NONE
-         || gLastResultingMoves[gBattlerTarget] == MOVE_UNAVAILABLE
+         || gLastResultingMoves[gBattlerTarget] == MOVIMIENTO_NO_DISPONIBLE
          || gLastResultingMoves[gBattlerTarget] == MOVE_STRUGGLE)
         {
             gBattlescriptCurrInstr = cmd->failInstr;
@@ -12002,10 +11977,10 @@ static void Cmd_copymovepermanently(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    gChosenMove = MOVE_UNAVAILABLE;
+    gChosenMove = MOVIMIENTO_NO_DISPONIBLE;
 
     if (!(gBattleMons[gBattlerAttacker].status2 & STATUS2_TRANSFORMED)
-        && gLastPrintedMoves[gBattlerTarget] != MOVE_UNAVAILABLE
+        && gLastPrintedMoves[gBattlerTarget] != MOVIMIENTO_NO_DISPONIBLE
         && !gMovesInfo[gLastPrintedMoves[gBattlerTarget]].sketchBanned)
     {
         s32 i;
@@ -12147,34 +12122,19 @@ static void Cmd_tryspiteppreduce(void)
     CMD_ARGS(const u8 *failInstr);
 
     if (gLastMoves[gBattlerTarget] != MOVE_NONE
-     && gLastMoves[gBattlerTarget] != MOVE_UNAVAILABLE)
+     && gLastMoves[gBattlerTarget] != MOVIMIENTO_NO_DISPONIBLE)
     {
         s32 i;
 
-        // Get move slot to reduce PP.
-        if (IsMaxMove(gLastMoves[gBattlerTarget]))
+        for (i = 0; i < MAX_MON_MOVES; i++)
         {
-            for (i = 0; i < MAX_MON_MOVES; i++)
-            {
-                if (gBattleStruct->dynamax.baseMoves[gBattlerTarget] == gBattleMons[gBattlerTarget].moves[i])
-                    break;
-            }
-        }
-        else
-        {
-            for (i = 0; i < MAX_MON_MOVES; i++)
-            {
-                if (gLastMoves[gBattlerTarget] == gBattleMons[gBattlerTarget].moves[i])
-                    break;
-            }
+            if (gLastMoves[gBattlerTarget] == gBattleMons[gBattlerTarget].moves[i])
+                break;
         }
 
         if (i != MAX_MON_MOVES && gBattleMons[gBattlerTarget].pp[i] > (B_CAN_SPITE_FAIL >= GEN_4 ? 0 : 1))
         {
             s32 ppToDeduct = B_PP_REDUCED_BY_SPITE >= GEN_4 ? 4 : (Random() & 3) + 2;
-            // G-Max Depletion only deducts 2 PP.
-            if (IsMaxMove(gCurrentMove) && gMovesInfo[gCurrentMove].argument == MAX_EFFECT_SPITE)
-                ppToDeduct = 2;
 
             if (gBattleMons[gBattlerTarget].pp[i] < ppToDeduct)
                 ppToDeduct = gBattleMons[gBattlerTarget].pp[i];
@@ -14645,7 +14605,7 @@ void BS_DoStockpileStatChangesWearOff(void)
 
 bool32 IsMoveAffectedByParentalBond(u32 move, u32 battler)
 {
-    if (move != MOVE_NONE && move != MOVE_UNAVAILABLE && move != MOVE_STRUGGLE
+    if (move != MOVE_NONE && move != MOVIMIENTO_NO_DISPONIBLE && move != MOVE_STRUGGLE
         && !gMovesInfo[move].parentalBondBanned
         && gMovesInfo[move].category != CATEGORIA_ESTADO
         && gMovesInfo[move].strikeCount < 2
@@ -15389,7 +15349,7 @@ void BS_TryCopycat(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
 
-    if (gLastUsedMove == MOVE_NONE || gLastUsedMove == MOVE_UNAVAILABLE || gMovesInfo[gLastUsedMove].copycatBanned || IsZMove(gLastUsedMove))
+    if (gLastUsedMove == MOVE_NONE || gLastUsedMove == MOVIMIENTO_NO_DISPONIBLE || gMovesInfo[gLastUsedMove].copycatBanned || IsZMove(gLastUsedMove))
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
@@ -15399,10 +15359,6 @@ void BS_TryCopycat(void)
         {
             gBattleStruct->zmove.baseMoves[gBattlerAttacker] = gLastUsedMove;
             gCalledMove = GetTypeBasedZMove(gLastUsedMove);
-        }
-        else if (IsMaxMove(gLastUsedMove))
-        {
-            gCalledMove = gBattleStruct->dynamax.lastUsedBaseMove;
         }
         else
         {

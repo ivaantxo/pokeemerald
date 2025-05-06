@@ -1995,7 +1995,6 @@ const struct BattleAnimBackground gBattleAnimBackgroundTable[] =
     [BG_MAX_LIGHTNING]             = {gBattleAnimBgImage_MaxLightning,            gBattleAnimBgPalette_MaxLightning,            gBattleAnimBgTilemap_MaxLightning},
     [BG_GARBAGE_FALLS]             = {gBattleAnimBgImage_Waterfall,               gBattleAnimBgPalette_GarbageFalls,            gBattleAnimBgTilemap_Waterfall},
     [BG_HYPER_BEAM]                = {gBattleAnimBgImage_HydroCannon,             gBattleAnimBgPalette_HyperBeam,               gBattleAnimBgTilemap_HydroCannon},
-    [BG_DYNAMAX_CANNON]            = {gBattleAnimBgImage_HydroCannon,             gBattleAnimBgPalette_DynamaxCannon,           gBattleAnimBgTilemap_HydroCannon},
     [BG_AURA_SPHERE]               = {gBattleAnimBgImage_FocusBlast,              gBattleAnimBgPalette_AuraSphere,              gBattleAnimBgTilemap_FocusBlast},
     [BG_STEEL_BEAM_OPPONENT]       = {gBattleAnimBgImage_Highspeed,               gBattleAnimBgPalette_SteelBeam,               gBattleAnimBgTilemap_HighspeedOpponent},
     [BG_STEEL_BEAM_PLAYER]         = {gBattleAnimBgImage_Highspeed,               gBattleAnimBgPalette_SteelBeam,               gBattleAnimBgTilemap_HighspeedPlayer},

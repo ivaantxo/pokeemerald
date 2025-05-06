@@ -5402,16 +5402,6 @@ static void BufferMonStatsToTaskData(struct Pokemon *mon, s16 *data)
     data[3] = GetMonData(mon, MON_DATA_SPEED);
 }
 
-void Task_DynamaxCandy(u8 taskId)
-{
-
-}
-
-void ItemUseCB_DynamaxCandy(u8 taskId, TaskFunc task)
-{
-
-}
-
 #define tUsedOnSlot   data[0]
 #define tHadEffect    data[1]
 #define tLastSlotUsed data[2]

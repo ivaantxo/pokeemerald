@@ -103,31 +103,19 @@ struct FollowerMsgInfo {
 
 struct FollowerMessagePool
 {
-    const struct FollowerMsgInfo * messages;
-    const u8 * script;
+    const struct FollowerMsgInfo *messages;
+    const u8 *script;
     u16 length;
 };
 
-struct TypeInfo
+struct TypeInfo //por hacer
 {
     u8 name[TYPE_NAME_LENGTH + 1];
-    u8 generic[21];
     u8 palette;
-    u16 zMove;
-    u16 maxMove;
-    u16 damageCategory:2;    // Used for B_PHYSICAL_SPECIAL_SPLIT <= GEN_3
-    u16 useSecondTypeIconPalette:1;
-    u16 isSpecialCaseType:1;
-    u16 padding:12;
     const u32 *const paletteTMHM;
     //u16 enhanceItem;
     //u16 berry;
     //u16 gem;
-    //u16 plate;
-    //u16 memory;
-    //u16 zCrystal;
-    //u16 teraShard;
-    //u16 arceusForm;
 };
 
 // Egg palette tables
