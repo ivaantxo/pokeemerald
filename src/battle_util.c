@@ -7,8 +7,6 @@
 #include "battle_controllers.h"
 #include "battle_interface.h"
 #include "battle_setup.h"
-#include "battle_z_move.h"
-#include "battle_gimmick.h"
 #include "party_menu.h"
 #include "pokemon.h"
 #include "international_string_util.h"
@@ -171,7 +169,7 @@ void HandleAction_UseMove(void)
         gCurrentMove = gChosenMove = gLockedMoves[gBattlerAttacker];
     }
     // encore forces you to use the same move
-    else if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE && gDisableStructs[gBattlerAttacker].encoredMove != MOVE_NONE
+    else if (gDisableStructs[gBattlerAttacker].encoredMove != MOVE_NONE
              && gDisableStructs[gBattlerAttacker].encoredMove == gBattleMons[gBattlerAttacker].moves[gDisableStructs[gBattlerAttacker].encoredMovePos])
     {
         gCurrentMove = gChosenMove = gDisableStructs[gBattlerAttacker].encoredMove;
@@ -179,8 +177,8 @@ void HandleAction_UseMove(void)
         *(gBattleStruct->moveTarget + gBattlerAttacker) = GetMoveTarget(gCurrentMove, NO_TARGET_OVERRIDE);
     }
     // check if the encored move wasn't overwritten
-    else if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE && gDisableStructs[gBattlerAttacker].encoredMove != MOVE_NONE
-          && gDisableStructs[gBattlerAttacker].encoredMove != gBattleMons[gBattlerAttacker].moves[gDisableStructs[gBattlerAttacker].encoredMovePos])
+    else if (gDisableStructs[gBattlerAttacker].encoredMove != MOVE_NONE
+             && gDisableStructs[gBattlerAttacker].encoredMove != gBattleMons[gBattlerAttacker].moves[gDisableStructs[gBattlerAttacker].encoredMovePos])
     {
         gCurrMovePos = gChosenMovePos = gDisableStructs[gBattlerAttacker].encoredMovePos;
         gCurrentMove = gChosenMove = gBattleMons[gBattlerAttacker].moves[gCurrMovePos];
@@ -210,13 +208,6 @@ void HandleAction_UseMove(void)
     // Set dynamic move type.
     SetTypeBeforeUsingMove(gChosenMove, gBattlerAttacker);
     moveType = GetMoveType(gCurrentMove);
-
-    // check Z-Move used
-    if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE && !IS_MOVE_STATUS(gCurrentMove) && !IsZMove(gCurrentMove))
-    {
-        gBattleStruct->categoryOverride = gMovesInfo[gCurrentMove].category;
-        gCurrentMove = gChosenMove = GetUsableZMove(gBattlerAttacker, gCurrentMove);
-    }
 
     moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
 
@@ -362,8 +353,6 @@ void HandleAction_Switch(void)
     if (gBattleResults.playerSwitchesCounter < 255)
         gBattleResults.playerSwitchesCounter++;
 
-    if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_DYNAMAX)
-        UndoDynamax(gBattlerAttacker); // this is better performed here instead of SwitchInClearSetData
     TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_SWITCH);
 }
 
@@ -2683,34 +2672,6 @@ u8 DoBattlerEndTurnEffects(void)
             }
             gBattleStruct->turnEffectsTracker++;
             break;
-        case ENDTURN_DYNAMAX:
-            if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX
-                && --gBattleStruct->dynamax.dynamaxTurns[battler] == 0)
-            {
-                gBattleScripting.battler = battler;
-                UndoDynamax(battler);
-                BattleScriptExecute(BattleScript_DynamaxEnds);
-                effect++;
-            }
-            gBattleStruct->turnEffectsTracker++;
-            break;
-        case ENDTURN_GMAX_MOVE_RESIDUAL_DAMAGE:
-            {
-                u32 side = GetBattlerSide(gBattlerAttacker);
-                if (gSideTimers[side].damageNonTypesTimer
-                 && !IS_BATTLER_OF_TYPE(gBattlerAttacker, gSideTimers[side].damageNonTypesType)
-                 && IsBattlerAlive(gBattlerAttacker)
-                 && GetBattlerAbility(gBattlerAttacker) != ABILITY_MAGIC_GUARD)
-                {
-                    gBattleScripting.battler = battler;
-                    gBattleMoveDamage = GetNonDynamaxMaxHP(battler) / 6;
-                    ChooseDamageNonTypesString(gSideTimers[side].damageNonTypesType);
-                    BattleScriptExecute(BattleScript_DamageNonTypesContinues);
-                    effect++;
-                }
-                gBattleStruct->turnEffectsTracker++;
-                break;
-            }
         case ENDTURN_SEA_OF_FIRE_DAMAGE:
             if (IsBattlerAlive(battler) && gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SEA_OF_FIRE)
             {
@@ -3059,7 +3020,7 @@ u8 AtkCanceller_UnableToUseMove(u32 moveType)
             gBattleStruct->atkCancellerTracker++;
             break;
         case CANCELLER_DISABLED: // disabled move
-            if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE && gDisableStructs[gBattlerAttacker].disabledMove == gCurrentMove && gDisableStructs[gBattlerAttacker].disabledMove != MOVE_NONE)
+            if (gDisableStructs[gBattlerAttacker].disabledMove == gCurrentMove && gDisableStructs[gBattlerAttacker].disabledMove != MOVE_NONE)
             {
                 gProtectStructs[gBattlerAttacker].usedDisabledMove = TRUE;
                 gBattleScripting.battler = gBattlerAttacker;
@@ -3071,7 +3032,7 @@ u8 AtkCanceller_UnableToUseMove(u32 moveType)
             gBattleStruct->atkCancellerTracker++;
             break;
         case CANCELLER_HEAL_BLOCKED:
-            if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE && gStatuses3[gBattlerAttacker] & STATUS3_HEAL_BLOCK && IsHealBlockPreventingMove(gBattlerAttacker, gCurrentMove))
+            if (gStatuses3[gBattlerAttacker] & STATUS3_HEAL_BLOCK && IsHealBlockPreventingMove(gBattlerAttacker, gCurrentMove))
             {
                 gProtectStructs[gBattlerAttacker].usedHealBlockedMove = TRUE;
                 gBattleScripting.battler = gBattlerAttacker;
@@ -3095,7 +3056,7 @@ u8 AtkCanceller_UnableToUseMove(u32 moveType)
             gBattleStruct->atkCancellerTracker++;
             break;
         case CANCELLER_TAUNTED: // taunt
-            if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE && gDisableStructs[gBattlerAttacker].tauntTimer && IS_MOVE_STATUS(gCurrentMove))
+            if (gDisableStructs[gBattlerAttacker].tauntTimer && IS_MOVE_STATUS(gCurrentMove))
             {
                 gProtectStructs[gBattlerAttacker].usedTauntedMove = TRUE;
                 CancelMultiTurnMoves(gBattlerAttacker);
@@ -3106,7 +3067,7 @@ u8 AtkCanceller_UnableToUseMove(u32 moveType)
             gBattleStruct->atkCancellerTracker++;
             break;
         case CANCELLER_IMPRISONED: // imprisoned
-            if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE && GetImprisonedMovesCount(gBattlerAttacker, gCurrentMove))
+            if (GetImprisonedMovesCount(gBattlerAttacker, gCurrentMove))
             {
                 gProtectStructs[gBattlerAttacker].usedImprisonedMove = TRUE;
                 CancelMultiTurnMoves(gBattlerAttacker);
@@ -3274,10 +3235,10 @@ u8 AtkCanceller_UnableToUseMove(u32 moveType)
                     && (B_POWDER_RAIN < GEN_7 || !IsBattlerWeatherAffected(gBattlerAttacker, B_WEATHER_RAIN_PRIMAL)))
                         gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
 
-                    if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE
-                     || gBattleStruct->obedienceResult != OBEYS
-                     || HasTrainerUsedGimmick(gBattlerAttacker, GIMMICK_Z_MOVE))
+                    if (gBattleStruct->obedienceResult != OBEYS)
+                    {
                         gBattlescriptCurrInstr = BattleScript_MoveUsedPowder;
+                    }
                     gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
                     effect = 1;
                 }
@@ -3285,52 +3246,12 @@ u8 AtkCanceller_UnableToUseMove(u32 moveType)
             gBattleStruct->atkCancellerTracker++;
             break;
         case CANCELLER_THROAT_CHOP:
-            if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE && gDisableStructs[gBattlerAttacker].throatChopTimer && gMovesInfo[gCurrentMove].soundMove)
+            if (gDisableStructs[gBattlerAttacker].throatChopTimer && gMovesInfo[gCurrentMove].soundMove)
             {
                 gProtectStructs[gBattlerAttacker].usedThroatChopPreventedMove = TRUE;
                 CancelMultiTurnMoves(gBattlerAttacker);
                 gBattlescriptCurrInstr = BattleScript_MoveUsedIsThroatChopPrevented;
                 gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
-                effect = 1;
-            }
-            gBattleStruct->atkCancellerTracker++;
-            break;
-        case CANCELLER_Z_MOVES:
-            if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE
-             && gBattleStruct->obedienceResult == OBEYS)
-            {
-                // For Z-Mirror Move, so it doesn't play the animation twice.
-                bool32 alreadyUsed = HasTrainerUsedGimmick(gBattlerAttacker, GIMMICK_Z_MOVE);
-
-                // attacker has a queued z move
-                RecordItemEffectBattle(gBattlerAttacker, HOLD_EFFECT_Z_CRYSTAL);
-                SetGimmickAsActivated(gBattlerAttacker, GIMMICK_Z_MOVE);
-
-                gBattleScripting.battler = gBattlerAttacker;
-                if (gProtectStructs[gBattlerAttacker].powderSelfDmg)
-                {
-                    if (!alreadyUsed)
-                    {
-                        BattleScriptPushCursor();
-                        gBattlescriptCurrInstr = BattleScript_ZMoveActivatePowder;
-                    }
-                }
-                else if (gMovesInfo[gCurrentMove].category == CATEGORIA_ESTADO)
-                {
-                    if (!alreadyUsed)
-                    {
-                        BattleScriptPushCursor();
-                        gBattlescriptCurrInstr = BattleScript_ZMoveActivateStatus;
-                    }
-                }
-                else
-                {
-                    if (!alreadyUsed)
-                    {
-                        BattleScriptPushCursor();
-                        gBattlescriptCurrInstr = BattleScript_ZMoveActivateDamaging;
-                    }
-                }
                 effect = 1;
             }
             gBattleStruct->atkCancellerTracker++;
@@ -5175,7 +5096,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && IsBattlerAlive(gBattlerAttacker)
              && !IsAbilityOnSide(gBattlerAttacker, ABILITY_AROMA_VEIL)
              && gBattleMons[gBattlerAttacker].pp[gChosenMovePos] != 0
-             && !(GetActiveGimmick(gBattlerAttacker) == GIMMICK_DYNAMAX) // TODO: Max Moves don't make contact, useless?
              && RandomPercentage(RNG_CURSED_BODY, 50))
             {
                 gDisableStructs[gBattlerAttacker].disabledMove = gChosenMove;
@@ -5218,7 +5138,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && TARGET_TURN_DAMAGED
              && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_PROTECTIVE_PADS
              && IsMoveMakingContact(move, gBattlerAttacker)
-             && !(GetActiveGimmick(gBattlerTarget) == GIMMICK_DYNAMAX)
              && !gAbilitiesInfo[gBattleMons[gBattlerAttacker].ability].cantBeSwapped)
             {
                 if (GetBattlerHoldEffect(gBattlerAttacker, TRUE) == HOLD_EFFECT_ABILITY_SHIELD)
@@ -8421,9 +8340,6 @@ static inline u32 CalcMoveBasePower(struct DamageCalculationData *damageCalcData
     u32 basePower = gMovesInfo[move].power;
     u32 weight, hpFraction, speed;
 
-    if (GetActiveGimmick(battlerAtk) == GIMMICK_Z_MOVE)
-        return GetZMovePower(gBattleStruct->zmove.baseMoves[battlerAtk]);
-
     switch (gMovesInfo[move].effect)
     {
     case EFFECT_PLEDGE:
@@ -8596,10 +8512,6 @@ static inline u32 CalcMoveBasePower(struct DamageCalculationData *damageCalcData
     case EFFECT_EXPLOSION:
         if (move == MOVE_MISTY_EXPLOSION && gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN && IsBattlerGrounded(battlerAtk))
             basePower = uq4_12_multiply(basePower, UQ_4_12(1.5));
-        break;
-    case EFFECT_DYNAMAX_DOUBLE_DMG:
-        if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
-            basePower *= 2;
         break;
     case EFFECT_HIDDEN_POWER:
         break;
@@ -9272,11 +9184,11 @@ static inline u32 CalcAttackStat(struct DamageCalculationData *damageCalcData, u
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.25));
         break;
     case HOLD_EFFECT_CHOICE_BAND:
-        if (IS_MOVE_PHYSICAL(move) && GetActiveGimmick(battlerAtk) != GIMMICK_DYNAMAX)
+        if (IS_MOVE_PHYSICAL(move))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
     case HOLD_EFFECT_CHOICE_SPECS:
-        if (IS_MOVE_SPECIAL(move) && GetActiveGimmick(battlerAtk) != GIMMICK_DYNAMAX)
+        if (IS_MOVE_SPECIAL(move))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
     }
@@ -10873,9 +10785,6 @@ bool32 CanTargetBattler(u32 battlerAtk, u32 battlerDef, u16 move)
       && GetBattlerSide(battlerAtk) == GetBattlerSide(battlerDef)
       && gStatuses3[battlerAtk] & STATUS3_HEAL_BLOCK)
         return FALSE;   // Pokémon affected by Heal Block cannot target allies with Pollen Puff
-    if ((GetActiveGimmick(battlerAtk) == GIMMICK_DYNAMAX || IsGimmickSelected(battlerAtk, GIMMICK_DYNAMAX))
-      && GetBattlerSide(battlerAtk) == GetBattlerSide(battlerDef))
-        return FALSE;
     return TRUE;
 }
 
@@ -10912,8 +10821,6 @@ void CopyMonAbilityAndTypesToBattleMon(u32 battler, struct Pokemon *mon)
 void RecalcBattlerStats(u32 battler, struct Pokemon *mon)
 {
     CalculateMonStats(mon);
-    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && gChosenActionByBattler[battler] != B_ACTION_SWITCH)
-        ApplyDynamaxHPMultiplier(battler, mon);
     CopyMonLevelAndBaseStatsToBattleMon(battler, mon);
     CopyMonAbilityAndTypesToBattleMon(battler, mon);
 }
@@ -11108,8 +11015,6 @@ u8 GetBattlerType(u32 battler, u8 typeIndex)
 void RemoveBattlerType(u32 battler, u8 type)
 {
     u32 i;
-    if (GetActiveGimmick(battler) == GIMMICK_TERA) // don't remove type if Terastallized
-        return;
     for (i = 0; i < 3; i++)
     {
         if (*(u8 *)(&gBattleMons[battler].types[0] + i) == type)

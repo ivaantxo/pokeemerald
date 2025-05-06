@@ -1919,7 +1919,6 @@ const struct Item gItemsInfo[] =
         .name = _("Exp. Candy XS"),
         .pluralName = _("Exp. Candies XS"),
         .price = 20,
-        .holdEffectParam = EXP_100,
         .description = COMPOUND_STRING(
             "Gives a very small\n"
             "amount of Exp. to\n"
@@ -1938,7 +1937,6 @@ const struct Item gItemsInfo[] =
         .name = _("Exp. Candy S"),
         .pluralName = _("Exp. Candies S"),
         .price = 240,
-        .holdEffectParam = EXP_800,
         .description = COMPOUND_STRING(
             "Gives a small\n"
             "amount of Exp. to\n"
@@ -1957,7 +1955,6 @@ const struct Item gItemsInfo[] =
         .name = _("Exp. Candy M"),
         .pluralName = _("Exp. Candies M"),
         .price = 1000,
-        .holdEffectParam = EXP_3000,
         .description = COMPOUND_STRING(
             "Gives a moderate\n"
             "amount of Exp. to\n"
@@ -1976,7 +1973,6 @@ const struct Item gItemsInfo[] =
         .name = _("Exp. Candy L"),
         .pluralName = _("Exp. Candies L"),
         .price = 3000,
-        .holdEffectParam = EXP_10000,
         .description = COMPOUND_STRING(
             "Gives a large\n"
             "amount of Exp. to\n"
@@ -1995,7 +1991,6 @@ const struct Item gItemsInfo[] =
         .name = _("Exp. Candy XL"),
         .pluralName = _("Exp. Candies XL"),
         .price = 10000,
-        .holdEffectParam = EXP_30000,
         .description = COMPOUND_STRING(
             "Gives a very large\n"
             "amount of Exp. to\n"
@@ -12070,40 +12065,6 @@ const struct Item gItemsInfo[] =
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_ReinsOfUnity,
         .iconPalette = gItemIconPalette_ReinsOfUnity,
-    },
-
-// Battle Mechanic Key Items
-
-    [ITEM_MEGA_RING] =
-    {
-        .name = _("Mega Ring"),
-        .price = 0,
-        .importance = 1,
-        .description = COMPOUND_STRING(
-            "Enables {PKMN} holding\n"
-            "their Mega Stone to\n"
-            "Mega Evolve."),
-        .pocket = POCKET_KEY_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_MegaRing,
-        .iconPalette = gItemIconPalette_MegaRing,
-    },
-
-    [ITEM_Z_POWER_RING] =
-    {
-        .name = _("Z-Power Ring"),
-        .price = 0,
-        .importance = 1,
-        .description = COMPOUND_STRING(
-            "A strange ring\n"
-            "that enables\n"
-            "Z-Move usage."),
-        .pocket = POCKET_KEY_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_ZPowerRing,
-        .iconPalette = gItemIconPalette_ZPowerRing,
     },
 
 // Misc. Key Items

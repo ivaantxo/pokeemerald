@@ -81,19 +81,12 @@ enum {
     BALL_TRAINER_BLOCK,
 };
 
-enum {
-    LINK_STANDBY_MSG_STOP_BOUNCE,
-    LINK_STANDBY_STOP_BOUNCE_ONLY,
-    LINK_STANDBY_MSG_ONLY,
-};
-
 #define INSTANT_HP_BAR_DROP     0x7FFF
 
 #define PARTY_SUMM_SKIP_DRAW_DELAY (1 << 7)
 
 // Special return values in gBattleBufferB from Battle Controller functions.
 #define RET_VALUE_LEVELED_UP   11
-#define RET_GIMMICK            (1 << 7)
 
 struct HpAndStatus
 {
@@ -166,7 +159,6 @@ enum
     CONTROLLER_ENDBOUNCE,
     CONTROLLER_SPRITEINVISIBILITY,
     CONTROLLER_BATTLEANIMATION,
-    CONTROLLER_LINKSTANDBYMSG,
     CONTROLLER_RESETACTIONMOVESELECTION,
     CONTROLLER_DEBUGMENU,
     /*new controllers should go here*/
@@ -224,7 +216,6 @@ void BtlController_EmitHidePartyStatusSummary(u32 battler, u32 bufferId);
 void BtlController_EmitEndBounceEffect(u32 battler, u32 bufferId);
 void BtlController_EmitSpriteInvisibility(u32 battler, u32 bufferId, bool8 isInvisible);
 void BtlController_EmitBattleAnimation(u32 battler, u32 bufferId, u8 animationId, struct DisableStruct* disableStructPtr, u16 argument);
-void BtlController_EmitLinkStandbyMsg(u32 battler, u32 bufferId, u8 mode, bool32 record);
 void BtlController_EmitResetActionMoveSelection(u32 battler, u32 bufferId, u8 caseId);
 void BtlController_EmitDebugMenu(u32 battler, u32 bufferId);
 

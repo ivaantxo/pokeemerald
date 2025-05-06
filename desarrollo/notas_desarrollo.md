@@ -93,3 +93,6 @@ porytiles compile-primary -Wall -o /Users/ivanmartinez/Desktop/pokeemerald/data/
 paletas: (\d+) (\d+) (\d+) \d+ --> $1 $2 $3
 
 //falta terminar lista de macros (scrcmd...) y terminar strings, después comprobar que todo va bien, y añadir cambios de rama principal.
+
+Acero neutro Acero, Acero x1 Fuego, Hielo resiste Tierra
+//MarkBattlerForControllerExec(battlerOpposite);

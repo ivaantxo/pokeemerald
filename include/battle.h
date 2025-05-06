@@ -13,7 +13,6 @@
 #include "battle_bg.h"
 #include "pokeball.h"
 #include "battle_debug.h"
-#include "battle_gimmick.h"
 #include "random.h" // for rng_value_t
 
 // Helper for accessing command arguments and advancing gBattlescriptCurrInstr.
@@ -440,27 +439,26 @@ struct BattleResources
 
 struct BattleResults
 {
-    u8 playerFaintCounter;    // 0x0
-    u8 opponentFaintCounter;  // 0x1
-    u8 playerSwitchesCounter; // 0x2
-    u8 numHealingItemsUsed;   // 0x3
-    u8 numRevivesUsed;        // 0x4
-    u8 playerMonWasDamaged:1; // 0x5
-    u8 caughtMonBall:4;       // 0x5
-    u8 shinyWildMon:1;        // 0x5
-    u16 playerMon1Species;    // 0x6
-    u8 playerMon1Name[POKEMON_NAME_LENGTH + 1];    // 0x8
-    u8 battleTurnCounter;     // 0x13
-    u8 playerMon2Name[POKEMON_NAME_LENGTH + 1];    // 0x14
-    u8 pokeblockThrows;       // 0x1F
-    u16 lastOpponentSpecies;  // 0x20
-    u16 lastUsedMovePlayer;   // 0x22
-    u16 lastUsedMoveOpponent; // 0x24
-    u16 playerMon2Species;    // 0x26
-    u16 caughtMonSpecies;     // 0x28
-    u8 caughtMonNick[POKEMON_NAME_LENGTH + 1];     // 0x2A
-    u8 filler35;           // 0x35
-    u8 catchAttempts[POKEBALL_COUNT];     // 0x36
+    u8 playerFaintCounter;
+    u8 opponentFaintCounter;
+    u8 playerSwitchesCounter;
+    u8 numHealingItemsUsed;
+    u8 numRevivesUsed;
+    u8 playerMonWasDamaged:1;
+    u8 caughtMonBall:4;
+    u8 shinyWildMon:1;
+    u16 playerMon1Species;
+    u8 playerMon1Name[POKEMON_NAME_LENGTH + 1];
+    u8 battleTurnCounter;
+    u8 playerMon2Name[POKEMON_NAME_LENGTH + 1];
+    u8 pokeblockThrows;
+    u16 lastOpponentSpecies;
+    u16 lastUsedMovePlayer;
+    u16 lastUsedMoveOpponent;
+    u16 playerMon2Species;
+    u16 caughtMonSpecies;
+    u8 caughtMonNick[POKEMON_NAME_LENGTH + 1];
+    u8 catchAttempts[POKEBALL_COUNT];
 };
 
 struct Illusion
@@ -470,26 +468,6 @@ struct Illusion
     u8 broken;
     u8 partyId;
     struct Pokemon *mon;
-};
-
-struct ZMoveData
-{
-    u8 viable:1;   // current move can become a z move
-    u8 viewing:1;  // if player is viewing the z move name instead of regular moves
-    u8 healReplacement:6;
-    u8 possibleZMoves[MAX_BATTLERS_COUNT];
-    u16 baseMoves[MAX_BATTLERS_COUNT];
-};
-
-struct BattleGimmickData
-{
-    u8 usableGimmick[MAX_BATTLERS_COUNT];                // first usable gimmick that can be selected for each battler
-    bool8 playerSelect;                                  // used to toggle trigger and update battle UI
-    u8 triggerSpriteId;
-    u8 indicatorSpriteId[MAX_BATTLERS_COUNT];
-    u8 toActivate;                                       // stores whether a battler should transform at start of turn as bitfield
-    u8 activeGimmick[NUM_BATTLE_SIDES][PARTY_SIZE];      // stores the active gimmick for each party member
-    bool8 activated[MAX_BATTLERS_COUNT][GIMMICKS_COUNT]; // stores whether a trainer has used gimmick
 };
 
 struct LostItem
@@ -622,8 +600,6 @@ struct BattleStruct
     bool8 ateBoost[MAX_BATTLERS_COUNT];
     u8 activeAbilityPopUps; // as bits for each battler
     u8 abilityPopUpSpriteIds[MAX_BATTLERS_COUNT][2];    // two per battler
-    struct ZMoveData zmove;
-    struct BattleGimmickData gimmick;
     const u8 *trainerSlideMsg;
     enum EstadosIntroBatalla estadoIntro:8;
     u8 ateBerry[2]; // array id determined by side, each party pokemon as bit

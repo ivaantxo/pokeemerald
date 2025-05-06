@@ -1751,17 +1751,6 @@ const u32 gItemIconPalette_NLunarizer[] = INCBIN_U32("graphics/items/icon_palett
 const u32 gItemIcon_ReinsOfUnity[] = INCBIN_U32("graphics/items/icons/reins_of_unity.4bpp.lz");
 const u32 gItemIconPalette_ReinsOfUnity[] = INCBIN_U32("graphics/items/icon_palettes/reins_of_unity.gbapal.lz");
 
-// Battle Mechanic Key Items
-
-const u32 gItemIcon_MegaRing[] = INCBIN_U32("graphics/items/icons/mega_ring.4bpp.lz");
-const u32 gItemIconPalette_MegaRing[] = INCBIN_U32("graphics/items/icon_palettes/mega_ring.gbapal.lz");
-
-const u32 gItemIcon_ZPowerRing[] = INCBIN_U32("graphics/items/icons/z_power_ring.4bpp.lz");
-const u32 gItemIconPalette_ZPowerRing[] = INCBIN_U32("graphics/items/icon_palettes/z_power_ring.gbapal.lz");
-
-const u32 gItemIcon_ZRing[] = INCBIN_U32("graphics/items/icons/z_ring.4bpp.lz"); // Remove
-const u32 gItemIconPalette_ZRing[] = INCBIN_U32("graphics/items/icon_palettes/z_ring.gbapal.lz"); // Remove
-
 // Misc. Key Items
 
 const u32 gItemIcon_Bicycle[] = INCBIN_U32("graphics/items/icons/bicycle.4bpp.lz");

@@ -7,25 +7,6 @@ Route123_BerryMastersHouse_OnTransition:
 	end
 
 Route123_BerryMastersHouse_EventScript_BerryMaster::
-	lock
-	faceplayer
-	dotimebasedevents
-	goto_if_set FLAG_DAILY_BERRY_MASTER_RECEIVED_BERRY, Route123_BerryMastersHouse_EventScript_ReceivedBerryToday
-	msgbox Route123_BerryMastersHouse_Text_YoureDeservingOfBerry, MSGBOX_DEFAULT
-	random NUM_BERRY_MASTER_BERRIES
-	addvar VAR_RESULT, NUM_BERRY_MASTER_BERRIES_SKIPPED
-	addvar VAR_RESULT, FIRST_BERRY_INDEX
-	giveitem VAR_RESULT
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
-	setflag FLAG_DAILY_BERRY_MASTER_RECEIVED_BERRY
-	msgbox Route123_BerryMastersHouse_Text_WhyBeStingyTakeAnother, MSGBOX_DEFAULT
-	random NUM_BERRY_MASTER_BERRIES
-	addvar VAR_RESULT, NUM_BERRY_MASTER_BERRIES_SKIPPED
-	addvar VAR_RESULT, FIRST_BERRY_INDEX
-	giveitem VAR_RESULT
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
-	msgbox Route123_BerryMastersHouse_Text_VisitPrettyPetalFlowerShop, MSGBOX_DEFAULT
-	release
 	end
 
 Route123_BerryMastersHouse_EventScript_ReceivedBerryToday::
@@ -63,13 +44,6 @@ Route123_BerryMastersHouse_EventScript_GavePhrase::
 	end
 
 Route123_BerryMastersHouse_EventScript_GiveNormalBerry::
-	msgbox Route123_BerryMastersHouse_Text_GoodSayingTakeThis, MSGBOX_DEFAULT
-	random NUM_BERRY_MASTER_WIFE_BERRIES
-	addvar VAR_RESULT, FIRST_BERRY_INDEX
-	giveitem VAR_RESULT
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
-	goto Route123_BerryMastersHouse_EventScript_GaveBerry
-	release
 	end
 
 Route123_BerryMastersHouse_EventScript_GiveSpelonBerry::

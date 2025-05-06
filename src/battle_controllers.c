@@ -618,17 +618,6 @@ void BtlController_EmitBattleAnimation(u32 battler, u32 bufferId, u8 animationId
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 4 + sizeof(struct DisableStruct));
 }
 
-// mode is a LINK_STANDBY_* constant
-void BtlController_EmitLinkStandbyMsg(u32 battler, u32 bufferId, u8 mode, bool32 record)
-{
-    gBattleResources->transferBuffer[0] = CONTROLLER_LINKSTANDBYMSG;
-    gBattleResources->transferBuffer[1] = mode;
-
-    gBattleResources->transferBuffer[3] = gBattleResources->transferBuffer[2] = 0;
-
-    PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, gBattleResources->transferBuffer[2] + 4);
-}
-
 void BtlController_EmitResetActionMoveSelection(u32 battler, u32 bufferId, u8 caseId)
 {
     gBattleResources->transferBuffer[0] = CONTROLLER_RESETACTIONMOVESELECTION;

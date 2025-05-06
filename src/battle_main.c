@@ -2241,7 +2241,6 @@ enum
     STATE_BEFORE_ACTION_CHOSEN,
     STATE_WAIT_ACTION_CHOSEN,
     STATE_WAIT_ACTION_CASE_CHOSEN,
-    STATE_WAIT_ACTION_CONFIRMED_STANDBY,
     STATE_WAIT_ACTION_CONFIRMED,
     STATE_SELECTION_SCRIPT,
     STATE_WAIT_SET_BEFORE_ACTION,
@@ -2298,7 +2297,7 @@ static void HandleTurnActionSelectionState(void)
                         || gBattleMons[battler].status2 & STATUS2_RECHARGE)
                     {
                         gChosenActionByBattler[battler] = B_ACTION_USE_MOVE;
-                        gBattleCommunication[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
+                        gBattleCommunication[battler] = STATE_WAIT_ACTION_CONFIRMED;
                     }
                     else
                     {
@@ -2322,7 +2321,7 @@ static void HandleTurnActionSelectionState(void)
                     {
                         gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
                         *(gBattleStruct->selectionScriptFinished + battler) = FALSE;
-                        *(gBattleStruct->stateIdAfterSelScript + battler) = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
+                        *(gBattleStruct->stateIdAfterSelScript + battler) = STATE_WAIT_ACTION_CONFIRMED;
                         *(gBattleStruct->moveTarget + battler) = gBattleResources->bufferB[battler][3];
                         return;
                     }
@@ -2330,7 +2329,7 @@ static void HandleTurnActionSelectionState(void)
                     {
                         gChosenMoveByBattler[battler] = gDisableStructs[battler].encoredMove;
                         *(gBattleStruct->chosenMovePositions + battler) = gDisableStructs[battler].encoredMovePos;
-                        gBattleCommunication[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
+                        gBattleCommunication[battler] = STATE_WAIT_ACTION_CONFIRMED;
                         return;
                     }
                     else
@@ -2558,32 +2557,6 @@ static void HandleTurnActionSelectionState(void)
                 }
             }
             break;
-        case STATE_WAIT_ACTION_CONFIRMED_STANDBY:
-            if (!(gBattleControllerExecFlags & ((1u << battler)
-                                                | (0xF << 28)
-                                                | (1u << (battler + 4))
-                                                | (1u << (battler + 8))
-                                                | (1u << (battler + 12)))))
-            {
-                if (AllAtActionConfirmed())
-                    i = TRUE;
-                else
-                    i = FALSE;
-
-                if ((!EsContraEntrenador())
-                    || (position & BIT_FLANK) != B_FLANK_LEFT
-                    || (*(&gBattleStruct->absentBattlerFlags) & (1u << GetBattlerAtPosition(BATTLE_PARTNER(position)))))
-                {
-                    BtlController_EmitLinkStandbyMsg(battler, BUFFER_A, LINK_STANDBY_MSG_STOP_BOUNCE, i);
-                }
-                else
-                {
-                    BtlController_EmitLinkStandbyMsg(battler, BUFFER_A, LINK_STANDBY_STOP_BOUNCE_ONLY, i);
-                }
-                MarkBattlerForControllerExec(battler);
-                gBattleCommunication[battler]++;
-            }
-            break;
         case STATE_WAIT_ACTION_CONFIRMED:
             if (!(gBattleControllerExecFlags & ((1u << battler) | (0xF << 28) | (1u << (battler + 4)) | (1u << (battler + 8)) | (1u << (battler + 12)))))
             {
@@ -2619,7 +2592,7 @@ static void HandleTurnActionSelectionState(void)
                 {
                     gHitMarker |= HITMARKER_RUN;
                     gChosenActionByBattler[battler] = B_ACTION_RUN;
-                    gBattleCommunication[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
+                    gBattleCommunication[battler] = STATE_WAIT_ACTION_CONFIRMED;
                 }
                 else
                 {

@@ -484,7 +484,6 @@ extern const u8 gPPUpClearMask[];
 extern const u8 gPPUpAddValues[];
 extern const u16 gMultiplicadoresEstadisticas[NUMERO_CAMBIOS_ESTADISTICAS];
 extern const struct SpriteTemplate gBattlerSpriteTemplates[];
-extern const u32 sExpCandyExperienceTable[];
 extern const struct Ability gAbilitiesInfo[];
 extern const struct NatureInfo gNaturesInfo[];
 

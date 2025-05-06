@@ -50,16 +50,7 @@ enum
 #define TAG_SHADOW_PAL                  TAG_HEALTHBOX_PLAYER1_TILE
 
 #define TAG_SHADOW_TILE                 0xD759
-#define TAG_GIMMICK_TRIGGER_TILE        0xD777
-#define TAG_MEGA_INDICATOR_TILE         0xD778
-#define TAG_ALPHA_INDICATOR_TILE        0xD779
-#define TAG_OMEGA_INDICATOR_TILE        0xD77A
 
-#define TAG_GIMMICK_TRIGGER_PAL         0xD777
-#define TAG_MEGA_INDICATOR_PAL          0xD778
-#define TAG_MISC_INDICATOR_PAL          0xD779 // Alpha, Omega indicators use the same palette as each of them only uses 4 different colors.
-#define TAG_ZMOVE_TRIGGER_PAL           0xD77B
-#define TAG_BURST_TRIGGER_PAL           0xD77C
 #define TAG_BATTLE_INTERFACE_SELECTOR   0xD77F
 
 enum
