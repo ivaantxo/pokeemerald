@@ -78,7 +78,6 @@ bool32 CanKnockOffItem(u32 battler, u32 item);
 bool32 IsAbilityOfRating(u32 ability, s8 rating);
 bool32 AI_IsAbilityOnSide(u32 battlerId, u32 ability);
 bool32 AI_MoveMakesContact(u32 ability, u32 holdEffect, u32 move);
-bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove);
 
 // stat stage checks
 bool32 AnyStatIsRaised(u32 battlerId);

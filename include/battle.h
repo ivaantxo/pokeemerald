@@ -652,7 +652,6 @@ struct BattleStruct
     u8 trainerSlidePlayerMonUnaffectedMsgState:2;
     u8 trainerSlideHalfHpMsgDone:1;
     u8 trainerSlideMegaEvolutionMsgDone:1;
-    u8 trainerSlideZMoveMsgDone:1;
     u8 trainerSlideBeforeFirstTurnMsgDone:1;
     u8 trainerSlideLowHpMsgDone:1;
     u8 pledgeMove:1;

@@ -293,10 +293,6 @@ struct MoveInfo
     u16 accuracy:7;
     u16 target:9;
     u8 pp;
-    union {
-        u8 effect;
-        u8 powerOverride;
-    } zMove;
 
     s32 priority:4;
     u32 recoil:7;

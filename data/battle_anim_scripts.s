@@ -28558,41 +28558,6 @@ gBattleAnimGeneral_RestoreBg::
 	waitbgfadein
 	end
 
-gBattleAnimGeneral_ZMoveActivate::
-	loadspritegfx ANIM_TAG_FOCUS_ENERGY @focus energy
-	loadspritegfx ANIM_TAG_Z_MOVE_SYMBOL @Z-Move Symbol
-	loadspritegfx ANIM_TAG_WHIP_HIT @green color
-	loadspritegfx ANIM_TAG_SWEAT_BEAD @blue color
-	loadspritegfx ANIM_TAG_PAW_PRINT @yellow color
-	monbg ANIM_ATTACKER
-	setalpha 12, 8
-	fadetobg BG_ZMOVE_ACTIVATE
-	waitbgfadein
-	createvisualtask AnimTask_StartSlidingBg, 0x5, 0x0, 0x0, 0x0, 0xFFFF
-	playsewithpan SE_M_SOLAR_BEAM, SOUND_PAN_ATTACKER
-	createvisualtask AnimTask_BlendColorCycle, 2, F_PAL_ATTACKER, 0, 6, 0, 11, RGB(28, 21, 29)
-	call ZMoveBuffEffect
-	call ZMoveBuffEffect
-	call ZMoveBuffEffect
-	createsprite gZMoveSymbolSpriteTemplate, ANIM_ATTACKER, 41, 0x0, 0x0, 0x0, 0x0
-	call ZMoveBuffEffect
-	call ZMoveBuffEffect
-	waitforvisualfinish
-	call UnsetPsychicBg
-	blendoff
-	clearmonbg ANIM_ATTACKER
-	end
-ZMoveBuffEffect:
-	createsprite gBlueZMoveEnergySpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0xffe8, 0x1a, 0x2
-	delay 0x3
-	createsprite gEndureEnergySpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0xe, 0x1c, 0x1 @Red Buff
-	delay 0x3
-	createsprite gGreenZMoveEnergySpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0xfffb, 0xa, 0x2
-	delay 0x3
-	createsprite gYellowZMoveEnergySpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x1c, 0x1a, 0x3
-	delay 0x3
-	return
-
 gBattleAnimGeneral_TotemFlare::
 	loadspritegfx ANIM_TAG_FOCUS_ENERGY
 	loadspritegfx ANIM_TAG_WHIP_HIT @green color
