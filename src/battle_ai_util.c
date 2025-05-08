@@ -3837,12 +3837,6 @@ bool32 AI_MoveMakesContact(u32 ability, u32 holdEffect, u32 move)
     return FALSE;
 }
 
-//TODO - this could use some more sophisticated logic
-bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
-{
-    return FALSE;
-}
-
 bool32 AI_IsBattlerAsleepOrComatose(u32 battlerId)
 {
     return (gBattleMons[battlerId].status1 & STATUS1_SLEEP) || AI_DATA->abilities[battlerId] == ABILITY_COMATOSE;

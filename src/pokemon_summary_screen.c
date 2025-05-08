@@ -8,7 +8,6 @@
 #include "battle_factory.h"
 #include "bg.h"
 #include "contest.h"
-#include "contest_effect.h"
 #include "data.h"
 #include "daycare.h"
 #include "decompress.h"
@@ -2650,37 +2649,7 @@ static void DrawExperienceProgressBar(struct Pokemon *unused)
 
 static void DrawContestMoveHearts(u16 move)
 {
-    u16 *tilemap = sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_CONTEST_MOVES][1];
-    u8 i;
 
-    if (move != MOVE_NONE)
-    {
-        // Draw appeal hearts
-        u8 effectValue = gContestEffects[gMovesInfo[move].contestEffect].appeal;
-        if (effectValue != 0xFF)
-            effectValue /= 10;
-
-        for (i = 0; i < MAX_CONTEST_MOVE_HEARTS; i++)
-        {
-            if (effectValue != 0xFF && i < effectValue)
-                tilemap[(i / 4 * 32) + (i & 3) + 0x1E6] = TILE_FILLED_APPEAL_HEART;
-            else
-                tilemap[(i / 4 * 32) + (i & 3) + 0x1E6] = TILE_EMPTY_APPEAL_HEART;
-        }
-
-        // Draw jam hearts
-        effectValue = gContestEffects[gMovesInfo[move].contestEffect].jam;
-        if (effectValue != 0xFF)
-            effectValue /= 10;
-
-        for (i = 0; i < MAX_CONTEST_MOVE_HEARTS; i++)
-        {
-            if (effectValue != 0xFF && i < effectValue)
-                tilemap[(i / 4 * 32) + (i & 3) + 0x226] = TILE_FILLED_JAM_HEART;
-            else
-                tilemap[(i / 4 * 32) + (i & 3) + 0x226] = TILE_EMPTY_JAM_HEART;
-        }
-    }
 }
 
 static void LimitEggSummaryPageDisplay(void) // If the Pokémon is an egg, limit the number of pages displayed to 1
@@ -3637,18 +3606,7 @@ static void Task_PrintContestMoves(u8 taskId)
 
 static void PrintContestMoveDescription(u8 moveSlot)
 {
-    u16 move;
 
-    if (moveSlot == MAX_MON_MOVES)
-        move = sMonSummaryScreen->newMove;
-    else
-        move = sMonSummaryScreen->summary.moves[moveSlot];
-
-    if (move != MOVE_NONE)
-    {
-        u8 windowId = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_DESCRIPTION);
-        PrintTextOnWindow(windowId, gContestEffectDescriptionPointers[gMovesInfo[move].contestEffect], 6, 1, 0, 0);
-    }
 }
 
 static void PrintMoveDetails(u16 move)
@@ -3669,10 +3627,6 @@ static void PrintMoveDetails(u16 move)
                 PrintTextOnWindow(windowId, gMovesInfo[move].description, 6, 1, 0, 0);
             else
                 PrintTextOnWindow(windowId, gNotDoneYetDescription, 6, 1, 0, 0);
-        }
-        else
-        {
-            PrintTextOnWindow(windowId, gContestEffectDescriptionPointers[gMovesInfo[move].contestEffect], 6, 1, 0, 0);
         }
         PutWindowTilemap(windowId);
     }

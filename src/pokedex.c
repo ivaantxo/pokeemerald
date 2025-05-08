@@ -2,7 +2,6 @@
 #include "battle_main.h"
 #include "battle_util.h"
 #include "bg.h"
-#include "contest_effect.h"
 #include "data.h"
 #include "daycare.h"
 #include "decompress.h"
@@ -3684,11 +3683,6 @@ static void PrintStatsScreen_Moves_Description(u8 taskId)
         StringCopy(gStringVar4, gMovesInfo[move].description);
         PrintStatsScreenTextSmall(WIN_STATS_MOVES_DESCRIPTION, gStringVar4, moves_x, moves_y);
     }
-    else
-    {
-        StringCopy(gStringVar4, gContestEffectDescriptionPointers[gMovesInfo[move].contestEffect]);
-        PrintStatsScreenTextSmall(WIN_STATS_MOVES_DESCRIPTION, gStringVar4, moves_x, moves_y);
-    }
 }
 
 static void PrintStatsScreen_Moves_BottomText(u8 taskId)
@@ -3713,10 +3707,6 @@ static void PrintStatsScreen_Moves_Bottom(u8 taskId)
     u8 moves_y = 3;
     u8 selected = sPokedexView->moveSelected;
     u16 move;
-    //Contest
-    u8 contest_effectValue;
-    u8 contest_appeal = 0;
-    u8 contest_jam = 0;
 
     //Move
     move = sStatsMoves[selected];
@@ -3739,28 +3729,6 @@ static void PrintStatsScreen_Moves_Bottom(u8 taskId)
         else
             ConvertIntToDecimalStringN(gStringVar1, gMovesInfo[move].accuracy, STR_CONV_MODE_RIGHT_ALIGN, 3);
         PrintStatsScreenTextSmall(WIN_STATS_MOVES_BOTTOM, gStringVar1,  moves_x + 114, moves_y);
-    }
-    else //Appeal + Jam
-    {
-        DestroyCategoryIcon();
-        gSprites[sPokedexView->categoryIconSpriteId].invisible = TRUE;
-        //Appeal
-        contest_effectValue = gContestEffects[gMovesInfo[move].contestEffect].appeal;
-        if (contest_effectValue != 0xFF)
-            contest_appeal = contest_effectValue / 10;
-        ConvertIntToDecimalStringN(gStringVar1, contest_appeal, STR_CONV_MODE_RIGHT_ALIGN, 1);
-        StringCopy(gStringVar2, sText_PlusSymbol);
-        StringAppend(gStringVar2, gStringVar1);
-        PrintStatsScreenTextSmall(WIN_STATS_MOVES_BOTTOM, gStringVar2, moves_x + 45, moves_y);
-
-        //Jam
-        contest_effectValue = gContestEffects[gMovesInfo[move].contestEffect].jam;
-        if (contest_effectValue != 0xFF)
-            contest_jam = contest_effectValue / 10;
-        ConvertIntToDecimalStringN(gStringVar1, contest_jam, STR_CONV_MODE_RIGHT_ALIGN, 1);
-        StringCopy(gStringVar2, sText_Stats_Minus);
-        StringAppend(gStringVar2, gStringVar1);
-        PrintStatsScreenTextSmall(WIN_STATS_MOVES_BOTTOM, gStringVar2,  moves_x + 119, moves_y);
     }
 }
 

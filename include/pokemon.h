@@ -5,7 +5,6 @@
 #include "constants/items.h"
 #include "constants/region_map_sections.h"
 #include "constants/map_groups.h"
-#include "contest_effect.h"
 
 #define GET_BASE_SPECIES_ID(speciesId) (GetFormSpeciesId(speciesId, 0))
 #define FORM_SPECIES_END (0xffff)
@@ -319,7 +318,7 @@ struct MoveInfo
     u32 powderMove:1;
     u32 danceMove:1;
     u32 windMove:1;
-    u32 slicingMove:1; // end of word
+    u32 slicingMove:1;
     u32 healingMove:1;
     u32 minimizeDoubleDamage:1;
     u32 ignoresTargetAbility:1;
@@ -349,20 +348,13 @@ struct MoveInfo
     u32 instructBanned:1;
     u32 encoreBanned:1;
     u32 parentalBondBanned:1;
-    u32 skyBattleBanned:1;
     u32 sketchBanned:1;
-    u32 padding:5; // end of word
 
     u32 argument;
 
     // primary/secondary effects
     const struct AdditionalEffect *additionalEffects;
 
-    // contest parameters
-    u8 contestEffect;
-    u8 contestCategory:3;
-    u8 contestComboStarterId;
-    u8 contestComboMoves[MAX_COMBO_MOVES];
     const u8 *battleAnimScript;
 };
 

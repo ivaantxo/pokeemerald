@@ -215,23 +215,6 @@ struct ContestAppealMoveResults
     u8 contestant;
 };
 
-struct ContestAIInfo
-{
-    /*0x00*/ u8 aiState;
-    /*0x02*/ u16 nextMove;
-    /*0x04*/ u8 nextMoveIndex;
-    /*0x05*/ u8 moveScores[MAX_MON_MOVES];
-    /*0x09*/ u8 aiAction;
-    /*0x0A*/ u8 filler[6];
-    /*0x10*/ u8 currentAIFlag;
-    /*0x14*/ u32 aiFlags;
-    /*0x18*/ s16 scriptResult;
-    /*0x1A*/ s16 vars[3];
-    /*0x20*/ const u8 *stack[8];
-    /*0x40*/ u8 stackSize;
-    /*0x41*/ u8 contestantId;
-};
-
 struct ContestExcitement
 {
     s8 moveExcitement;
@@ -272,7 +255,6 @@ struct ContestResources
     struct Contest *contest;
     struct ContestantStatus *status;
     struct ContestAppealMoveResults *appealResults;
-    struct ContestAIInfo *aiData;
     struct ContestExcitement *excitement;
     struct ContestGraphicsState *gfxState;
     struct ContestMoveAnimData *moveAnim;
@@ -286,7 +268,6 @@ struct ContestResources
 #define eContest (*gContestResources->contest)
 #define eContestantStatus (gContestResources->status)
 #define eContestAppealResults (*gContestResources->appealResults)
-#define eContestAI (*gContestResources->aiData)
 #define eContestExcitement (*gContestResources->excitement)
 #define eContestGfxState (gContestResources->gfxState)
 #define eUnzippedContestAudience_Gfx (gHeap + 0x18000)

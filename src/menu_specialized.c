@@ -1,7 +1,6 @@
 #include "global.h"
 #include "malloc.h"
 #include "battle_main.h"
-#include "contest_effect.h"
 #include "data.h"
 #include "decompress.h"
 #include "gpu_regs.h"
@@ -669,38 +668,7 @@ static void MoveRelearnerLoadBattleMoveDescription(u32 chosenMove)
 
 static void MoveRelearnerMenuLoadContestMoveDescription(u32 chosenMove)
 {
-    s32 x;
-    const u8 *str;
-    const struct MoveInfo *move;
 
-    MoveRelearnerShowHideHearts(chosenMove);
-    FillWindowPixelBuffer(RELEARNERWIN_DESC_CONTEST, PIXEL_FILL(1));
-    str = gText_MoveRelearnerContestMovesTitle;
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, str, 128);
-    AddTextPrinterParameterized(RELEARNERWIN_DESC_CONTEST, FONT_NORMAL, str, x, 1, TEXT_SKIP_DRAW, NULL);
-
-    str = gText_MoveRelearnerAppeal;
-    x = GetStringRightAlignXOffset(FONT_NORMAL, str, 92);
-    AddTextPrinterParameterized(RELEARNERWIN_DESC_CONTEST, FONT_NORMAL, str, x, 25, TEXT_SKIP_DRAW, NULL);
-
-    str = gText_MoveRelearnerJam;
-    x = GetStringRightAlignXOffset(FONT_NORMAL, str, 92);
-    AddTextPrinterParameterized(RELEARNERWIN_DESC_CONTEST, FONT_NORMAL, str, x, 41, TEXT_SKIP_DRAW, NULL);
-
-    if (chosenMove == MENU_NOTHING_CHOSEN)
-    {
-        CopyWindowToVram(RELEARNERWIN_DESC_CONTEST, COPYWIN_GFX);
-        return;
-    }
-
-    move = &gMovesInfo[chosenMove];
-    str = gContestMoveTypeTextPointers[move->contestCategory];
-    AddTextPrinterParameterized(RELEARNERWIN_DESC_CONTEST, FONT_NORMAL, str, 4, 25, TEXT_SKIP_DRAW, NULL);
-
-    str = gContestEffectDescriptionPointers[move->contestEffect];
-    AddTextPrinterParameterized(RELEARNERWIN_DESC_CONTEST, FONT_NARROW, str, 0, 65, TEXT_SKIP_DRAW, NULL);
-
-    CopyWindowToVram(RELEARNERWIN_DESC_CONTEST, COPYWIN_GFX);
 }
 
 static void MoveRelearnerCursorCallback(s32 itemIndex, bool8 onInit, struct ListMenu *list)
