@@ -96,3 +96,5 @@ paletas: (\d+) (\d+) (\d+) \d+ --> $1 $2 $3
 
 Acero neutro Acero, Acero x1 Fuego, Hielo resiste Tierra
 //MarkBattlerForControllerExec(battlerOpposite);
+- Eliminar ITEM_VENUSAURITE, etc
+- Omega, Alpha, Tera, Z, Max, etc

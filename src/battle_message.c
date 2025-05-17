@@ -625,9 +625,6 @@ static const u8 sText_TargetElectrified[] = _("{B_DEF_NAME_WITH_PREFIX}'s moves\
 static const u8 sText_AssaultVestDoesntAllow[] = _("{B_LAST_ITEM} impide el uso\nde ataques de estado.\p");
 static const u8 sText_GravityPreventsUsage[] = _("{B_ATK_NAME_WITH_PREFIX} can't use {B_CURRENT_MOVE}\nbecause of gravity!\p");
 static const u8 sText_HealBlockPreventsUsage[] = _("{B_ATK_NAME_WITH_PREFIX} was\nprevented from healing!\p");
-static const u8 sText_MegaEvoReacting[] = _("{B_ATK_NAME_WITH_PREFIX}'s {B_LAST_ITEM} is\nreacting to {B_ATK_TRAINER_NAME}'s Mega Ring!");
-static const u8 sText_FerventWishReached[] = _("{B_ATK_TRAINER_NAME}'s fervent wish\nhas reached {B_ATK_NAME_WITH_PREFIX}!");
-static const u8 sText_MegaEvoEvolved[] = _("{B_ATK_NAME_WITH_PREFIX} has Mega Evolved into\nMega {B_BUFF1}!");
 const u8 sText_drastically[] = _("drastically ");
 const u8 sText_severely[] = _("severely ");
 static const u8 sText_Infestation[] = _("{B_DEF_NAME_WITH_PREFIX} has been afflicted\nwith an infestation by {B_ATK_NAME_WITH_PREFIX}!");
@@ -1453,9 +1450,6 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_TERRAINBECOMESELECTRIC] = sText_TerrainBecomesElectric,
     [STRINGID_TERRAINBECOMESPSYCHIC] = sText_TerrainBecomesPsychic,
     [STRINGID_TARGETELECTRIFIED] = sText_TargetElectrified,
-    [STRINGID_MEGAEVOREACTING] = sText_MegaEvoReacting,
-    [STRINGID_FERVENTWISHREACHED] = sText_FerventWishReached,
-    [STRINGID_MEGAEVOEVOLVED] = sText_MegaEvoEvolved,
     [STRINGID_DRASTICALLY] = sText_drastically,
     [STRINGID_SEVERELY] = sText_severely,
     [STRINGID_INFESTATION] = sText_Infestation,
@@ -3360,10 +3354,7 @@ struct TrainerSlide
     const u8 *msgFirstSuperEffectiveHit;
     const u8 *msgFirstSTABMove;
     const u8 *msgPlayerMonUnaffected;
-    const u8 *msgMegaEvolution;
-    const u8 *msgZMove;
     const u8 *msgBeforeFirstTurn;
-    const u8 *msgDynamax;
 };
 
 static const struct TrainerSlide sTrainerSlides[] =
@@ -3381,10 +3372,7 @@ static const struct TrainerSlide sTrainerSlides[] =
         .msgFirstSuperEffectiveHit = sText_SuperEffective,
         .msgFirstSTABMove = sText_ABoosted,
         .msgPlayerMonUnaffected = sText_ButNoEffect,
-        .msgMegaEvolution = sText_PowderExplodes,
-        .msgZMove = sText_Electromagnetism,
         .msgBeforeFirstTurn = sText_GravityIntensified,
-        .msgDynamax = sText_TargetWokeUp,
     },
     */
 };
@@ -3526,35 +3514,11 @@ u32 ShouldDoTrainerSlide(u32 battler, u32 which)
                     return TRUE;
                 }
                 break;
-            case TRAINER_SLIDE_MEGA_EVOLUTION:
-                if (sTrainerSlides[i].msgMegaEvolution != NULL && !gBattleStruct->trainerSlideMegaEvolutionMsgDone)
-                {
-                    gBattleStruct->trainerSlideMegaEvolutionMsgDone = TRUE;
-                    gBattleStruct->trainerSlideMsg = sTrainerSlides[i].msgMegaEvolution;
-                    return TRUE;
-                }
-                break;
-            case TRAINER_SLIDE_Z_MOVE:
-                if (sTrainerSlides[i].msgZMove != NULL && !gBattleStruct->trainerSlideZMoveMsgDone)
-                {
-                    gBattleStruct->trainerSlideZMoveMsgDone = TRUE;
-                    gBattleStruct->trainerSlideMsg = sTrainerSlides[i].msgZMove;
-                    return TRUE;
-                }
-                break;
             case TRAINER_SLIDE_BEFORE_FIRST_TURN:
                 if (sTrainerSlides[i].msgBeforeFirstTurn != NULL && !gBattleStruct->trainerSlideBeforeFirstTurnMsgDone)
                 {
                     gBattleStruct->trainerSlideBeforeFirstTurnMsgDone = TRUE;
                     gBattleStruct->trainerSlideMsg = sTrainerSlides[i].msgBeforeFirstTurn;
-                    return TRUE;
-                }
-                break;
-            case TRAINER_SLIDE_DYNAMAX:
-                if (sTrainerSlides[i].msgDynamax != NULL && !gBattleStruct->trainerSlideDynamaxMsgDone)
-                {
-                    gBattleStruct->trainerSlideDynamaxMsgDone = TRUE;
-                    gBattleStruct->trainerSlideMsg = sTrainerSlides[i].msgDynamax;
                     return TRUE;
                 }
                 break;

@@ -158,7 +158,6 @@ static const u8 sText_EVO_Buttons_PE[] = _("{DPAD_UPDOWN}EVOs  {A_BUTTON}CHECK  
 static const u8 sText_EVO_Buttons_Decapped_PE[] = _("{DPAD_UPDOWN}Evos  {A_BUTTON}Check  {START_BUTTON}Forms");
 static const u8 sText_EVO_Name[] = _("{STR_VAR_3}:");
 static const u8 sText_EVO_PreEvo[] = _("{STR_VAR_1} evolves from {STR_VAR_2}");
-static const u8 sText_EVO_PreEvo_PE_Mega[] = _("{STR_VAR_1} Mega Evolves with {STR_VAR_2}");
 static const u8 sText_EVO_AMISTAD[] = _("{LV}{UP_ARROW}, high friendship");
 static const u8 sText_EVO_NIVEL[] = _("{LV}{UP_ARROW} to {STR_VAR_2}");
 static const u8 sText_EVO_ITEM[] = _("{STR_VAR_2} is used");
@@ -274,7 +273,6 @@ struct EvoScreenData
     bool8 seen[10];
     u8 menuPos;
     u8 arrowSpriteId;
-    bool8 isMega;
 };
 
 struct FromScreenData
@@ -4584,19 +4582,13 @@ static void HandlePreEvolutionSpeciesPrint(u8 taskId, u16 preSpecies, u16 specie
 
     StringCopy(gStringVar1, GetSpeciesName(species)); //evolution mon name
 
-    if (sPokedexView->sEvoScreenData.isMega)
-        StringExpandPlaceholders(gStringVar3, sText_EVO_PreEvo_PE_Mega);
+
+    if (seen || !HGSS_HIDE_UNSEEN_EVOLUTION_NAMES)
+        StringCopy(gStringVar2, GetSpeciesName(preSpecies)); //evolution mon name
     else
-    {
+        StringCopy(gStringVar2, gText_ThreeQuestionMarks); //show questionmarks instead of name
 
-        if (seen || !HGSS_HIDE_UNSEEN_EVOLUTION_NAMES)
-            StringCopy(gStringVar2, GetSpeciesName(preSpecies)); //evolution mon name
-        else
-            StringCopy(gStringVar2, gText_ThreeQuestionMarks); //show questionmarks instead of name
-
-        StringExpandPlaceholders(gStringVar3, sText_EVO_PreEvo); //evolution mon name
-
-    }
+    StringExpandPlaceholders(gStringVar3, sText_EVO_PreEvo); //evolution mon name
 
     PrintInfoScreenTextSmall(gStringVar3, base_x, base_y + base_y_offset*base_i); //evolution mon name
 
@@ -4621,8 +4613,6 @@ static u8 PrintPreEvolutions(u8 taskId, u16 species)
     u16 preEvolutionOne = 0;
     u16 preEvolutionTwo = 0;
     u8 numPreEvolutions = 0;
-
-    sPokedexView->sEvoScreenData.isMega = FALSE;
 
     //Calculate previous evolution
     for (i = 0; i < NUM_SPECIES; i++)
@@ -4715,8 +4705,6 @@ static u8 PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 depth,
     bool8 isEevee = FALSE;
     const struct Evolution *evolutions = GetSpeciesEvolutions(species);
 
-    if (sPokedexView->sEvoScreenData.isMega)
-        return 0;
     if (evolutions == NULL)
         return 0;
 

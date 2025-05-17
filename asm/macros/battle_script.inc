@@ -1501,10 +1501,6 @@
 	.4byte \ptr
 	.endm
 
-	.macro trytrainerslidemegaevolutionmsg
-	callnative BS_TryTrainerSlideMegaEvolutionMsg
-	.endm
-
 	.macro tryhealpulse failInstr:req
 	callnative BS_TryHealPulse
 	.4byte \failInstr

@@ -1157,83 +1157,6 @@ const union AffineAnimCmd gSlackOffSquishAffineAnimCmds[] =
     AFFINEANIMCMD_END,
 };
 
-const struct SpriteTemplate gMegaStoneSpriteTemplate =
-{
-    .tileTag = ANIM_TAG_MEGA_STONE,
-    .paletteTag = ANIM_TAG_MEGA_STONE,
-    .oam = &gOamData_AffineDouble_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gAffineAnims_LusterPurgeCircle,
-    .callback = AnimSpriteOnMonPos,
-};
-
-const struct SpriteTemplate gMegaParticlesSpriteTemplate =
-{
-    .tileTag = ANIM_TAG_MEGA_PARTICLES,
-    .paletteTag = ANIM_TAG_MEGA_PARTICLES,
-    .oam = &gOamData_AffineNormal_ObjBlend_16x16,
-    .anims = gPowerAbsorptionOrbAnimTable,
-    .images = NULL,
-    .affineAnims = gPowerAbsorptionOrbAffineAnimTable,
-    .callback = AnimPowerAbsorptionOrb,
-};
-
-const struct SpriteTemplate gMegaSymbolSpriteTemplate =
-{
-    .tileTag = ANIM_TAG_MEGA_SYMBOL,
-    .paletteTag = ANIM_TAG_MEGA_SYMBOL,
-    .oam = &gOamData_AffineOff_ObjBlend_32x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = AnimGhostStatusSprite,
-};
-
-const struct SpriteTemplate gAlphaStoneSpriteTemplate =
-{
-    .tileTag = ANIM_TAG_ALPHA_STONE,
-    .paletteTag = ANIM_TAG_ALPHA_STONE,
-    .oam = &gOamData_AffineDouble_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gAffineAnims_LusterPurgeCircle,
-    .callback = AnimSpriteOnMonPos,
-};
-
-const struct SpriteTemplate gOmegaStoneSpriteTemplate =
-{
-    .tileTag = ANIM_TAG_OMEGA_STONE,
-    .paletteTag = ANIM_TAG_OMEGA_STONE,
-    .oam = &gOamData_AffineDouble_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gAffineAnims_LusterPurgeCircle,
-    .callback = AnimSpriteOnMonPos,
-};
-
-const struct SpriteTemplate gAlphaSymbolSpriteTemplate =
-{
-    .tileTag = ANIM_TAG_ALPHA_SYMBOL,
-    .paletteTag = ANIM_TAG_ALPHA_SYMBOL,
-    .oam = &gOamData_AffineOff_ObjBlend_32x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = AnimGhostStatusSprite,
-};
-
-const struct SpriteTemplate gOmegaSymbolSpriteTemplate =
-{
-    .tileTag = ANIM_TAG_OMEGA_SYMBOL,
-    .paletteTag = ANIM_TAG_OMEGA_SYMBOL,
-    .oam = &gOamData_AffineOff_ObjBlend_32x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = AnimGhostStatusSprite,
-};
-
 const struct SpriteTemplate gPinkPetalVortexTemplate =
 {
     .tileTag = ANIM_TAG_PINK_PETAL,
@@ -2301,11 +2224,10 @@ void AnimTask_HideSwapSprite(u8 taskId)
     case 0:
         gTasks[taskId].data[11] = gSprites[spriteId].x; // Save battler position
         gSprites[spriteId].x = -64; // hide it from screen to avoid the blip/glitch effect when swapping the sprite.
-        gTasks[taskId].data[10] = gBattleAnimArgs[0];
         gTasks[taskId].data[0]++;
         break;
     case 1:
-        HandleSpeciesGfxDataChange(gBattleAnimAttacker, gBattleAnimTarget, gTasks[taskId].data[10], gBattleAnimArgs[1]);
+        HandleSpeciesGfxDataChange(gBattleAnimAttacker, gBattleAnimTarget, gBattleAnimArgs[1]);
         GetBgDataForTransform(&animBg, gBattleAnimAttacker);
         position = GetBattlerPosition(gBattleAnimAttacker);
         src = gMonSpritesGfxPtr->spritesGfx[position];
@@ -2318,8 +2240,7 @@ void AnimTask_HideSwapSprite(u8 taskId)
         gSprites[spriteId].x = gTasks[taskId].data[11]; // restores battler position
         if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
         {
-            if (gTasks[taskId].data[10] == 0)
-                SetBattlerShadowSpriteCallback(gBattleAnimAttacker, gBattleSpritesDataPtr->battlerData[gBattleAnimAttacker].transformSpecies);
+            SetBattlerShadowSpriteCallback(gBattleAnimAttacker, gBattleSpritesDataPtr->battlerData[gBattleAnimAttacker].transformSpecies);
         }
 
         DestroyAnimVisualTask(taskId);
@@ -2344,7 +2265,6 @@ void AnimTask_TransformMon(u8 taskId)
         else
             SetAnimBgAttribute(2, BG_ANIM_MOSAIC, 1);
 
-        gTasks[taskId].data[10] = gBattleAnimArgs[0];
         gTasks[taskId].data[11] = gBattleAnimArgs[1];
         gTasks[taskId].data[0]++;
         break;
@@ -2360,7 +2280,7 @@ void AnimTask_TransformMon(u8 taskId)
         }
         break;
     case 2:
-        HandleSpeciesGfxDataChange(gBattleAnimAttacker, gBattleAnimTarget, gTasks[taskId].data[10], gTasks[taskId].data[11]);
+        HandleSpeciesGfxDataChange(gBattleAnimAttacker, gBattleAnimTarget, gTasks[taskId].data[11]);
         GetBgDataForTransform(&animBg, gBattleAnimAttacker);
         position = GetBattlerPosition(gBattleAnimAttacker);
         src = gMonSpritesGfxPtr->spritesGfx[position];
@@ -2390,8 +2310,7 @@ void AnimTask_TransformMon(u8 taskId)
 
         if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
         {
-            if (gTasks[taskId].data[10] == 0)
-                SetBattlerShadowSpriteCallback(gBattleAnimAttacker, gBattleSpritesDataPtr->battlerData[gBattleAnimAttacker].transformSpecies);
+            SetBattlerShadowSpriteCallback(gBattleAnimAttacker, gBattleSpritesDataPtr->battlerData[gBattleAnimAttacker].transformSpecies);
         }
 
         DestroyAnimVisualTask(taskId);

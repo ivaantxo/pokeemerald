@@ -6752,25 +6752,6 @@ BattleScript_FocusPunchSetUp::
 	waitmessage B_WAIT_TIME_LONG
 	end3
 
-BattleScript_MegaEvolution::
-BattleScript_MegaEvolutionAfterString:
-	end3
-
-BattleScript_WishMegaEvolution::
-	end3
-
-BattleScript_PrimalReversion::
-	end3
-
-BattleScript_PrimalReversionRestoreAttacker::
-	end3
-
-BattleScript_PrimalReversionRet::
-	return
-
-BattleScript_UltraBurst::
-	end3
-
 BattleScript_GulpMissileFormChange::
 	call BattleScript_AttackerFormChange
 	goto BattleScript_FromTwoTurnMovesSecondTurnRet
