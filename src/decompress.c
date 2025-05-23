@@ -162,7 +162,7 @@ u32 GetDecompressedDataSize(const u32 *ptr)
     return (ptr8[3] << 16) | (ptr8[2] << 8) | (ptr8[1]);
 }
 
-bool8 LoadCompressedSpriteSheetUsingHeap(const struct CompressedSpriteSheet *src)
+void LoadCompressedSpriteSheetUsingHeap(const struct CompressedSpriteSheet *src)
 {
     struct SpriteSheet dest;
     void *buffer;
@@ -176,10 +176,9 @@ bool8 LoadCompressedSpriteSheetUsingHeap(const struct CompressedSpriteSheet *src
 
     LoadSpriteSheet(&dest);
     Free(buffer);
-    return FALSE;
 }
 
-bool8 LoadCompressedSpritePaletteUsingHeap(const struct CompressedSpritePalette *src)
+void LoadCompressedSpritePaletteUsingHeap(const struct CompressedSpritePalette *src)
 {
     struct SpritePalette dest;
     void *buffer;
@@ -191,7 +190,28 @@ bool8 LoadCompressedSpritePaletteUsingHeap(const struct CompressedSpritePalette 
 
     LoadSpritePalette(&dest);
     Free(buffer);
-    return FALSE;
+}
+
+void LoadCompressedBattleAnimUsingHeap(const struct CompressedBattleAnim *src)
+{
+    struct SpriteSheet sheet;
+    struct SpritePalette pal;
+    void *gfxBuffer, *palBuffer;
+
+    gfxBuffer = AllocZeroed(src->size);
+    LZ77UnCompWram(src->gfx, gfxBuffer);
+    sheet.data = gfxBuffer;
+    sheet.size = src->size;
+    sheet.tag = src->tag;
+    LoadSpriteSheet(&sheet);
+    Free(gfxBuffer);
+
+    palBuffer = AllocZeroed(32);
+    LZ77UnCompWram(src->pal, palBuffer);
+    pal.data = palBuffer;
+    pal.tag = src->tag;
+    LoadSpritePalette(&pal);
+    Free(palBuffer);
 }
 
 void LoadCompressedEggSpritePalette(const struct CompressedSpritePalette *src1, const struct CompressedSpritePalette *src2)

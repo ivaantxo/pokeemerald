@@ -106,8 +106,7 @@ static void SpriteCB_RayquazaOrb(struct Sprite *sprite);
 
 static void MainCB2_EndIntro(void);
 
-extern const struct CompressedSpriteSheet gBattleAnimPicTable[];
-extern const struct CompressedSpritePalette gBattleAnimPaletteTable[];
+extern const struct CompressedBattleAnim gTablaAnimacionesBatalla[];
 extern const struct SpriteTemplate gAncientPowerRockSpriteTemplate[];
 
 enum {
@@ -1741,21 +1740,7 @@ static void Task_Scene3_WaitGroudon(u8 taskId)
 
 static void Task_Scene3_LoadGroudon(u8 taskId)
 {
-    if (!gFundidoPaletas.activo)
-    {
-        IntroResetGpuRegs();
-        ResetSpriteData();
-        FreeAllSpritePalettes();
-        gReservedSpritePaletteCount = 8;
-        LZDecompressVram(gIntroGroudon_Gfx, (void *)VRAM);
-        LZDecompressVram(gIntroGroudon_Tilemap, (void *)(BG_CHAR_ADDR(3)));
-        LZDecompressVram(gIntroLegendBg_Gfx, (void *)(BG_CHAR_ADDR(1)));
-        LZDecompressVram(gIntroGroudonBg_Tilemap, (void *)(BG_SCREEN_ADDR(28)));
-        LoadCompressedSpriteSheetUsingHeap(&gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_ROCKS)]);
-        LoadCompressedSpritePaletteUsingHeap(&gBattleAnimPaletteTable[GET_TRUE_SPRITE_INDEX(ANIM_TAG_ROCKS)]);
-        CpuCopy16(gIntro3Bg_Pal, gPlttBufferUnfaded, sizeof(gIntro3Bg_Pal));
-        gTasks[taskId].func = Task_Scene3_InitGroudonBg;
-    }
+
 }
 
 #define tWinPos  data[0]

@@ -1006,7 +1006,7 @@ const struct OamData gOamData_AffineDouble_ObjBlend_32x64 =
     .paletteNum = 0,
 };
 
-const struct CompressedSpriteSheet gBattleAnimPicTable[] =
+const struct CompressedBattleAnim gTablaAnimacionesBatalla[] =
 {
     {gBattleAnimSpriteGfx_Bone, 512, ANIM_TAG_BONE},
     {gBattleAnimSpriteGfx_Spark, 768, ANIM_TAG_SPARK},
@@ -1070,7 +1070,6 @@ const struct CompressedSpriteSheet gBattleAnimPicTable[] =
     {gBattleAnimSpriteGfx_MonsterFoot, 512, ANIM_TAG_MONSTER_FOOT},
     {gBattleAnimSpriteGfx_HumanoidHand, 512, ANIM_TAG_HUMANOID_HAND},
     {gBattleAnimSpriteGfx_NoiseLine, 2048, ANIM_TAG_NOISE_LINE},
-    {gBattleAnimSpriteGfx_YellowUnk, 128, ANIM_TAG_YELLOW_UNK},
     {gBattleAnimSpriteGfx_RedFist, 512, ANIM_TAG_RED_FIST},
     {gBattleAnimSpriteGfx_SlamHit, 4096, ANIM_TAG_SLAM_HIT},
     {gBattleAnimSpriteGfx_Ring, 384, ANIM_TAG_RING},
@@ -1080,7 +1079,6 @@ const struct CompressedSpriteSheet gBattleAnimPicTable[] =
     {gBattleAnimSpriteGfx_Rocks, 3072, ANIM_TAG_ROCKS},
 #endif
     {gBattleAnimSpriteGfx_Z, 256, ANIM_TAG_Z},
-    {gBattleAnimSpriteGfx_YellowUnk2, 64, ANIM_TAG_YELLOW_UNK_2},
     {gBattleAnimSpriteGfx_AirSlash, 384, ANIM_TAG_AIR_SLASH},
     {gBattleAnimSpriteGfx_SpinningGreenOrbs, 2048, ANIM_TAG_SPINNING_GREEN_ORBS},
 #if B_NEW_LEAF_PARTICLE
@@ -1390,7 +1388,6 @@ const struct CompressedSpriteSheet gBattleAnimPicTable[] =
     {gBattleAnimSpriteGfx_Confide, 2048, ANIM_TAG_CONFIDE},
     {gBattleAnimSpriteGfx_Arrows, 1152, ANIM_TAG_VERTICAL_HEX},
     {gBattleAnimSpriteGfx_SmallEmber, 2560, ANIM_TAG_ASCUAS},
-    {NULL, 0, ANIM_TAG_UNAVAILABLE_2},
     {gBattleAnimSpriteGfx_PowerTrick, 2048, ANIM_TAG_POWER_TRICK},
     {gBattleAnimSpriteGfx_ChainLink, 512, ANIM_TAG_CHAIN_LINK},
     {gBattleAnimSpriteGfx_Anchor, 512, ANIM_TAG_ANCHOR},
@@ -1522,7 +1519,6 @@ const struct CompressedSpritePalette gBattleAnimPaletteTable[] =
     {gBattleAnimSpritePal_HumanoidFoot, ANIM_TAG_MONSTER_FOOT},
     {gBattleAnimSpritePal_HumanoidFoot, ANIM_TAG_HUMANOID_HAND},
     {gBattleAnimSpritePal_HitDuplicate, ANIM_TAG_NOISE_LINE},
-    {gBattleAnimSpritePal_YellowUnk, ANIM_TAG_YELLOW_UNK},
     {gBattleAnimSpritePal_HumanoidFoot, ANIM_TAG_RED_FIST},
     {gBattleAnimSpritePal_SlamHit, ANIM_TAG_SLAM_HIT},
     {gBattleAnimSpritePal_Ring, ANIM_TAG_RING},
@@ -1532,7 +1528,6 @@ const struct CompressedSpritePalette gBattleAnimPaletteTable[] =
     {gBattleAnimSpritePal_Rocks, ANIM_TAG_ROCKS},
 #endif
     {gBattleAnimSpritePal_Z, ANIM_TAG_Z},
-    {gBattleAnimSpritePal_YellowUnk2, ANIM_TAG_YELLOW_UNK_2},
     {gBattleAnimSpritePal_AirSlash, ANIM_TAG_AIR_SLASH},
     {gBattleAnimSpritePal_SpinningGreenOrbs, ANIM_TAG_SPINNING_GREEN_ORBS},
 #if B_NEW_LEAF_PARTICLE
@@ -1843,7 +1838,6 @@ const struct CompressedSpritePalette gBattleAnimPaletteTable[] =
     {gBattleAnimSpritePal_Confide, ANIM_TAG_CONFIDE},
     {gBattleAnimSpritePal_FusionFlare, ANIM_TAG_VERTICAL_HEX},
     {gBattleAnimSpritePal_SmallEmber, ANIM_TAG_ASCUAS},
-    {NULL, ANIM_TAG_UNAVAILABLE_2},
     {gBattleAnimSpritePal_PowerTrick, ANIM_TAG_POWER_TRICK},
     {gBattleAnimSpritePal_ChainLink, ANIM_TAG_CHAIN_LINK},
     {gBattleAnimSpritePal_NaturalGiftRing, ANIM_TAG_ANCHOR},

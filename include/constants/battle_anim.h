@@ -6,9 +6,6 @@
 // Sprites start at 10000 and thus must be subtracted of 10000 to account for the true index.
 #define GET_TRUE_SPRITE_INDEX(i) ((i - ANIM_SPRITES_START))
 
-// Particle ids.
-#define ANIM_SPRITES_START 10000
-
 #define ANIM_TAG_BONE                       (ANIM_SPRITES_START + 0)
 #define ANIM_TAG_SPARK                      (ANIM_SPRITES_START + 1)
 #define ANIM_TAG_PENCIL                     (ANIM_SPRITES_START + 2)
@@ -63,13 +60,11 @@
 #define ANIM_TAG_MONSTER_FOOT               (ANIM_SPRITES_START + 51)
 #define ANIM_TAG_HUMANOID_HAND              (ANIM_SPRITES_START + 52) // unused
 #define ANIM_TAG_NOISE_LINE                 (ANIM_SPRITES_START + 53)
-#define ANIM_TAG_YELLOW_UNK                 (ANIM_SPRITES_START + 54) // unused
 #define ANIM_TAG_RED_FIST                   (ANIM_SPRITES_START + 55) // unused
 #define ANIM_TAG_SLAM_HIT                   (ANIM_SPRITES_START + 56)
 #define ANIM_TAG_RING                       (ANIM_SPRITES_START + 57) // unused
 #define ANIM_TAG_ROCKS                      (ANIM_SPRITES_START + 58)
 #define ANIM_TAG_Z                          (ANIM_SPRITES_START + 59) // unused
-#define ANIM_TAG_YELLOW_UNK_2               (ANIM_SPRITES_START + 60) // unused
 #define ANIM_TAG_AIR_SLASH                  (ANIM_SPRITES_START + 61) // unused
 #define ANIM_TAG_SPINNING_GREEN_ORBS        (ANIM_SPRITES_START + 62) // unused
 #define ANIM_TAG_LEAF                       (ANIM_SPRITES_START + 63)
@@ -525,7 +520,6 @@ enum BgMovimientos
     BG_SWAMP,
 },
 
-// table ids for general animations (sBattleAnims_General)
 enum AnimacionesBatallaGeneral
 {
     B_ANIM_STATS_CHANGE,
@@ -579,7 +573,7 @@ enum AnimacionesBatallaGeneral
     B_ANIM_TERA_ACTIVATE,
     B_ANIM_SIMPLE_HEAL,
 
-    NUM_B_ANIMS_GENERAL
+    NUM_ANIMACIONES_BATALLA_GENERAL
 },
 
 enum AnimacionesEspecialesBatalla

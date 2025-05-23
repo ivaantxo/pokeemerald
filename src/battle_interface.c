@@ -317,7 +317,7 @@ static const struct SpriteTemplate sBattleInterfaceSelector =
 
 void MoveSelectionCreateCursorAt(u8 cursorPos)
 {
-    u8 index = GetSpriteIndexByTileTag(TAG_BATTLE_INTERFACE_SELECTOR);
+    u32 index = GetSpriteIndexByTileTag(TAG_BATTLE_INTERFACE_SELECTOR);
 
     if (index == 0xFF)
     {
@@ -345,7 +345,7 @@ void MoveSelectionCreateCursorAt(u8 cursorPos)
 
 void MoveSelectionDestroyCursor(void)
 {
-    u8 cursorId = GetSpriteIndexByTileTag(TAG_BATTLE_INTERFACE_SELECTOR);
+    u32 cursorId = GetSpriteIndexByTileTag(TAG_BATTLE_INTERFACE_SELECTOR);
     if (cursorId != 0xFF)
     {
         FreeSpriteTilesByTag(TAG_BATTLE_INTERFACE_SELECTOR);

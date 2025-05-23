@@ -83,8 +83,8 @@ static void Task_PanFromInitialToTarget(u8 taskId);
 static void Task_LoopAndPlaySE(u8 taskId);
 static void Task_WaitAndPlaySE(u8 taskId);
 
-EWRAM_DATA static const u8 *sBattleAnimScriptPtr = NULL;
-EWRAM_DATA static const u8 *sBattleAnimScriptRetAddr = NULL;
+EWRAM_DATA static u8 *sBattleAnimScriptPtr = NULL;
+EWRAM_DATA static u8 *sBattleAnimScriptRetAddr = NULL;
 EWRAM_DATA void (*gAnimScriptCallback)(void) = NULL;
 EWRAM_DATA static s8 sAnimFramesToWait = 0;
 EWRAM_DATA bool8 gAnimScriptActive = FALSE;
@@ -178,7 +178,7 @@ static const u8* const sBattleAnims_StatusConditions[NUM_B_ANIMS_STATUS] =
     [B_ANIM_STATUS_NIGHTMARE]   = gBattleAnimStatus_Nightmare,
 };
 
-static const u8* const sBattleAnims_General[NUM_B_ANIMS_GENERAL] =
+static const u8* const sAnimacionesBatalla_General[NUM_ANIMACIONES_BATALLA_GENERAL] =
 {
     [B_ANIM_STATS_CHANGE]           = gBattleAnimGeneral_StatsChange,
     [B_ANIM_SUBSTITUTE_FADE]        = gBattleAnimGeneral_SubstituteFade,
@@ -342,7 +342,7 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
     {
     case ANIM_TYPE_GENERAL:
     default:
-        sBattleAnimScriptPtr = sBattleAnims_General[animId];
+        sBattleAnimScriptPtr = sAnimacionesBatalla_General[animId];
         break;
     case ANIM_TYPE_MOVE:
         sBattleAnimScriptPtr = GetMoveAnimationScript(animId);
@@ -449,28 +449,27 @@ static void RunAnimScriptCommand(void)
 
 static void Cmd_loadspritegfx(void)
 {
-    u16 index;
+    u32 index;
 
     sBattleAnimScriptPtr++;
     index = T1_READ_16(sBattleAnimScriptPtr);
-    LoadCompressedSpriteSheetUsingHeap(&gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(index)]);
-    LoadCompressedSpritePaletteUsingHeap(&gBattleAnimPaletteTable[GET_TRUE_SPRITE_INDEX(index)]);
+    LoadCompressedBattleAnimUsingHeap(&gTablaAnimacionesBatalla[index]);
     sBattleAnimScriptPtr += 2;
-    AddSpriteIndex(GET_TRUE_SPRITE_INDEX(index));
+    AddSpriteIndex(index);
     sAnimFramesToWait = 1;
     gAnimScriptCallback = WaitAnimFrameCount;
 }
 
 static void Cmd_unloadspritegfx(void)
 {
-    u16 index;
+    u32 index;
 
     sBattleAnimScriptPtr++;
     index = T1_READ_16(sBattleAnimScriptPtr);
-    FreeSpriteTilesByTag(gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(index)].tag);
-    FreeSpritePaletteByTag(gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(index)].tag);
+    FreeSpriteTilesByTag(gTablaAnimacionesBatalla[index].tag);
+    FreeSpritePaletteByTag(gTablaAnimacionesBatalla[index].tag);
     sBattleAnimScriptPtr += 2;
-    ClearSpriteIndex(GET_TRUE_SPRITE_INDEX(index));
+    ClearSpriteIndex(index);
 }
 
 static u8 GetBattleAnimMoveTargets(u8 battlerArgIndex, u8 *targets)
