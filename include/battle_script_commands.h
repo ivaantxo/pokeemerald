@@ -10,12 +10,6 @@
 // Arguments for 'xStart, yStart, xEnd, yEnd' in HandleBattleWindow
 #define YESNOBOX_X_Y 24, 8, 29, 13
 
-struct PickupItem
-{
-    u16 itemId;
-    u8 percentage[10];
-};
-
 s32 CalcCritChanceStageArgs(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordAbility, u32 abilityAtk, u32 abilityDef, u32 holdEffectAtk);
 s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordAbility);
 s32 GetCritHitOdds(s32 critChanceIndex);
