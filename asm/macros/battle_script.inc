@@ -1413,10 +1413,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setzeffect
-	callnative BS_SetZEffect
-	.endm
-
 	@ Used by effects that may proc Symbiosis but do not call removeitem.
 	.macro trysymbiosis
 	callnative BS_TrySymbiosis
@@ -1548,10 +1544,6 @@
 
 	.macro removeweather
 	callnative BS_RemoveWeather
-	.endm
-
-	.macro applyterastallization
-	callnative BS_ApplyTerastallization
 	.endm
 
 	.macro damagetoquartertargethp

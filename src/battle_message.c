@@ -5,7 +5,6 @@
 #include "battle_message.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
-#include "battle_z_move.h"
 #include "data.h"
 #include "event_data.h"
 #include "frontier_util.h"
@@ -774,8 +773,6 @@ static const u8 sText_ItemRestoredSpeciesPP[] = _("{B_BUFF1} had its PP restored
 static const u8 sText_AtkTrappedDef[] = _("{B_ATK_NAME_WITH_PREFIX} trapped {B_DEF_NAME_WITH_PREFIX}!");
 static const u8 sText_MirrorHerbCopied[] = _("{B_SCR_ACTIVE_NAME_WITH_PREFIX} used its Mirror Herb to mirror its opponent's stat changes!");
 static const u8 sText_PkmnItemMelted[] = _("{B_ATK_NAME_WITH_PREFIX} corroded {B_DEF_NAME_WITH_PREFIX}'s {B_LAST_ITEM}!");
-static const u8 sText_UltraBurstReacting[] = _("Bright light is about to burst out of {B_ATK_NAME_WITH_PREFIX}!");
-static const u8 sText_UltraBurstCompleted[] = _("{B_ATK_NAME_WITH_PREFIX} regained its true power through Ultra Burst!");
 static const u8 sText_TeamGainedEXP[] = _("The rest of your team gained Exp. Points thanks to the Exp. Share!\p");
 static const u8 sText_CurrentMoveCantSelect[] = _("{B_BUFF1} cannot be used!\p");
 static const u8 sText_TargetIsBeingSaltCured[] = _("{B_DEF_NAME_WITH_PREFIX} is being salt cured!");
@@ -798,7 +795,6 @@ static const u8 sText_ElectroShotCharging[] = _("{B_ATK_NAME_WITH_PREFIX} absorb
 static const u8 sText_ItemWasUsedUp[] = _("The {B_LAST_ITEM} was used up…");
 static const u8 sText_AttackerLostItsType[] = _("{B_ATK_NAME_WITH_PREFIX} lost its {B_BUFF1} type!");
 static const u8 sText_ShedItsTail[] = _("{B_ATK_NAME_WITH_PREFIX} shed its tail to create a decoy!");
-static const u8 sText_PkmnTerastallizedInto[] = _("{B_ATK_NAME_WITH_PREFIX} terastallized into the {B_BUFF1} type!");
 static const u8 sText_SupersweetAromaWafts[] = _("A supersweet aroma is wafting from the syrup covering {B_ATK_NAME_WITH_PREFIX}!");
 static const u8 sText_TidyingUpComplete[] = _("Tidying up complete!");
 static const u8 sText_FickleBeamDoubled[] = _("{B_ATK_NAME_WITH_PREFIX} is going all out for this attack!");
@@ -807,7 +803,6 @@ static const u8 sText_WagglingAFinger[] = _("Waggling a finger let it use {B_CUR
 const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
 {
     [STRINGID_FICKLEBEAMDOUBLED] = sText_FickleBeamDoubled,
-    [STRINGID_PKMNTERASTALLIZEDINTO] = sText_PkmnTerastallizedInto,
     [STRINGID_TIDYINGUPCOMPLETE] = sText_TidyingUpComplete,
     [STRINGID_SUPERSWEETAROMAWAFTS] = sText_SupersweetAromaWafts,
     [STRINGID_SHEDITSTAIL] = sText_ShedItsTail,
@@ -1492,8 +1487,6 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_PKMNFROSTBITEHEALED] = sText_PkmnFrostbiteHealed,
     [STRINGID_PKMNFROSTBITEHEALED2] = sText_PkmnFrostbiteHealed2,
     [STRINGID_PKMNFROSTBITEHEALEDBY] = sText_PkmnFrostbiteHealedBy,
-    [STRINGID_ULTRABURSTREACTING] = sText_UltraBurstReacting,
-    [STRINGID_ULTRABURSTCOMPLETED] = sText_UltraBurstCompleted,
     [STRINGID_TEAMGAINEDEXP] = sText_TeamGainedEXP,
     [STRINGID_TARGETCOVEREDINSTICKYCANDYSYRUP] = sText_TargetCoveredInStickyCandySyrup,
     [STRINGID_ITEMWASUSEDUP] = sText_ItemWasUsedUp,
@@ -1505,17 +1498,6 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
 const u16 gTrainerUsedItemStringIds[] =
 {
     STRINGID_PLAYERUSEDITEM, STRINGID_TRAINER1USEDITEM
-};
-
-const u16 gZEffectStringIds[] =
-{
-    [B_MSG_Z_RESET_STATS] = STRINGID_ZMOVERESETSSTATS,
-    [B_MSG_Z_ALL_STATS_UP]= STRINGID_ZMOVEALLSTATSUP,
-    [B_MSG_Z_BOOST_CRITS] = STRINGID_ZMOVEZBOOSTCRIT,
-    [B_MSG_Z_FOLLOW_ME]   = STRINGID_PKMNCENTERATTENTION,
-    [B_MSG_Z_RECOVER_HP]  = STRINGID_ZMOVERESTOREHP,
-    [B_MSG_Z_STAT_UP]     = STRINGID_ZMOVESTATUP,
-    [B_MSG_Z_HP_TRAP]     = STRINGID_ZMOVEHPTRAP,
 };
 
 const u16 gMentalHerbCureStringIds[] =
@@ -3270,13 +3252,7 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
 
     if (B_WIN_MOVE_NAME_1 <= windowId && windowId <= B_WIN_MOVE_NAME_4)
     {
-        // We cannot check the actual width of the window because
-        // B_WIN_MOVE_NAME_1 and B_WIN_MOVE_NAME_3 are 16 wide for
-        // Z-move details.
-        if (gBattleStruct->zmove.viewing && windowId == B_WIN_MOVE_NAME_1)
-            printerTemplate.fontId = GetFontIdToFit(text, printerTemplate.fontId, printerTemplate.letterSpacing, 16 * TILE_WIDTH);
-        else
-            printerTemplate.fontId = GetFontIdToFit(text, printerTemplate.fontId, printerTemplate.letterSpacing, 8 * TILE_WIDTH);
+        printerTemplate.fontId = GetFontIdToFit(text, printerTemplate.fontId, printerTemplate.letterSpacing, 8 * TILE_WIDTH);
     }
 
     if (printerTemplate.x == 0xFF)

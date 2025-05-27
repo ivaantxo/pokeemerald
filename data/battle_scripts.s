@@ -43,34 +43,6 @@ BattleScript_FickleBeamDoubled::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_HitFromCritCalc
 
-BattleScript_Terastallization::
-	@ TODO: no string prints in S/V, but right now this helps with clarity
-	printstring STRINGID_PKMNSTORINGENERGY
-	playanimation BS_ATTACKER, B_ANIM_TERA_CHARGE
-	waitanimation
-	applyterastallization
-	playanimation BS_ATTACKER, B_ANIM_TERA_ACTIVATE
-	waitanimation
-	printstring STRINGID_PKMNTERASTALLIZEDINTO
-	waitmessage B_WAIT_TIME_LONG
-	end3
-
-BattleScript_TeraFormChange::
-	@ TODO: no string prints in S/V, but right now this helps with clarity
-	printstring STRINGID_PKMNSTORINGENERGY
-	handleformchange BS_ATTACKER, 0
-	handleformchange BS_ATTACKER, 1
-	playanimation BS_ATTACKER, B_ANIM_TERA_CHARGE
-	waitanimation
-	applyterastallization
-	playanimation BS_ATTACKER, B_ANIM_TERA_ACTIVATE
-	waitanimation
-	handleformchange BS_ATTACKER, 2
-	printstring STRINGID_PKMNTERASTALLIZEDINTO
-	waitmessage B_WAIT_TIME_LONG
-	switchinabilities BS_ATTACKER
-	end3
-
 BattleScript_LowerAtkSpAtk::
 	jumpifstat BS_EFFECT_BATTLER, COMPARACION_MAYOR, ESTADISTICA_ATAQUE, ESTADISTICA_MENOS_6, BattleScript_LowerAtkSpAtkDoAnim
 	jumpifstat BS_EFFECT_BATTLER, COMPARACION_IGUAL, ESTADISTICA_ATAQUE_ESPECIAL, ESTADISTICA_MENOS_6, BattleScript_LowerAtkSpAtkEnd
@@ -8102,13 +8074,6 @@ BattleScript_ProteanActivates::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_TeraShellDistortingTypeMatchups::
-	pause B_WAIT_TIME_SHORTEST
-	call BattleScript_AbilityPopUp
-	printstring STRINGID_PKMNMADESHELLGLEAM
-	waitmessage B_WAIT_TIME_LONG
-	return
-
 BattleScript_CursedBodyActivates::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_CUSEDBODYDISABLED
@@ -8997,25 +8962,6 @@ BattleScript_AnnounceAirLockCloudNine::
 	printstring STRINGID_AIRLOCKACTIVATES
 	waitmessage B_WAIT_TIME_LONG
 	call BattleScript_ActivateWeatherAbilities
-	end3
-
-BattleScript_ActivateTeraformZero::
-	call BattleScript_AbilityPopUp
-	waitmessage B_WAIT_TIME_LONG
-	jumpifhalfword COMPARACION_BITS_COMUNES, gBattleWeather, B_WEATHER_ANY, BattleScript_ActivateTeraformZero_RemoveWeather
-	jumpifhalfword COMPARACION_BITS_COMUNES, gFieldStatuses, STATUS_FIELD_TERRAIN_ANY, BattleScript_ActivateTeraformZero_RemoveTerrain
-	goto BattleScript_ActivateTeraformZero_End
-BattleScript_ActivateTeraformZero_RemoveWeather:
-	removeweather
-	printfromtable gWeatherEndsStringIds
-	waitmessage B_WAIT_TIME_LONG
-	jumpifhalfword COMPARACION_BITS_DISTINTOS, gFieldStatuses, STATUS_FIELD_TERRAIN_ANY, BattleScript_ActivateTeraformZero_End
-BattleScript_ActivateTeraformZero_RemoveTerrain:
-	removeterrain
-	playanimation BS_ATTACKER, B_ANIM_RESTORE_BG
-	printfromtable gTerrainStringIds
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_ActivateTeraformZero_End:
 	end3
 
 BattleScript_QuickClawActivation::

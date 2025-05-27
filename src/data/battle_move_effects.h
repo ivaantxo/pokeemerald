@@ -1869,16 +1869,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_TERA_BLAST] =
-    {
-        .battleScript = BattleScript_EffectPhotonGeyser,
-    },
-
-    [EFFECT_TERA_STARSTORM] =
-    {
-        .battleScript = BattleScript_EffectPhotonGeyser,
-    },
-
     [EFFECT_DRAGON_DARTS] =
     {
         .battleScript = BattleScript_EffectHit,

@@ -8069,12 +8069,6 @@ bool32 IsBattlerProtected(u32 battlerAtk, u32 battlerDef, u32 move)
             return FALSE;
     }
 
-    // Z-Moves and Max Moves bypass protection (except Max Guard).
-    if ((IsZMove(move))
-         && (!gProtectStructs[battlerDef].maxGuarded
-             || gMovesInfo[move].argument == MAX_EFFECT_BYPASS_PROTECT))
-        return FALSE;
-
     // Max Guard is silly about the moves it blocks, including Teatime.
     if (gProtectStructs[battlerDef].maxGuarded && IsMoveBlockedByMaxGuard(move))
         return TRUE;
@@ -8547,8 +8541,6 @@ static inline u32 CalcMoveBasePower(struct DamageCalculationData *damageCalcData
     case EFFECT_FICKLE_BEAM:
         if (gBattleStruct->fickleBeamBoosted)
             basePower *= 2;
-        break;
-    case EFFECT_TERA_BLAST:
         break;
     case EFFECT_LAST_RESPECTS:
         basePower += (basePower * min(100, GetBattlerSideFaintCounter(battlerAtk)));
@@ -10428,7 +10420,7 @@ static bool32 IsUnnerveAbilityOnOpposingSide(u32 battler)
     return FALSE;
 }
 
-// Photon Geyser, Light That Burns the Sky, Tera Blast
+// Photon Geyser, Light That Burns the Sky
 u8 GetCategoryBasedOnStats(u32 battler)
 {
     u32 attack = gBattleMons[battler].attack;

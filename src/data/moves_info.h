@@ -3,7 +3,6 @@
 #include "constants/battle_move_effects.h"
 #include "constants/battle_script_commands.h"
 #include "constants/battle_string_ids.h"
-#include "constants/battle_z_move_effects.h"
 #include "constants/hold_effects.h"
 #include "constants/moves.h"
 #include "constants/contest.h"
@@ -16001,28 +16000,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT] =
         .battleAnimScript = gBattleAnimMove_TakeHeart,
     },
 
-    [MOVE_TERA_BLAST] =
-    {
-        .name = COMPOUND_STRING("Tera Blast"),
-        .description = COMPOUND_STRING(
-            "If the user's Terastallized,\n"
-            "it hits with its Tera-type."),
-        .effect = EFFECT_TERA_BLAST,
-        .power = 80,
-        .type = TIPO_NORMAL,
-        .accuracy = 100,
-        .pp = 10,
-        .target = MOVE_TARGET_SELECTED,
-        .priority = 0,
-        .category = CATEGORIA_ESPECIAL,
-        .forcePressure = TRUE,
-        .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_TERA_BLAST,
-            .self = TRUE,
-        }),
-        .battleAnimScript = gBattleAnimMove_TeraBlast,
-    },
-
     [MOVE_SILK_TRAP] =
     {
         .name = COMPOUND_STRING("Silk Trap"),
@@ -17175,27 +17152,6 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT] =
             .onChargeTurnOnly = TRUE,
         }),
         .battleAnimScript = gBattleAnimMove_ElectroShot,
-    },
-
-    [MOVE_TERA_STARSTORM] =
-    {
-        .name = COMPOUND_STRING("Tera Starstorm"),
-        .description = COMPOUND_STRING(
-            "In Terapagos's Stellar\n"
-            "Form, it hits all foes."),
-        .effect = EFFECT_TERA_STARSTORM,
-        .power = 120,
-        .type = TIPO_NORMAL,
-        .accuracy = 100,
-        .pp = 5,
-        .target = MOVE_TARGET_SELECTED,
-        .priority = 0,
-        .category = CATEGORIA_ESPECIAL,
-        .assistBanned = TRUE,
-        .copycatBanned = TRUE,
-        .mimicBanned = TRUE,
-        .sketchBanned = (B_SKETCH_BANS >= GEN_9),
-        .battleAnimScript = gBattleAnimMove_TeraStarstorm,
     },
 
     [MOVE_FICKLE_BEAM] =

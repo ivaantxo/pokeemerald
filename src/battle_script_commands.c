@@ -5,7 +5,6 @@
 #include "battle_ai_main.h"
 #include "battle_ai_util.h"
 #include "battle_scripts.h"
-#include "battle_z_move.h"
 #include "constants/moves.h"
 #include "constants/abilities.h"
 #include "item.h"
@@ -1075,11 +1074,6 @@ bool32 ProteanTryChangeType(u32 battler, u32 ability, u32 move, u32 moveType)
     return FALSE;
 }
 
-bool32 ShouldTeraShellDistortTypeMatchups(u32 move, u32 battlerDef)
-{
-    return FALSE;
-}
-
 bool32 IsMoveNotAllowedInSkyBattles(u32 move)
 {
     return ((gBattleStruct->isSkyBattle) && (gMovesInfo[gCurrentMove].skyBattleBanned));
@@ -1754,14 +1748,6 @@ static void Cmd_ppreduce(void)
 
     gHitMarker &= ~HITMARKER_NO_PPDEDUCT;
     gBattlescriptCurrInstr = cmd->nextInstr;
-
-    if (ShouldTeraShellDistortTypeMatchups(gCurrentMove, gBattlerTarget))
-    {
-        gBattleStruct->distortedTypeMatchups |= 1u << gBattlerTarget;
-        gBattlerAbility = gBattlerTarget;
-        BattleScriptPushCursor();
-        gBattlescriptCurrInstr = BattleScript_TeraShellDistortingTypeMatchups;
-    }
 }
 
 // The chance is 1/N for each stage.
@@ -6618,16 +6604,6 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
         SET_STATCHANGER(ESTADISTICA_VELOCIDAD, 1, TRUE);
         BattleScriptPushCursor();
         gBattlescriptCurrInstr = BattleScript_StickyWebOnSwitchIn;
-    }
-    else if (gBattleMons[battler].hp != gBattleMons[battler].maxHP && gBattleStruct->zmove.healReplacement)
-    {
-        gBattleStruct->zmove.healReplacement = FALSE;
-        gBattleMoveDamage = -1 * (gBattleMons[battler].maxHP);
-        gBattleScripting.battler = battler;
-        BattleScriptPushCursor();
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_HP_TRAP;
-        gBattlescriptCurrInstr = BattleScript_HealReplacementZMove;
-        return TRUE;
     }
     else
     {
@@ -14566,11 +14542,6 @@ void BS_TrySymbiosis(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_SetZEffect(void)
-{
-    SetZEffect();   // Handles battle script jumping internally
-}
-
 static void TryUpdateRoundTurnOrder(void)
 {
     if (EsContraEntrenador())
@@ -15150,7 +15121,7 @@ void BS_TryCopycat(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
 
-    if (gLastUsedMove == MOVE_NONE || gLastUsedMove == MOVIMIENTO_NO_DISPONIBLE || gMovesInfo[gLastUsedMove].copycatBanned || IsZMove(gLastUsedMove))
+    if (gLastUsedMove == MOVE_NONE || gLastUsedMove == MOVIMIENTO_NO_DISPONIBLE || gMovesInfo[gLastUsedMove].copycatBanned)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
@@ -15345,11 +15316,6 @@ void BS_RemoveWeather(void)
     NATIVE_ARGS();
     RemoveAllWeather();
     gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_ApplyTerastallization(void)
-{
-
 }
 
 void BS_DamageToQuarterTargetHP(void)

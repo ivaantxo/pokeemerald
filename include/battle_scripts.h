@@ -387,7 +387,6 @@ extern const u8 BattleScript_FriskMsgWithPopup[];
 extern const u8 BattleScript_MoodyActivates[];
 extern const u8 BattleScript_CheekPouchActivates[];
 extern const u8 BattleScript_AnnounceAirLockCloudNine[];
-extern const u8 BattleScript_ActivateTeraformZero[];
 extern const u8 BattleScript_BattlerAbilityStatRaiseOnSwitchIn[];
 extern const u8 BattleScript_CottonDownActivates[];
 extern const u8 BattleScript_BallFetch[];
@@ -494,7 +493,6 @@ extern const u8 BattleScript_SpikesActivates[];
 extern const u8 BattleScript_BerserkGeneRet[];
 extern const u8 BattleScript_TargetFormChangeWithStringNoPopup[];
 extern const u8 BattleScript_DefDown[];
-extern const u8 BattleScript_UltraBurst[];
 extern const u8 BattleScript_SelectingNotAllowedCurrentMove[];
 extern const u8 BattleScript_SelectingNotAllowedCurrentMoveInPalace[];
 extern const u8 BattleScript_SaltCureExtraDamage[];
@@ -510,10 +508,7 @@ extern const u8 BattleScript_TheSwampDisappeared[];
 extern const u8 BattleScript_EffectPsychicNoise[];
 extern const u8 BattleScript_AromaVeilProtectsRet[];
 extern const u8 BattleScript_LowerAtkSpAtk[];
-extern const u8 BattleScript_Terastallization[];
 extern const u8 BattleScript_BoosterEnergyEnd2[];
-extern const u8 BattleScript_TeraShellDistortingTypeMatchups[];
-extern const u8 BattleScript_TeraFormChange[];
 
 // Battle move scripts
 extern const u8 BattleScript_EffectSleep[];

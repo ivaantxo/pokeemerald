@@ -2336,7 +2336,6 @@ static void HandleTurnActionSelectionState(void)
                     {
                         struct ChooseMoveStruct moveInfo;
 
-                        moveInfo.zmove = gBattleStruct->zmove;
                         moveInfo.species = gBattleMons[battler].species;
                         moveInfo.monTypes[0] = gBattleMons[battler].types[0];
                         moveInfo.monTypes[1] = gBattleMons[battler].types[1];
@@ -3513,8 +3512,6 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost)
     case EFFECT_IVY_CUDGEL:
     case EFFECT_NATURAL_GIFT:
     case EFFECT_TERRAIN_PULSE:
-    case EFFECT_TERA_BLAST:
-    case EFFECT_TERA_STARSTORM:
         break;
     }
 

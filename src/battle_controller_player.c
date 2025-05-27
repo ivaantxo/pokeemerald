@@ -709,13 +709,6 @@ void HandleInputChooseMove(u32 battler)
 
         moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[gMoveSelectionCursor[battler]]);
 
-        if (gBattleStruct->zmove.viewing)
-        {
-            gBattleStruct->zmove.viewing = FALSE;
-            if (gMovesInfo[moveInfo->moves[gMoveSelectionCursor[battler]]].category != CATEGORIA_ESTADO)
-                moveTarget = MOVE_TARGET_SELECTED;  //damaging z moves always have selected target
-        }
-
         if (moveTarget & MOVE_TARGET_USER)
             gMultiUsePlayerCursor = battler;
         else
@@ -822,7 +815,7 @@ void HandleInputChooseMove(u32 battler)
         LoadBattleMenuWindowGfx();
         MoveSelectionDestroyCursor();
     }
-    else if (JOY_NEW(DPAD_LEFT) && !gBattleStruct->zmove.viewing)
+    else if (JOY_NEW(DPAD_LEFT))
     {
         if (gMoveSelectionCursor[battler] & 1)
         {
@@ -834,7 +827,7 @@ void HandleInputChooseMove(u32 battler)
             MoveSelectionDisplayMoveType(battler);
         }
     }
-    else if (JOY_NEW(DPAD_RIGHT) && !gBattleStruct->zmove.viewing)
+    else if (JOY_NEW(DPAD_RIGHT))
     {
         if (!(gMoveSelectionCursor[battler] & 1)
          && (gMoveSelectionCursor[battler] ^ 1) < gNumberOfMovesToChoose)
@@ -847,7 +840,7 @@ void HandleInputChooseMove(u32 battler)
             MoveSelectionDisplayMoveType(battler);
         }
     }
-    else if (JOY_NEW(DPAD_UP) && !gBattleStruct->zmove.viewing)
+    else if (JOY_NEW(DPAD_UP))
     {
         if (gMoveSelectionCursor[battler] & 2)
         {
@@ -859,7 +852,7 @@ void HandleInputChooseMove(u32 battler)
             MoveSelectionDisplayMoveType(battler);
         }
     }
-    else if (JOY_NEW(DPAD_DOWN) && !gBattleStruct->zmove.viewing)
+    else if (JOY_NEW(DPAD_DOWN))
     {
         if (!(gMoveSelectionCursor[battler] & 2)
          && (gMoveSelectionCursor[battler] ^ 2) < gNumberOfMovesToChoose)

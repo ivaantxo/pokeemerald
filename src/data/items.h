@@ -122,10 +122,6 @@ static const u8 sKeyToRoomDesc[]      = _("A key that opens a\n"
                                           "door inside the\n"
                                           "Abandoned Ship.");
 
-static const u8 sTeraShardDesc[]      = _("These shards may\n"
-                                          "form when a Tera\n"
-                                          "Pokémon faints.");
-
 static const u8 sGenericMulchDesc[]   = _("A fertilizer that\n"
                                           "is unsuitable for\n"
                                           "local soil.");
@@ -12351,22 +12347,6 @@ const struct Item gItemsInfo[] =
         .iconPalette = gItemIconPalette_ScrollOfWaters,
     },
 
-    [ITEM_TERA_ORB] =
-    {
-        .name = _("Tera Orb"),
-        .price = 0,
-        .description = COMPOUND_STRING(
-            "Energy charges can\n"
-            "be used to cause\n"
-            "Terastallization."),
-        .importance = 1,
-        .pocket = POCKET_KEY_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraOrb,
-        .iconPalette = gItemIconPalette_TeraOrb,
-    },
-
     [ITEM_TINY_BAMBOO_SHOOT] =
     {
         .name = _("Tiny Bamboo Shoot"),
@@ -12381,222 +12361,6 @@ const struct Item gItemsInfo[] =
         .flingPower = 30,
         .iconPic = gItemIcon_TinyBambooShoot,
         .iconPalette = gItemIconPalette_TinyBambooShoot,
-    },
-
-    [ITEM_BUG_TERA_SHARD] =
-    {
-        .name = _("Bug Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_BugTeraShard,
-    },
-
-    [ITEM_DARK_TERA_SHARD] =
-    {
-        .name = _("Dark Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_DarkTeraShard,
-    },
-
-    [ITEM_DRAGON_TERA_SHARD] =
-    {
-        .name = _("Dragon Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_DragonTeraShard,
-    },
-
-    [ITEM_ELECTRIC_TERA_SHARD] =
-    {
-        .name = _("Electric Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_ElectricTeraShard,
-    },
-
-    [ITEM_FAIRY_TERA_SHARD] =
-    {
-        .name = _("Fairy Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_FairyTeraShard,
-    },
-
-    [ITEM_FIGHTING_TERA_SHARD] =
-    {
-        .name = _("Fighting Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_FightingTeraShard,
-    },
-
-    [ITEM_FIRE_TERA_SHARD] =
-    {
-        .name = _("Fire Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_FireTeraShard,
-    },
-
-    [ITEM_FLYING_TERA_SHARD] =
-    {
-        .name = _("Flying Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_FlyingTeraShard,
-    },
-
-    [ITEM_GHOST_TERA_SHARD] =
-    {
-        .name = _("Ghost Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_GhostTeraShard,
-    },
-
-    [ITEM_GRASS_TERA_SHARD] =
-    {
-        .name = _("Grass Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_GrassTeraShard,
-    },
-
-    [ITEM_GROUND_TERA_SHARD] =
-    {
-        .name = _("Ground Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_GroundTeraShard,
-    },
-
-    [ITEM_ICE_TERA_SHARD] =
-    {
-        .name = _("Ice Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_IceTeraShard,
-    },
-
-    [ITEM_NORMAL_TERA_SHARD] =
-    {
-        .name = _("Normal Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_NormalTeraShard,
-    },
-
-    [ITEM_POISON_TERA_SHARD] =
-    {
-        .name = _("Poison Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_PoisonTeraShard,
-    },
-
-    [ITEM_PSYCHIC_TERA_SHARD] =
-    {
-        .name = _("Psychic Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_PsychicTeraShard,
-    },
-
-    [ITEM_ROCK_TERA_SHARD] =
-    {
-        .name = _("Rock Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_RockTeraShard,
-    },
-
-    [ITEM_STEEL_TERA_SHARD] =
-    {
-        .name = _("Steel Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_SteelTeraShard,
-    },
-
-    [ITEM_WATER_TERA_SHARD] =
-    {
-        .name = _("Water Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_TeraShard,
-        .iconPalette = gItemIconPalette_WaterTeraShard,
     },
 
     [ITEM_ADAMANT_CRYSTAL] =
@@ -12970,18 +12734,6 @@ const struct Item gItemsInfo[] =
         .effect = gItemEffect_EvoItem,
         .iconPic = gItemIcon_MetalAlloy,
         .iconPalette = gItemIconPalette_MetalAlloy,
-    },
-
-    [ITEM_STELLAR_TERA_SHARD] =
-    {
-        .name = _("Stellar Tera Shard"),
-        .price = 0,
-        .description = sTeraShardDesc,
-        .pocket = POCKET_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
-        .iconPic = gItemIcon_StellarTeraShard,
-        .iconPalette = gItemIconPalette_StellarTeraShard,
     },
 
     [ITEM_JUBILIFE_MUFFIN] =

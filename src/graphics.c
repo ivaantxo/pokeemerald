@@ -200,9 +200,6 @@ const u32 gBattleAnimSpritePal_Mushroom[] = INCBIN_U32("graphics/battle_anims/sp
 
 const u32 gBattleAnimSpritePal_NaturalGiftRing[] = INCBIN_U32("graphics/battle_anims/sprites/natural_gift_ring.gbapal.lz");
 
-const u32 gBattleAnimSpriteGfx_NecrozmaStar[] = INCBIN_U32("graphics/battle_anims/sprites/necrozma_star.4bpp.lz");
-const u32 gBattleAnimSpritePal_NecrozmaStar[] = INCBIN_U32("graphics/battle_anims/sprites/necrozma_star.gbapal.lz");
-
 const u32 gBattleAnimSpritePal_NewImpact[] = INCBIN_U32("graphics/battle_anims/sprites/impact_new.gbapal.lz");
 
 const u32 gBattleAnimSpriteGfx_Obstruct[] = INCBIN_U32("graphics/battle_anims/sprites/obstruct.4bpp.lz");
@@ -279,9 +276,6 @@ const u32 gBattleAnimSpritePal_NewHandsAndFeet[] = INCBIN_U32("graphics/battle_a
 
 const u32 gBattleAnimSpriteGfx_Tornado[] = INCBIN_U32("graphics/battle_anims/sprites/tornado.4bpp.lz");
 const u32 gBattleAnimSpritePal_Tornado[] = INCBIN_U32("graphics/battle_anims/sprites/tornado.gbapal.lz");
-
-const u32 gBattleAnimSpriteGfx_ZMoveSymbol[] = INCBIN_U32("graphics/battle_anims/sprites/z_move_symbol.4bpp.lz");
-const u32 gBattleAnimSpritePal_ZMoveSymbol[] = INCBIN_U32("graphics/battle_anims/sprites/z_move_symbol.gbapal.lz");
 
 const u32 gBattleAnimSpriteGfx_Teapot[] = INCBIN_U32("graphics/battle_anims/sprites/new/teapot.4bpp.lz");
 const u32 gBattleAnimSpritePal_Teapot[] = INCBIN_U32("graphics/battle_anims/sprites/new/teapot.gbapal.lz");
@@ -1487,14 +1481,6 @@ const u32 gBattleAnimBgTilemap_Waterfall[] = INCBIN_U32("graphics/battle_anims/b
 
 const u32 gBattleAnimBgPalette_DarkVoid[] = INCBIN_U32("graphics/battle_anims/backgrounds/dark_void.gbapal.lz");
 const u32 gBattleAnimBgTilemap_DarkVoid[] = INCBIN_U32("graphics/battle_anims/backgrounds/dark_void.bin.lz");
-
-const u32 gBattleAnimBgImage_ZMoveActivate[] = INCBIN_U32("graphics/battle_anims/backgrounds/zmove_activate.4bpp.lz");
-const u32 gBattleAnimBgPalette_ZMoveActivate[] = INCBIN_U32("graphics/battle_anims/backgrounds/zmove_activate.gbapal.lz");
-const u32 gBattleAnimBgTilemap_ZMoveActivate[] = INCBIN_U32("graphics/battle_anims/backgrounds/zmove_activate.bin.lz");
-
-const u32 gBattleAnimBgImage_ZMoveMountain[] = INCBIN_U32("graphics/battle_anims/backgrounds/zmove_mountain.4bpp.lz");
-const u32 gBattleAnimBgPalette_ZMoveMountain[] = INCBIN_U32("graphics/battle_anims/backgrounds/zmove_mountain.gbapal.lz");
-const u32 gBattleAnimBgTilemap_ZMoveMountain[] = INCBIN_U32("graphics/battle_anims/backgrounds/zmove_mountain.bin.lz");
 
 const u32 gBattleAnimBgPalette_SteelBeam[] = INCBIN_U32("graphics/battle_anims/backgrounds/steel_beam.gbapal.lz");
 

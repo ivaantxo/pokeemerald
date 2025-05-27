@@ -214,7 +214,6 @@ static const u8* const sAnimacionesBatalla_General[NUM_ANIMACIONES_BATALLA_GENER
     [B_ANIM_BEAK_BLAST_SETUP]       = gBattleAnimGeneral_BeakBlastSetUp,
     [B_ANIM_SHELL_TRAP_SETUP]       = gBattleAnimGeneral_ShellTrapSetUp,
     [B_ANIM_SNOW_CONTINUES]         = gBattleAnimGeneral_Snow,
-    [B_ANIM_ULTRA_BURST]            = gBattleAnimGeneral_UltraBurst,
     [B_ANIM_SALT_CURE_DAMAGE]       = gBattleAnimGeneral_SaltCureDamage,
     [B_ANIM_DYNAMAX_GROWTH]         = gBattleAnimGeneral_DynamaxGrowth,
     [B_ANIM_MAX_SET_WEATHER]        = gBattleAnimGeneral_SetWeather,
@@ -226,8 +225,6 @@ static const u8* const sAnimacionesBatalla_General[NUM_ANIMACIONES_BATALLA_GENER
     [B_ANIM_MAGIC_ROOM]             = gBattleAnimGeneral_MagicRoom,
     [B_ANIM_TAILWIND]               = gBattleAnimGeneral_Tailwind,
     [B_ANIM_FOG_CONTINUES]          = gBattleAnimGeneral_Fog,
-    [B_ANIM_TERA_CHARGE]            = gBattleAnimGeneral_TeraCharge,
-    [B_ANIM_TERA_ACTIVATE]          = gBattleAnimGeneral_TeraActivate,
     [B_ANIM_SIMPLE_HEAL]            = gBattleAnimGeneral_SimpleHeal,
 };
 
@@ -308,7 +305,6 @@ void LaunchBattleAnimation(u32 animType, u32 animId)
         case B_ANIM_GULP_MISSILE:
         case B_ANIM_RAINBOW:
         case B_ANIM_SEA_OF_FIRE:
-        case B_ANIM_TERA_CHARGE:
             sAnimHideHpBoxes = TRUE;
             break;
         default:

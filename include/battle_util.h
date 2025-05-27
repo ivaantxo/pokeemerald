@@ -117,7 +117,6 @@ enum
     CANCELLER_THROAT_CHOP,
     CANCELLER_EXPLODING_DAMP,
     CANCELLER_MULTIHIT_MOVES,
-    CANCELLER_Z_MOVES,
     CANCELLER_END,
     CANCELLER_PSYCHIC_TERRAIN,
     CANCELLER_END2,
@@ -232,10 +231,6 @@ uq4_12_t GetTypeModifier(u32 atkType, u32 defType);
 uq4_12_t GetTypeEffectiveness(struct Pokemon *mon, u8 moveType);
 s32 GetStealthHazardDamage(u8 hazardType, u32 battler);
 s32 GetStealthHazardDamageByTypesAndHP(u8 hazardType, u8 type1, u8 type2, u32 maxHp);
-bool32 CanMegaEvolve(u32 battler);
-bool32 CanUltraBurst(u32 battler);
-void ActivateMegaEvolution(u32 battler);
-void ActivateUltraBurst(u32 battler);
 u16 GetBattleFormChangeTargetSpecies(u32 battler, u16 method);
 bool32 TryBattleFormChange(u32 battler, u32 method);
 bool32 DoBattlersShareType(u32 battler1, u32 battler2);

@@ -1,5 +1,4 @@
 #include "global.h"
-#include "battle_z_move.h"
 #include "malloc.h"
 #include "battle.h"
 #include "battle_anim.h"

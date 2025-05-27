@@ -2289,40 +2289,6 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .aiRating = 5,
     },
 
-    [ABILITY_TERA_SHIFT] =
-    {
-        .name = _("Tera Shift"),
-        .description = COMPOUND_STRING("Terastallizes upon entry."),
-        .aiRating = 10,
-        .cantBeCopied = TRUE,
-        .cantBeSwapped = TRUE,
-        .cantBeTraced = TRUE,
-        .cantBeSuppressed = TRUE,
-        .cantBeOverwritten = TRUE,
-        .failsOnImposter = TRUE,
-    },
-
-    [ABILITY_TERA_SHELL] =
-    {
-        .name = _("Tera Shell"),
-        .description = COMPOUND_STRING("Resists all at full HP."),
-        .aiRating = 10,
-        .cantBeCopied = TRUE,
-        .cantBeSwapped = TRUE,
-        .cantBeTraced = TRUE,
-        .breakable = TRUE,
-    },
-
-    [ABILITY_TERAFORM_ZERO] =
-    {
-        .name = _("Teraform Zero"),
-        .description = COMPOUND_STRING("Zeroes weather and terrain."),
-        .aiRating = 10,
-        .cantBeCopied = TRUE,
-        .cantBeSwapped = TRUE,
-        .cantBeTraced = TRUE,
-    },
-
     [ABILITY_POISON_PUPPETEER] =
     {
         .name = _("Poison Puppeteer"),

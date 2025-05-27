@@ -9,7 +9,6 @@
 #include "battle_pyramid.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
-#include "battle_z_move.h"
 #include "data.h"
 #include "event_data.h"
 #include "event_object_movement.h"
@@ -3391,7 +3390,6 @@ static const u16 sUniversalMoves[] =
     MOVE_RETURN,
     MOVE_SECRET_POWER,
     MOVE_SUBSTITUTE,
-    MOVE_TERA_BLAST,
 };
 
 u8 CanLearnTeachableMove(u16 species, u16 move)

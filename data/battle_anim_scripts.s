@@ -18113,7 +18113,6 @@ PopulationBombContinue:
 gBattleAnimMove_RevivalBlessing::
 	goto gBattleAnimMove_LunarBlessing
 
-gBattleAnimMove_TeraBlast::
 gBattleAnimMove_OrderUp::
 gBattleAnimMove_GlaiveRush::
 gBattleAnimMove_SaltCure::
@@ -18130,7 +18129,6 @@ gBattleAnimMove_CombatTorque::
 gBattleAnimMove_MagicalTorque::
 gBattleAnimMove_Psyblade::
 gBattleAnimMove_MatchaGotcha::
-gBattleAnimMove_TeraStarstorm::
 gBattleAnimMove_MightyCleave::
 gBattleAnimMove_TachyonCutter::
 gBattleAnimMove_SupercellSlam::
@@ -28491,21 +28489,6 @@ gBattleAnimGeneral_SlideOffScreen::
 	waitforvisualfinish
 	createvisualtask AnimTask_SetInvisible, 1, ANIM_TARGET, TRUE
 	waitforvisualfinish
-	end
-
-gBattleAnimGeneral_TeraCharge::
-	end
-
-TeraChargeParticles:
-	return
-
-gBattleAnimGeneral_TeraActivate::
-	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 16, 0, RGB_WHITEALPHA
-	createvisualtask AnimTask_HorizontalShake, 5, ANIM_TARGET, 5, 14
-	waitforvisualfinish
-	createvisualtask SoundTask_PlayNormalCry, 0
-	clearmonbg ANIM_ATK_PARTNER
-	blendoff
 	end
 
 gBattleAnimGeneral_RestoreBg::
