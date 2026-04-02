@@ -710,6 +710,7 @@ struct BattleStruct
     u8 dancerSavedAttacker:3;
     u8 dancerSavedTarget:3;
     u8 padding:2;
+    u32 potenciaMovimientosRecibidosTurno[MAX_BATTLERS_COUNT];
 };
 
 struct AiBattleData

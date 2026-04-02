@@ -4012,6 +4012,7 @@ void BattleTurnPassed(void)
         gBattleMons[battler].volatiles.electrified = FALSE;
         gBattleMons[battler].volatiles.flinched = FALSE;
         gBattleMons[battler].volatiles.powder = FALSE;
+        gBattleStruct->potenciaMovimientosRecibidosTurno[battler] = 0;
 
         if (gBattleStruct->battlerState[battler].stompingTantrumTimer > 0)
             gBattleStruct->battlerState[battler].stompingTantrumTimer--;
@@ -5139,6 +5140,7 @@ static void TurnValuesCleanUp(bool8 var0)
         gBattleStruct->battlerState[i].usedEjectItem = FALSE;
         gProtectStructs[i].lashOutAffected = FALSE;
         gBattleMons[i].volatiles.endured = FALSE;
+        gBattleStruct->potenciaMovimientosRecibidosTurno[i] = 0;
     }
 
     gSideTimers[B_SIDE_PLAYER].followmeTimer = 0;

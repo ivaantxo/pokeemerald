@@ -404,6 +404,10 @@
 	createsprite gPinMissileSpriteTemplate, \anim_battler, \subpriority_offset, \initial_x, \initial_y, \target_x, \target_y, \duration, \wave_amplitude
 	.endm
 
+	.macro create_vudu_pin anim_battler:req, subpriority_offset:req, initial_x:req, initial_y:req, target_x:req, target_y:req, duration:req, wave_amplitude:req
+    createsprite gVuduPinSpriteTemplate, \anim_battler, \subpriority_offset, \initial_x, \initial_y, \target_x, \target_y, \duration, \wave_amplitude
+	.endm
+
 	.macro create_tail_glow_orb_sprite anim_battler:req, subpriority_offset:req, relative_to:req
 	createsprite gTailGlowOrbSpriteTemplate, \anim_battler, \subpriority_offset, \relative_to
 	.endm

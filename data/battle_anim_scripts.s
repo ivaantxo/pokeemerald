@@ -17701,6 +17701,30 @@ gBattleAnimMove_RageFist::
 	waitbgfadein
 	end
 
+gBattleAnimMove_Vudu::
+    loadspritegfx ANIM_TAG_NEEDLE
+    loadspritegfx ANIM_TAG_IMPACT
+    panse SE_M_PERISH_SONG, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, +2, 0
+    fadetobg BG_GHOST
+    waitbgfadein
+    monbg ANIM_ATTACKER
+    setalpha 12, 8
+    createvisualtask AnimTask_MonToSubstitute, 2
+    waitforvisualfinish
+    create_vudu_pin ANIM_ATTACKER, 5, -40, -40, 10, 0, 12, 0
+    create_vudu_pin ANIM_ATTACKER, 5, 40, -40, 30, 0, 12, 0
+    create_vudu_pin ANIM_ATTACKER, 5, -50, -10, 50, 0, 12, 0
+    create_vudu_pin ANIM_ATTACKER, 5, 50, -10, 70, 0, 12, 0
+    delay 120
+    playsewithpan SE_M_JUMP_KICK, SOUND_PAN_ATTACKER
+    createvisualtask AnimTask_RestoreAttacker, 2
+    waitforvisualfinish
+    clearmonbg ANIM_ATTACKER
+    blendoff
+    restorebg
+    waitbgfadein
+    end
+
 gBattleAnimMove_ChillingWater::
 	loadspritegfx ANIM_TAG_ICE_CRYSTALS
 	loadspritegfx ANIM_TAG_POISON_BUBBLE

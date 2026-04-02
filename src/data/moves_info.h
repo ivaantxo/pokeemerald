@@ -20692,6 +20692,23 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .battleAnimScript = gBattleAnimMove_RageFist,
     },
 
+    [MOVE_VUDU] =
+    {
+        .name = COMPOUND_STRING("Vudu"),
+        .description = COMPOUND_STRING(
+            "The more the user has been\n"
+            "hit, the stronger the move."),
+        .effect = EFFECT_VUDU,
+        .power = 10,
+        .type = TYPE_GHOST,
+        .accuracy = 100,
+        .pp = 10,
+        .target = TARGET_SELECTED,
+        .priority = -1,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .battleAnimScript = gBattleAnimMove_Vudu,
+    },
+
     [MOVE_ARMOR_CANNON] =
     {
         .name = COMPOUND_STRING("Armor Cannon"),

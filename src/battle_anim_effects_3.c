@@ -4967,12 +4967,19 @@ void AnimTask_MonToSubstitute(u8 taskId)
     }
     else
     {
+        // 1. Limpieza absoluta de transformaciones
+        ResetSpriteRotScale(spriteId);
+        gSprites[spriteId].affineAnimPaused = TRUE;
+        gSprites[spriteId].oam.affineMode = ST_OAM_AFFINE_OFF;
+        
+        // 2. Ocultar un frame para evitar el parpadeo de paleta
+        gSprites[spriteId].invisible = TRUE;
+
+        // 3. Cargar el sustituto
         LoadBattleMonGfxAndAnimate(gBattleAnimAttacker, FALSE, spriteId);
-        if (IsContest())
-        {
-            gSprites[gBattlerSpriteIds[gBattleAnimAttacker]].affineAnims = gAffineAnims_BattleSpriteContest;
-            StartSpriteAffineAnim(&gSprites[gBattlerSpriteIds[gBattleAnimAttacker]], BATTLER_AFFINE_NORMAL);
-        }
+        
+        gSprites[spriteId].x2 = 0;
+        gSprites[spriteId].y2 = 0;
 
         for (i = 0; i < NUM_TASK_DATA; i++)
             gTasks[taskId].data[i] = 0;

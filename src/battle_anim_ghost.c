@@ -45,6 +45,8 @@ static void AnimGrudgeFlame(struct Sprite *);
 static void AnimMonMoveCircular(struct Sprite *);
 static void AnimMonMoveCircular_Step(struct Sprite *);
 static void AnimPoltergeistItem(struct Sprite *);
+void AnimVuduPin(struct Sprite *sprite);
+void AnimVuduPin_Step(struct Sprite *sprite);
 
 static const union AffineAnimCmd sAffineAnim_ConfuseRayBallBounce[] =
 {
@@ -1666,3 +1668,71 @@ void AnimTask_GhostGetOut(u8 taskId)
     task->func(taskId);
 }
 
+const struct SpriteTemplate gVuduPinSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_NEEDLE,
+    .paletteTag = ANIM_TAG_NEEDLE,
+    .oam = &gOamData_AffineNormal_ObjNormal_32x32,
+    .callback = AnimVuduPin,
+};
+
+void AnimVuduPin(struct Sprite *sprite)
+{
+    u8 spriteId = GetAnimBattlerSpriteId(ANIM_ATTACKER);
+
+    // Posición de spawn: Centro del player + offsets del script
+    sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X) + (s16)gBattleAnimArgs[2];
+    sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET) + (s16)gBattleAnimArgs[3];
+    
+    // Destino: El Sustituto (Centro del player)
+    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X);
+    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
+    
+    sprite->data[0] = gBattleAnimArgs[4]; // DELAY: Tiempo de espera antes de moverse
+    sprite->data[1] = gBattleAnimArgs[6]; // DURACIÓN: Velocidad del vuelo
+    sprite->data[5] = gBattleAnimArgs[7]; // AMPLITUD: Curva del lanzamiento
+
+    sprite->oam.priority = gSprites[spriteId].oam.priority;
+    sprite->subpriority = gSprites[spriteId].subpriority - 1;
+    sprite->invisible = FALSE;
+
+    // Rotación inicial: Apuntando al centro del player
+    u16 rotation = ArcTan2Neg(sprite->data[2] - sprite->x, sprite->data[4] - sprite->y);
+    TrySetSpriteRotScale(sprite, FALSE, 0x100, 0x100, rotation + 0xC000);
+
+    sprite->callback = AnimVuduPin_Step;
+}
+
+void AnimVuduPin_Step(struct Sprite *sprite)
+{
+    if (sprite->data[0] > 0)
+    {
+        sprite->data[0]--;
+        if (sprite->data[0] == 0)
+        {
+            sprite->data[0] = sprite->data[1]; 
+            InitAnimArcTranslation(sprite);
+        }
+    }
+    else
+    {
+        if (TranslateAnimHorizontalArc(sprite))
+        {
+            DestroyAnimSprite(sprite);
+        }
+    }
+}
+
+void AnimTask_RestoreAttacker(u8 taskId)
+{
+    u8 spriteId = GetAnimBattlerSpriteId(ANIM_ATTACKER);
+    
+    gSprites[spriteId].invisible = TRUE; // Ocultar mientras carga
+    LoadBattleMonGfxAndAnimate(gBattleAnimAttacker, TRUE, spriteId);
+    
+    gSprites[spriteId].x2 = 0;
+    gSprites[spriteId].y2 = 0;
+    gSprites[spriteId].invisible = FALSE;
+    
+    DestroyAnimVisualTask(taskId);
+}

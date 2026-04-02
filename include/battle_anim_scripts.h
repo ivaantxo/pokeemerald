@@ -818,6 +818,7 @@ extern const u8 gBattleAnimMove_ChillingWater[];
 extern const u8 gBattleAnimMove_HyperDrill[];
 extern const u8 gBattleAnimMove_TwinBeam[];
 extern const u8 gBattleAnimMove_RageFist[];
+extern const u8 gBattleAnimMove_Vudu[];
 extern const u8 gBattleAnimMove_ArmorCannon[];
 extern const u8 gBattleAnimMove_BitterBlade[];
 extern const u8 gBattleAnimMove_DoubleShock[];
