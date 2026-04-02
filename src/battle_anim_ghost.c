@@ -46,7 +46,13 @@ static void AnimMonMoveCircular(struct Sprite *);
 static void AnimMonMoveCircular_Step(struct Sprite *);
 static void AnimPoltergeistItem(struct Sprite *);
 void AnimVuduPin(struct Sprite *sprite);
+void AnimVuduPin_Wait(struct Sprite *sprite);
+void AnimVuduPin_Move(struct Sprite *sprite);
 void AnimVuduPin_Step(struct Sprite *sprite);
+void AnimVuduDoll_Rise(struct Sprite *sprite);
+void AnimVuduDoll_RiseStep(struct Sprite *sprite);
+void AnimVuduDoll_WaitPins(struct Sprite *sprite);
+void AnimVuduDoll_End(struct Sprite *sprite);
 
 static const union AffineAnimCmd sAffineAnim_ConfuseRayBallBounce[] =
 {
@@ -1668,39 +1674,159 @@ void AnimTask_GhostGetOut(u8 taskId)
     task->func(taskId);
 }
 
+const struct SpriteTemplate gSubstituteSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_SUBSTITUTE,
+    .paletteTag = ANIM_TAG_SUBSTITUTE,
+    .oam = &gOamData_AffineNormal_ObjNormal_64x64,
+    .callback = AnimVuduDoll_Rise,
+};
+
 const struct SpriteTemplate gVuduPinSpriteTemplate =
 {
     .tileTag = ANIM_TAG_NEEDLE,
     .paletteTag = ANIM_TAG_NEEDLE,
-    .oam = &gOamData_AffineNormal_ObjNormal_32x32,
+    .oam = &gOamData_AffineNormal_ObjNormal_16x16,
     .callback = AnimVuduPin,
 };
 
+void AnimVuduDoll_Rise(struct Sprite *sprite)
+{
+    // Posición inicial: atacante
+    sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X);
+    sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
+
+    // Objetivo: subir
+    sprite->data[0] = sprite->y;        // startY
+    sprite->data[1] = sprite->y - 40;   // targetY (ajusta a ojo)
+    sprite->data[2] = 0;                // frame
+    sprite->data[7] = sprite - gSprites;
+
+    sprite->callback = AnimVuduDoll_RiseStep;
+}
+
+void AnimVuduDoll_RiseStep(struct Sprite *sprite)
+{
+    sprite->data[2]++;
+
+    // interpolación simple (lineal)
+    sprite->y = sprite->data[0] - (sprite->data[2] * 2);
+
+    if (sprite->y <= sprite->data[1])
+    {
+        sprite->y = sprite->data[1];
+        sprite->data[2] = 0;
+
+        // 🔥 IMPORTANTE: aquí NO destruyes
+        sprite->callback = AnimVuduDoll_WaitPins;
+    }
+}
+
+void AnimVuduDoll_WaitPins(struct Sprite *sprite)
+{
+    if (sprite->data[2] == 0)
+    {
+        s16 x = sprite->x;
+        s16 y = sprite->y;
+
+        u8 id;
+
+        sprite->data[6] = 4;
+
+        id = CreateSprite(&gVuduPinSpriteTemplate, x - 32, y - 32, sprite->subpriority - 1);
+        gSprites[id].data[2] = x;
+        gSprites[id].data[3] = y;
+        gSprites[id].data[4] = 0;
+        gSprites[id].data[5] = 0;
+        gSprites[id].data[7] = sprite->data[7];
+
+        id = CreateSprite(&gVuduPinSpriteTemplate, x + 32, y - 32, sprite->subpriority - 1);
+        gSprites[id].data[2] = x;
+        gSprites[id].data[3] = y;
+        gSprites[id].data[4] = 15;
+        gSprites[id].data[5] = 10;
+        gSprites[id].data[7] = sprite->data[7];
+
+        id = CreateSprite(&gVuduPinSpriteTemplate, x - 32, y + 16, sprite->subpriority - 1);
+        gSprites[id].data[2] = x;
+        gSprites[id].data[3] = y;
+        gSprites[id].data[4] = 30;
+        gSprites[id].data[5] = 20;
+        gSprites[id].data[7] = sprite->data[7];
+
+        id = CreateSprite(&gVuduPinSpriteTemplate, x + 32, y + 16, sprite->subpriority - 1);
+        gSprites[id].data[2] = x;
+        gSprites[id].data[3] = y;
+        gSprites[id].data[4] = 45;
+        gSprites[id].data[5] = 30;
+        gSprites[id].data[7] = sprite->data[7];
+    }
+
+    sprite->data[2]++;
+
+    if (sprite->data[2] > 60) // ~1 segundo
+    {
+        sprite->data[2] = 0;
+        sprite->callback = AnimVuduDoll_End;
+    }
+}
+
+void AnimVuduDoll_End(struct Sprite *sprite)
+{
+    // esperar a que TODAS las agujas mueran
+    if (sprite->data[6] == 0)
+    {
+        DestroySprite(sprite);
+    }
+}
+
 void AnimVuduPin(struct Sprite *sprite)
 {
-    u8 spriteId = GetAnimBattlerSpriteId(ANIM_ATTACKER);
+    // start
+    sprite->data[1] = sprite->x;
+    sprite->data[3] = sprite->y;
 
-    // Posición de spawn: Centro del player + offsets del script
-    sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X) + (s16)gBattleAnimArgs[2];
-    sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET) + (s16)gBattleAnimArgs[3];
-    
-    // Destino: El Sustituto (Centro del player)
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X);
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
-    
-    sprite->data[0] = gBattleAnimArgs[4]; // DELAY: Tiempo de espera antes de moverse
-    sprite->data[1] = gBattleAnimArgs[6]; // DURACIÓN: Velocidad del vuelo
-    sprite->data[5] = gBattleAnimArgs[7]; // AMPLITUD: Curva del lanzamiento
+    // target ya viene en data[2] y data[3] → MOVERLOS
+    s16 targetX = sprite->data[2];
+    s16 targetY = sprite->data[3];
 
-    sprite->oam.priority = gSprites[spriteId].oam.priority;
-    sprite->subpriority = gSprites[spriteId].subpriority - 1;
-    sprite->invisible = FALSE;
+    // target
+    sprite->data[2] = targetX;
+    sprite->data[4] = targetY;
 
-    // Rotación inicial: Apuntando al centro del player
-    u16 rotation = ArcTan2Neg(sprite->data[2] - sprite->x, sprite->data[4] - sprite->y);
-    TrySetSpriteRotScale(sprite, FALSE, 0x100, 0x100, rotation + 0xC000);
+    // duración (ajústalo)
+    sprite->data[0] = 12;
 
-    sprite->callback = AnimVuduPin_Step;
+    sprite->callback = AnimVuduPin_Wait;
+}
+
+void AnimVuduPin_Wait(struct Sprite *sprite)
+{
+    if (sprite->data[5] > 0)
+    {
+        sprite->data[5]--;
+        return;
+    }
+
+    u16 rot = ArcTan2Neg(sprite->data[2] - sprite->x,
+                        sprite->data[4] - sprite->y);
+    TrySetSpriteRotScale(sprite, FALSE, 0x100, 0x100, rot + 0xC000);
+
+    InitAnimLinearTranslation(sprite);
+    sprite->callback = AnimVuduPin_Move;
+}
+
+void AnimVuduPin_Move(struct Sprite *sprite)
+{
+    if (AnimTranslateLinear(sprite))
+    {
+        u8 dollId = sprite->data[7];
+
+        if (dollId < MAX_SPRITES)
+            gSprites[dollId].data[6]--; // 🔥 resta
+
+        DestroySprite(sprite);
+    }
 }
 
 void AnimVuduPin_Step(struct Sprite *sprite)
@@ -1721,18 +1847,4 @@ void AnimVuduPin_Step(struct Sprite *sprite)
             DestroyAnimSprite(sprite);
         }
     }
-}
-
-void AnimTask_RestoreAttacker(u8 taskId)
-{
-    u8 spriteId = GetAnimBattlerSpriteId(ANIM_ATTACKER);
-    
-    gSprites[spriteId].invisible = TRUE; // Ocultar mientras carga
-    LoadBattleMonGfxAndAnimate(gBattleAnimAttacker, TRUE, spriteId);
-    
-    gSprites[spriteId].x2 = 0;
-    gSprites[spriteId].y2 = 0;
-    gSprites[spriteId].invisible = FALSE;
-    
-    DestroyAnimVisualTask(taskId);
 }
