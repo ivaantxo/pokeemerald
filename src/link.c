@@ -408,7 +408,7 @@ void CloseLink(void)
 
 static void TestBlockTransfer(u8 nothing, u8 is, u8 used)
 {
-    u8 i;
+    u32 i;
     u8 status;
 
     if (sLinkTestLastBlockSendPos != sBlockSend.pos)
@@ -487,7 +487,7 @@ static void CB2_LinkTest(void)
 
 u16 LinkMain2(const u16 *heldKeys)
 {
-    u8 i;
+    u32 i;
 
     if (!sLinkOpen)
         return 0;
@@ -525,7 +525,7 @@ static void HandleReceiveRemoteLinkPlayer(u8 who)
 
 static void ProcessRecvCmds(u8 unused)
 {
-    u16 i;
+    u32 i;
 
     for (i = 0; i < MAX_LINK_PLAYERS; i++)
     {
@@ -572,7 +572,7 @@ static void ProcessRecvCmds(u8 unused)
                 if (sBlockRecv[i].size > BLOCK_BUFFER_SIZE)
                 {
                     u16 *buffer;
-                    u16 j;
+                    u32 j;
 
                     buffer = (u16 *)gDecompressionBuffer;
                     for (j = 0; j < CMD_LENGTH - 1; j++)
@@ -582,7 +582,7 @@ static void ProcessRecvCmds(u8 unused)
                 }
                 else
                 {
-                    u16 j;
+                    u32 j;
 
                     for (j = 0; j < CMD_LENGTH - 1; j++)
                     {
@@ -669,7 +669,7 @@ static void BuildSendCmd(u16 command)
             break;
         case LINKCMD_SEND_0xEE:
         {
-            u8 i;
+            u32 i;
             gSendCmd[0] = LINKCMD_SEND_0xEE;
             for (i = 0; i < 5; i++)
                 gSendCmd[i + 1] = 0xEE;
@@ -892,7 +892,7 @@ u8 GetLinkPlayerDataExchangeStatusTimed(int minPlayers, int maxPlayers)
 
 bool8 IsLinkPlayerDataExchangeComplete(void)
 {
-    u8 i;
+    u32 i;
     u8 count;
     bool8 retval;
 
@@ -1118,7 +1118,7 @@ void CheckShouldAdvanceLinkState(void)
 static u16 LinkTestCalcBlockChecksum(const u16 *src, u16 size)
 {
     u16 chksum;
-    u16 i;
+    u32 i;
 
     chksum = 0;
     for (i = 0; i < size / 2; i++)
@@ -1343,7 +1343,7 @@ void ClearSavedLinkPlayers(void)
 
 void CheckLinkPlayersMatchSaved(void)
 {
-    u8 i;
+    u32 i;
 
     for (i = 0; i < gSavedLinkPlayerCount; i++)
     {
@@ -1541,7 +1541,7 @@ static void LinkCB_Standby(void)
 
 static void LinkCB_StandbyForAll(void)
 {
-    u8 i;
+    u32 i;
     u8 linkPlayerCount = GetLinkPlayerCount();
     for (i = 0; i < linkPlayerCount; i++)
     {
@@ -2012,7 +2012,7 @@ static void InitTimer(void)
 
 static void EnqueueSendCmd(u16 *sendCmd)
 {
-    u8 i;
+    u32 i;
     u8 offset;
 
     gLinkSavedIme = REG_IME;
@@ -2048,8 +2048,8 @@ static void EnqueueSendCmd(u16 *sendCmd)
 
 static void DequeueRecvCmds(u16 (*recvCmds)[CMD_LENGTH])
 {
-    u8 i;
-    u8 j;
+    u32 i;
+    u32 j;
 
     gLinkSavedIme = REG_IME;
     REG_IME = 0;
@@ -2180,7 +2180,7 @@ static void StartTransfer(void)
 
 static bool8 DoHandshake(void)
 {
-    u8 i;
+    u32 i;
     u8 playerCount;
     u16 minRecv;
 
@@ -2232,7 +2232,7 @@ static bool8 DoHandshake(void)
 static void DoRecv(void)
 {
     u16 recv[4];
-    u8 i;
+    u32 i;
     u8 index;
 
     *(u64 *)recv = REG_SIOMLT_RECV;
@@ -2338,8 +2338,8 @@ static void SendRecvDone(void)
 
 void ResetSendBuffer(void)
 {
-    u8 i;
-    u8 j;
+    u32 i;
+    u32 j;
 
     gLink.sendQueue.count = 0;
     gLink.sendQueue.pos = 0;
@@ -2352,9 +2352,9 @@ void ResetSendBuffer(void)
 
 void ResetRecvBuffer(void)
 {
-    u8 i;
-    u8 j;
-    u8 k;
+    u32 i;
+    u32 j;
+    u32 k;
 
     gLink.recvQueue.count = 0;
     gLink.recvQueue.pos = 0;

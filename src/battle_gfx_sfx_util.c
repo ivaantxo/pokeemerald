@@ -738,7 +738,7 @@ void FreeTrainerFrontPicPalette(u16 frontPicId)
 void BattleLoadAllHealthBoxesGfxAtOnce(void)
 {
     u8 numberOfBattlers = 0;
-    u8 i;
+    u32 i;
 
     LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[0]);
     LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[1]);

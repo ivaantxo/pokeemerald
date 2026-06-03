@@ -444,7 +444,7 @@ void SaveMapView(void)
 
 static bool32 SavedMapViewIsEmpty(void)
 {
-    u16 i;
+    u32 i;
     u32 marker = 0;
 
 #ifndef UBFIX

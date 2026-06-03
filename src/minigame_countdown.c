@@ -207,7 +207,7 @@ static void Task_StaticCountdown(u8 taskId)
 
 static void StaticCountdown_CreateSprites(u8 taskId, s16 *data)
 {
-    u8 i;
+    u32 i;
     struct Sprite *sprite;
 
     LoadCompressedSpriteSheet(&sSpriteSheet_321Start_Static[tSpriteSheetId]);

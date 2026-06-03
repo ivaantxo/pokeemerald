@@ -817,7 +817,7 @@ void FieldEffectStop(struct Sprite *sprite, u8 id)
 
 void FieldEffectFreeTilesIfUnused(u16 tileStart)
 {
-    u8 i;
+    u32 i;
     u16 tag = GetSpriteTileTagByTileStart(tileStart);
 
     if (tag != TAG_NONE)
@@ -831,7 +831,7 @@ void FieldEffectFreeTilesIfUnused(u16 tileStart)
 
 void FieldEffectFreePaletteIfUnused(u8 paletteNum)
 {
-    u8 i;
+    u32 i;
     u16 tag = GetSpritePaletteTagByPaletteNum(paletteNum);
 
     if (tag != TAG_NONE)
@@ -845,14 +845,14 @@ void FieldEffectFreePaletteIfUnused(u8 paletteNum)
 
 void FieldEffectActiveListClear(void)
 {
-    u8 i;
+    u32 i;
     for (i = 0; i < ARRAY_COUNT(sActiveList); i++)
         sActiveList[i] = 0xFF;
 }
 
 void FieldEffectActiveListAdd(u8 id)
 {
-    u8 i;
+    u32 i;
     for (i = 0; i < ARRAY_COUNT(sActiveList); i++)
     {
         if (sActiveList[i] == 0xFF)
@@ -865,7 +865,7 @@ void FieldEffectActiveListAdd(u8 id)
 
 void FieldEffectActiveListRemove(u8 id)
 {
-    u8 i;
+    u32 i;
     for (i = 0; i < ARRAY_COUNT(sActiveList); i++)
     {
         if (sActiveList[i] == id)
@@ -878,7 +878,7 @@ void FieldEffectActiveListRemove(u8 id)
 
 bool8 FieldEffectActiveListContains(u8 id)
 {
-    u8 i;
+    u32 i;
     for (i = 0; i < ARRAY_COUNT(sActiveList); i++)
         if (sActiveList[i] == id)
             return TRUE;
@@ -944,7 +944,7 @@ void FreeResourcesAndDestroySprite(struct Sprite *sprite, u8 spriteId)
 }
 
 // r, g, b are between 0 and 16
-void MultiplyInvertedPaletteRGBComponents(u16 i, u8 r, u8 g, u8 b)
+void MultiplyInvertedPaletteRGBComponents(u32 i, u8 r, u8 g, u8 b)
 {
     int curRed, curGreen, curBlue;
     u16 color = gPlttBufferUnfaded[i];
@@ -965,7 +965,7 @@ void MultiplyInvertedPaletteRGBComponents(u16 i, u8 r, u8 g, u8 b)
 }
 
 // r, g, b are between 0 and 16
-void MultiplyPaletteRGBComponents(u16 i, u8 r, u8 g, u8 b)
+void MultiplyPaletteRGBComponents(u32 i, u8 r, u8 g, u8 b)
 {
     int curRed, curGreen, curBlue;
     u16 color = gPlttBufferUnfaded[i];
@@ -2737,7 +2737,7 @@ static void VBlankCB_FieldMoveShowMonOutdoors(void)
 
 static void LoadFieldMoveOutdoorStreaksTilemap(u16 offs)
 {
-    u16 i;
+    u32 i;
     u16 *dest;
     dest = (u16 *)(VRAM + ARRAY_COUNT(sFieldMoveStreaksOutdoors_Tilemap) + offs);
     for (i = 0; i < ARRAY_COUNT(sFieldMoveStreaksOutdoors_Tilemap); i++, dest++)
@@ -2869,7 +2869,7 @@ static void AnimateIndoorShowMonBg(struct Task *task)
 
 static bool8 SlideIndoorBannerOnscreen(struct Task *task)
 {
-    u16 i;
+    u32 i;
     u16 srcOffs;
     u16 dstOffs;
     u16 *dest;
@@ -2898,7 +2898,7 @@ static bool8 SlideIndoorBannerOnscreen(struct Task *task)
 
 static bool8 SlideIndoorBannerOffscreen(struct Task *task)
 {
-    u16 i;
+    u32 i;
     u16 dstOffs;
     u16 *dest;
 
@@ -3080,7 +3080,7 @@ static void SurfFieldEffect_End(struct Task *task)
 
 u8 FldEff_RayquazaSpotlight(void)
 {
-    u8 i, j, k;
+    u32 i, j, k;
     u8 spriteId = CreateSprite(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_RAYQUAZA], 120, -24, 1);
     struct Sprite *sprite = &gSprites[spriteId];
 

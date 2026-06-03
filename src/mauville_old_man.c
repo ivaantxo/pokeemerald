@@ -73,7 +73,7 @@ static const u8 *const sGiddyQuestions[GIDDY_MAX_QUESTIONS] = {
 
 static void SetupBard(void)
 {
-    u16 i;
+    u32 i;
     struct MauvilleManBard *bard = &gSaveBlock1Ptr->oldMan.bard;
 
     bard->id = MAUVILLE_MAN_BARD;
@@ -155,7 +155,7 @@ void HasBardSongBeenChanged(void)
 
 void SaveBardSongLyrics(void)
 {
-    u16 i;
+    u32 i;
     struct MauvilleManBard *bard = &gSaveBlock1Ptr->oldMan.bard;
 
     StringCopy(bard->playerName, gSaveBlock2Ptr->playerName);
@@ -325,7 +325,7 @@ static void InitGiddyTaleList(void)
         {EC_GROUP_MOVE_2,    0},
         {EC_GROUP_POKEMON_NATIONAL, 0}
     };
-    u16 i;
+    u32 i;
     u16 totalWords;
     u16 temp;
     u16 var; // re-used
@@ -1256,7 +1256,7 @@ static const u8 *GetStoryActionByStat(u32 stat)
 
 static u8 GetFreeStorySlot(void)
 {
-    u8 i;
+    u32 i;
 
     for (i = 0; i < NUM_STORYTELLER_TALES; i++)
     {

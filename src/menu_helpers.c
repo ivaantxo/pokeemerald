@@ -321,7 +321,7 @@ bool8 MenuHelpers_ShouldWaitForLinkRecv(void)
 
 void SetItemListPerPageCount(struct ItemSlot *slots, u8 slotsCount, u8 *pageItems, u8 *totalItems, u8 maxPerPage)
 {
-    u16 i;
+    u32 i;
     struct ItemSlot *slots_ = slots;
 
     // Count the number of non-empty item slots
@@ -356,7 +356,7 @@ void SetCursorWithinListBounds(u16 *scrollOffset, u16 *cursorPos, u8 maxShownIte
 
 void SetCursorScrollWithinListBounds(u16 *scrollOffset, u16 *cursorPos, u8 shownItems, u8 totalItems, u8 maxShownItems)
 {
-    u8 i;
+    u32 i;
 
     if (maxShownItems % 2 != 0)
     {
@@ -398,7 +398,7 @@ void LoadListMenuSwapLineGfx(void)
 
 void CreateSwapLineSprites(u8 *spriteIds, u8 count)
 {
-    u8 i;
+    u32 i;
 
     for (i = 0; i < count; i++)
     {
@@ -412,7 +412,7 @@ void CreateSwapLineSprites(u8 *spriteIds, u8 count)
 
 void DestroySwapLineSprites(u8 *spriteIds, u8 count)
 {
-    u8 i;
+    u32 i;
 
     for (i = 0; i < count; i++)
     {
@@ -425,7 +425,7 @@ void DestroySwapLineSprites(u8 *spriteIds, u8 count)
 
 void SetSwapLineSpritesInvisibility(u8 *spriteIds, u8 count, bool8 invisible)
 {
-    u8 i;
+    u32 i;
 
     for (i = 0; i < count; i++)
         gSprites[spriteIds[i]].invisible = invisible;
@@ -433,7 +433,7 @@ void SetSwapLineSpritesInvisibility(u8 *spriteIds, u8 count, bool8 invisible)
 
 void UpdateSwapLineSpritesPos(u8 *spriteIds, u8 count, s16 x, u16 y)
 {
-    u8 i;
+    u32 i;
     bool8 hasMargin = count & SWAP_LINE_HAS_MARGIN;
     count &= ~SWAP_LINE_HAS_MARGIN;
 

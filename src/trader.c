@@ -33,7 +33,7 @@ static const u8 sDefaultTraderDecorations[NUM_TRADER_ITEMS] =
 
 void TraderSetup(void)
 {
-    u8 i;
+    u32 i;
     struct MauvilleOldManTrader *trader = &gSaveBlock1Ptr->oldMan.trader;
 
     trader->id = MAUVILLE_MAN_TRADER;
@@ -57,7 +57,7 @@ void Trader_ResetFlag(void)
 
 void CreateAvailableDecorationsMenu(u8 taskId)
 {
-    u8 i;
+    u32 i;
     s16 *data = gTasks[taskId].data;
     struct MauvilleOldManTrader *trader = &gSaveBlock1Ptr->oldMan.trader;
     struct WindowTemplate windowTemplate = {
@@ -144,7 +144,7 @@ void GetTraderTradedFlag(void)
 
 void DoesPlayerHaveNoDecorations(void)
 {
-    u8 i;
+    u32 i;
 
     for (i = 0; i < DECORCAT_COUNT; i++)
     {

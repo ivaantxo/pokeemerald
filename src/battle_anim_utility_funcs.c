@@ -414,7 +414,7 @@ static void AnimTask_DrawFallingWhiteLinesOnAttacker_Step(u8 taskId)
 
 void InitStatsChangeAnimation(u8 taskId)
 {
-    u8 i;
+    u32 i;
 
     sAnimStatsChangeData = AllocZeroed(sizeof(struct AnimStatsChangeData));
     for (i = 0; i < ARRAY_COUNT(sAnimStatsChangeData->data); i++)
@@ -663,7 +663,7 @@ void AnimTask_Flash(u8 taskId)
 
 static void AnimTask_Flash_Step(u8 taskId)
 {
-    u16 i;
+    u32 i;
     struct Task *task = &gTasks[taskId];
 
     switch (task->data[0])
@@ -703,7 +703,7 @@ static void AnimTask_Flash_Step(u8 taskId)
 
 static void SetPalettesToColor(u32 selectedPalettes, u16 color)
 {
-    u16 i;
+    u32 i;
 
     for (i = 0; i < 32; i++)
     {

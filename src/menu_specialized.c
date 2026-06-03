@@ -196,7 +196,7 @@ static const struct ListMenuTemplate sMoveRelearnerMovesListTemplate =
 
 bool8 MailboxMenu_Alloc(u8 count)
 {
-    u8 i;
+    u32 i;
 
     // + 1 to count for 'Cancel'
     sMailboxList = Alloc((count + 1) * sizeof(*sMailboxList));
@@ -259,7 +259,7 @@ static void MailboxMenu_ItemPrintFunc(u8 windowId, u32 itemId, u8 y)
 
 u8 MailboxMenu_CreateList(struct PlayerPCItemPageStruct *page)
 {
-    u16 i;
+    u32 i;
     for (i = 0; i < page->count; i++)
     {
         sMailboxList[i].name = sEmptyItemName;
@@ -321,7 +321,7 @@ void MailboxMenu_Free(void)
 
 void ConditionGraph_Init(struct ConditionGraph *graph)
 {
-    u8 i, j;
+    u32 i, j;
 
     for (j = 0; j < CONDITION_COUNT; j++)
     {
@@ -350,7 +350,7 @@ void ConditionGraph_Init(struct ConditionGraph *graph)
 // old and new for the graph transition when switching between Pokémon.
 void ConditionGraph_SetNewPositions(struct ConditionGraph *graph, struct UCoords16 *old, struct UCoords16 *new)
 {
-    u16 i, j;
+    u32 i, j;
     s32 coord, increment;
 
     for (i = 0; i < CONDITION_COUNT; i++)
@@ -417,7 +417,7 @@ bool8 ConditionGraph_ResetScanline(struct ConditionGraph *graph)
 
 void ConditionGraph_Draw(struct ConditionGraph *graph)
 {
-    u16 i;
+    u32 i;
 
     if (!graph->needsDraw)
         return;
@@ -459,7 +459,7 @@ void ConditionGraph_InitWindow(u8 bg)
 
 void ConditionGraph_Update(struct ConditionGraph *graph)
 {
-    u16 i;
+    u32 i;
     for (i = 0; i < CONDITION_COUNT; i++)
         graph->curPositions[i] = graph->newPositions[graph->updateCounter][i];
 
@@ -468,7 +468,7 @@ void ConditionGraph_Update(struct ConditionGraph *graph)
 
 static void ConditionGraph_CalcLine(struct ConditionGraph *graph, u16 *scanline, struct UCoords16 *pos1, struct UCoords16 *pos2, bool8 dir, u16 *overflowScanline)
 {
-    u16 i, height, top, bottom, x2;
+    u32 i, height, top, bottom, x2;
     u16 *ptr;
     s32 x, xIncrement = 0;
 
@@ -569,7 +569,7 @@ static void ConditionGraph_CalcLine(struct ConditionGraph *graph, u16 *scanline,
 
 static void ConditionGraph_CalcRightHalf(struct ConditionGraph *graph)
 {
-    u16 i, y, bottom;
+    u32 i, y, bottom;
 
     // Calculate Cool -> Beauty line
     if (graph->curPositions[GRAPH_COOL].y < graph->curPositions[GRAPH_BEAUTY].y)
@@ -669,7 +669,7 @@ void ConditionGraph_CalcPositions(u8 *conditions, struct UCoords16 *positions)
 {
     u8 lineLength, sinIdx;
     s8 posIdx;
-    u16 i;
+    u32 i;
 
     // Cool is straight up-and-down (not angled), so no need for Sin
     lineLength = sConditionToLineLength[*(conditions++)];
@@ -702,7 +702,7 @@ void ConditionGraph_CalcPositions(u8 *conditions, struct UCoords16 *positions)
 
 void InitMoveRelearnerWindows(bool8 useContestWindow)
 {
-    u8 i;
+    u32 i;
 
     InitWindows(sMoveRelearnerWindowTemplates);
     DeactivateAllTextPrinters();
@@ -1000,7 +1000,7 @@ static u8 *BufferConditionMenuSpacedStringN(u8 *dst, const u8 *src, s16 n)
 
 void GetConditionMenuMonNameAndLocString(u8 *locationDst, u8 *nameDst, u16 boxId, u16 monId, u16 partyId, u16 numMons, bool8 excludesCancel)
 {
-    u16 i;
+    u32 i;
     u16 box = boxId;
     u16 mon = monId;
 
@@ -1036,7 +1036,7 @@ void GetConditionMenuMonNameAndLocString(u8 *locationDst, u8 *nameDst, u16 boxId
 
 void GetConditionMenuMonConditions(struct ConditionGraph *graph, u8 *numSparkles, u16 boxId, u16 monId, u16 partyId, u16 id, u16 numMons, bool8 excludesCancel)
 {
-    u16 i;
+    u32 i;
 
     if (!excludesCancel)
         numMons--;
@@ -1196,7 +1196,7 @@ void LoadConditionMonPicTemplate(struct SpriteSheet *sheet, struct SpriteTemplat
 
 void LoadConditionSelectionIcons(struct SpriteSheet *sheets, struct SpriteTemplate *template, struct SpritePalette *pals)
 {
-    u8 i;
+    u32 i;
 
     struct SpriteSheet dataSheets[] =
     {
@@ -1346,7 +1346,7 @@ static void SetConditionSparklePosition(struct Sprite *sprite)
 
 static void InitConditionSparkles(u8 count, bool8 allowFirstShowAll, struct Sprite **sprites)
 {
-    u16 i;
+    u32 i;
 
     for (i = 0; i < MAX_CONDITION_SPARKLES; i++)
     {
@@ -1373,7 +1373,7 @@ static void InitConditionSparkles(u8 count, bool8 allowFirstShowAll, struct Spri
 
 static void SetNextConditionSparkle(struct Sprite *sprite)
 {
-    u16 i;
+    u32 i;
     u8 id = sprite->sNextSparkleSpriteId;
     for (i = 0; i < sprite->sNumExtraSparkles + 1; i++)
     {
@@ -1385,7 +1385,7 @@ static void SetNextConditionSparkle(struct Sprite *sprite)
 
 void ResetConditionSparkleSprites(struct Sprite **sprites)
 {
-    u8 i;
+    u32 i;
 
     for (i = 0; i < MAX_CONDITION_SPARKLES; i++)
         sprites[i] = NULL;
@@ -1393,7 +1393,7 @@ void ResetConditionSparkleSprites(struct Sprite **sprites)
 
 void CreateConditionSparkleSprites(struct Sprite **sprites, u8 monSpriteId, u8 _count)
 {
-    u16 i, spriteId, firstSpriteId = 0;
+    u32 i, spriteId, firstSpriteId = 0;
     u8 count = _count;
 
     for (i = 0; i < count + 1; i++)
@@ -1421,7 +1421,7 @@ void CreateConditionSparkleSprites(struct Sprite **sprites, u8 monSpriteId, u8 _
 
 void DestroyConditionSparkleSprites(struct Sprite **sprites)
 {
-    u16 i;
+    u32 i;
 
     for (i = 0; i < MAX_CONDITION_SPARKLES; i++)
     {
@@ -1483,7 +1483,7 @@ static void SpriteCB_ConditionSparkle(struct Sprite *sprite)
 
 static void ShowAllConditionSparkles(struct Sprite *sprite)
 {
-    u8 i, id = sprite->sNextSparkleSpriteId;
+    u32 i, id = sprite->sNextSparkleSpriteId;
 
     for (i = 0; i < sprite->sNumExtraSparkles + 1; i++)
     {
@@ -1512,7 +1512,7 @@ static const u8 *const sLvlUpStatStrings[NUM_STATS] =
 
 void DrawLevelUpWindowPg1(u16 windowId, u16 *statsBefore, u16 *statsAfter, u8 bgClr, u8 fgClr, u8 shadowClr)
 {
-    u16 i, x;
+    u32 i, x;
     s16 statsDiff[NUM_STATS];
     u8 text[12];
     u8 color[3];
@@ -1567,7 +1567,7 @@ void DrawLevelUpWindowPg1(u16 windowId, u16 *statsBefore, u16 *statsAfter, u8 bg
 
 void DrawLevelUpWindowPg2(u16 windowId, u16 *currStats, u8 bgClr, u8 fgClr, u8 shadowClr)
 {
-    u16 i, numDigits, x;
+    u32 i, numDigits, x;
     s16 stats[NUM_STATS];
     u8 text[12];
     u8 color[3];

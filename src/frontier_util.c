@@ -906,7 +906,7 @@ static void SetFrontierTrainers(void)
 
 static void SaveSelectedParty(void)
 {
-    u8 i;
+    u32 i;
 
     for (i = 0; i < MAX_FRONTIER_PARTY_SIZE; i++)
     {
@@ -2158,7 +2158,7 @@ static void IncrementWinStreak(void)
 
 static void RestoreHeldItems(void)
 {
-    u8 i;
+    u32 i;
 
     for (i = 0; i < MAX_FRONTIER_PARTY_SIZE; i++)
     {
@@ -2191,7 +2191,7 @@ static void BufferFrontierTrainerName(void)
 
 static void ResetSketchedMoves(void)
 {
-    u8 i, j, k;
+    u32 i, j, k;
 
     for (i = 0; i < MAX_FRONTIER_PARTY_SIZE; i++)
     {

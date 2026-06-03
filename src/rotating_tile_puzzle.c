@@ -107,7 +107,7 @@ void FreeRotatingTilePuzzle(void)
 
 u16 MoveRotatingTileObjects(u8 puzzleNumber)
 {
-    u8 i;
+    u32 i;
     struct ObjectEventTemplate *objectEvents = gSaveBlock1Ptr->objectEventTemplates;
     u16 localId = LOCALID_NONE;
 
@@ -189,7 +189,7 @@ u16 MoveRotatingTileObjects(u8 puzzleNumber)
 
 void TurnRotatingTileObjects(void)
 {
-    u8 i;
+    u32 i;
     s32 puzzleTileStart;
     struct ObjectEventTemplate *objectEvents;
 

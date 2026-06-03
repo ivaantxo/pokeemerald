@@ -628,7 +628,7 @@ static u8 GetConnectedChildStrength(u8 maxFlags)
 {
     u8 flagCount = 0;
     u32 flags = gRfuLinkStatus->connSlotFlag;
-    u8 i;
+    u32 i;
 
     if (gRfuLinkStatus->parentChild == MODE_PARENT)
     {
@@ -795,7 +795,7 @@ void LoadWirelessStatusIndicatorSpriteGfx(void)
 
 static u8 GetParentSignalStrength(void)
 {
-    u8 i;
+    u32 i;
     u8 flags = gRfuLinkStatus->connSlotFlag;
     for (i = 0; i < RFU_CHILD_MAX; i++)
     {

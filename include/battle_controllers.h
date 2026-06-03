@@ -167,9 +167,9 @@ struct HpAndStatus
 
 struct MovePpInfo
 {
-    u16 moves[MAX_MON_MOVES];
-    u8 pp[MAX_MON_MOVES];
-    u8 ppBonuses;
+   u16 moves[MAX_MON_MOVES];
+   u8 pp[MAX_MON_MOVES];
+   u8 ppBonuses;
 };
 
 struct ChooseMoveStruct

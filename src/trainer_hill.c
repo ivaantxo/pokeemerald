@@ -630,7 +630,7 @@ static void SetTimerValue(u32 *dst, u32 val)
 
 void LoadTrainerHillObjectEventTemplates(void)
 {
-    u8 i, floorId;
+    u32 i, floorId;
     struct ObjectEventTemplate *eventTemplates = gSaveBlock1Ptr->objectEventTemplates;
 
     if (!LoadTrainerHillFloorObjectEventScripts())
@@ -821,7 +821,7 @@ bool8 GetHillTrainerFlag(u8 objectEventId)
 
 void SetHillTrainerFlag(void)
 {
-    u8 i;
+    u32 i;
     u8 trainerIndexStart = GetFloorId() * HILL_TRAINERS_PER_FLOOR;
 
     for (i = 0; i < HILL_TRAINERS_PER_FLOOR; i++)
@@ -1025,7 +1025,7 @@ static u8 GetPrizeListId(bool8 allowTMs)
 
 static u16 GetPrizeItemId(void)
 {
-    u8 i;
+    u32 i;
     const u16 *prizeList;
     s32 trainerNumSum = 0, prizeListSetId, minutes, id;
 

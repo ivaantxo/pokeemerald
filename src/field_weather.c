@@ -270,7 +270,7 @@ static u8 None_Finish(void)
 // this function always builds the same two tables.
 static void BuildColorMaps(void)
 {
-    u16 i;
+    u32 i;
     u8 (*colorMaps)[32];
     u16 colorVal;
     u16 curBrightness;
@@ -461,7 +461,7 @@ static void ApplyColorMap(u8 startPalIndex, u8 numPalettes, s8 colorMapIndex)
     u16 curPalIndex;
     u16 palOffset;
     u8 *colorMap;
-    u16 i;
+    u32 i;
 
     if (colorMapIndex > 0)
     {
@@ -541,7 +541,7 @@ static void ApplyColorMapWithBlend(u8 startPalIndex, u8 numPalettes, s8 colorMap
 {
     u16 palOffset;
     u16 curPalIndex;
-    u16 i;
+    u32 i;
     struct RGBColor color = *(struct RGBColor *)&blendColor;
     u8 rBlend = color.r;
     u8 gBlend = color.g;
@@ -596,7 +596,7 @@ static void ApplyDroughtColorMapWithBlend(s8 colorMapIndex, u8 blendCoeff, u16 b
     u8 bBlend;
     u16 curPalIndex;
     u16 palOffset;
-    u16 i;
+    u32 i;
 
     colorMapIndex = -colorMapIndex - 1;
     color = *(struct RGBColor *)&blendColor;
@@ -701,7 +701,7 @@ static void MarkFogSpritePalToLighten(u8 paletteIndex)
 
 static bool8 LightenSpritePaletteInFog(u8 paletteIndex)
 {
-    u16 i;
+    u32 i;
 
     for (i = 0; i < gWeatherPtr->lightenedFogSpritePalsCount; i++)
     {
@@ -810,7 +810,7 @@ bool8 IsWeatherNotFadingIn(void)
 void UpdateSpritePaletteWithWeather(u8 spritePaletteIndex)
 {
     u16 paletteIndex = 16 + spritePaletteIndex;
-    u16 i;
+    u32 i;
 
     switch (gWeatherPtr->palProcessingState)
     {

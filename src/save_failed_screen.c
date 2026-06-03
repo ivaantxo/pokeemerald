@@ -359,7 +359,7 @@ static void VBlankCB_UpdateClockGraphics(void)
 static bool8 VerifySectorWipe(u16 sector)
 {
     u32 *ptr = (u32 *)&gSaveDataBuffer;
-    u16 i;
+    u32 i;
 
     ReadFlash(sector, 0, (u8 *)ptr, SECTOR_SIZE);
 
@@ -373,7 +373,7 @@ static bool8 VerifySectorWipe(u16 sector)
 
 static bool8 WipeSector(u16 sector)
 {
-    u16 i, j;
+    u32 i, j;
     bool8 failed = TRUE;
 
     // Attempt to wipe sector with an arbitrary attempt limit of 130
@@ -390,7 +390,7 @@ static bool8 WipeSector(u16 sector)
 
 static bool8 WipeSectors(u32 sectorBits)
 {
-    u16 i;
+    u32 i;
 
     for (i = 0; i < SECTORS_COUNT; i++)
         if ((sectorBits & (1 << i)) && !WipeSector(i))

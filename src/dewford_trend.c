@@ -70,7 +70,7 @@ static s16 GetSavedTrendIndex(struct DewfordTrend *, struct DewfordTrend *, u16)
 
 void InitDewfordTrend(void)
 {
-    u16 i;
+    u32 i;
 
     for (i = 0; i < SAVED_TRENDS_COUNT; i++)
     {
@@ -89,7 +89,7 @@ void InitDewfordTrend(void)
 
 void UpdateDewfordTrendPerDay(u16 days)
 {
-    u16 i;
+    u32 i;
 
     if (days != 0)
     {
@@ -151,7 +151,7 @@ void UpdateDewfordTrendPerDay(u16 days)
 bool8 TrySetTrendyPhrase(u16 *phrase)
 {
     struct DewfordTrend trend = {0};
-    u16 i;
+    u32 i;
 
     if (!IsPhraseInSavedTrends(phrase))
     {
@@ -208,10 +208,10 @@ bool8 TrySetTrendyPhrase(u16 *phrase)
 
 static void SortTrends(struct DewfordTrend *trends, u16 numTrends, u8 mode)
 {
-    u16 i;
+    u32 i;
     for (i = 0; i < numTrends; i++)
     {
-        u16 j;
+        u32 j;
         for (j = i + 1; j < numTrends; j++)
         {
             if (CompareTrends(&trends[j], &trends[i], mode))
@@ -228,7 +228,7 @@ static void SortTrends(struct DewfordTrend *trends, u16 numTrends, u8 mode)
 
 void ReceiveDewfordTrendData(struct DewfordTrend *linkedTrends, size_t size, u8 unused)
 {
-    u16 i, j, numTrends, players;
+    u32 i, j, numTrends, players;
     struct DewfordTrend *linkedTrendsBuffer, *savedTrendsBuffer, *src, *dst, *temp;
 
     // Exit if alloc fails
@@ -384,7 +384,7 @@ static void SeedTrendRng(struct DewfordTrend *trend)
 
 static bool8 IsPhraseInSavedTrends(u16 *phrase)
 {
-    u16 i;
+    u32 i;
 
     for (i = 0; i < SAVED_TRENDS_COUNT; i++)
     {
@@ -396,7 +396,7 @@ static bool8 IsPhraseInSavedTrends(u16 *phrase)
 
 static bool8 IsEasyChatPairEqual(u16 *words1, u16 *words2)
 {
-    u16 i;
+    u32 i;
 
     for (i = 0; i < 2; i++)
     {

@@ -138,7 +138,7 @@ static const struct SpriteTemplate sSpriteTemplate_CutGrass =
 bool8 SetUpFieldMove_Cut(void)
 {
     s16 x, y;
-    u8 i, j;
+    u32 i, j;
     u8 tileBehavior;
     u8 userAbility;
     bool8 cutTiles[CUT_NORMAL_AREA];
@@ -575,7 +575,7 @@ static void CutGrassSpriteCallback2(struct Sprite *sprite)
 
 static void CutGrassSpriteCallbackEnd(struct Sprite *sprite)
 {
-    u8 i;
+    u32 i;
 
     for (i = 1; i < CUT_SPRITE_ARRAY_COUNT; i++)
         DestroySprite(&gSprites[sCutGrassSpriteArrayPtr[i]]);

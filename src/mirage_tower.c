@@ -446,7 +446,7 @@ static void FinishCeilingCrumbleTask(u8 taskId)
 
 static void CreateCeilingCrumbleSprites(void)
 {
-    u8 i;
+    u32 i;
     u8 spriteId;
 
     for (i = 0; i < ARRAY_COUNT(sCeilingCrumblePositions); i++)
@@ -484,7 +484,7 @@ static void SpriteCB_CeilingCrumble(struct Sprite *sprite)
 
 static void SetInvisibleMirageTowerMetatiles(void)
 {
-    u8 i;
+    u32 i;
     for (i = 0; i < ARRAY_COUNT(sInvisibleMirageTowerMetatiles); i++)
         MapGridSetMetatileIdAt(sInvisibleMirageTowerMetatiles[i].x + MAP_OFFSET,
                                sInvisibleMirageTowerMetatiles[i].y + MAP_OFFSET,
@@ -583,7 +583,7 @@ static void InitMirageTowerShake(u8 taskId)
 static void DoMirageTowerDisintegration(u8 taskId)
 {
     u8 bgShakeTaskId, j;
-    u16 i;
+    u32 i;
     u8 index;
 
     switch (gTasks[taskId].tState)
@@ -670,7 +670,7 @@ static void DoMirageTowerDisintegration(u8 taskId)
 
 static void Task_FossilFallAndSink(u8 taskId)
 {
-    u16 i;
+    u32 i;
     u8 *buffer;
 
     switch (gTasks[taskId].tState)
@@ -743,7 +743,7 @@ static void SpriteCB_FallingFossil(struct Sprite *sprite)
     else if (sprite->y >= 96)
     {
         // Fossil has reached the ground, update disintegration animation
-        u8 i;
+        u32 i;
         for (i = 0; i < 2; i++)
             UpdateDisintegrationEffect(sFallingFossil->frameImageTiles, sFallingFossil->disintegrateRand[sFallingFossil->disintegrateIdx++], 0, 16, 0);
 

@@ -1866,7 +1866,7 @@ static void DrawSelectedMonScreen(u8 whichParty)
     s8 nameStringWidth;
     u8 nickname[POKEMON_NAME_BUFFER_SIZE];
     u8 movesString[56];
-    u8 i;
+    u32 i;
     u8 partyIdx;
     u8 selectedMonParty;
     u8 selectedMonIdx = sTradeMenu->selectedMonIdx[whichParty];
@@ -1964,7 +1964,7 @@ static u8 GetMonNicknameWidth(u8 *str, u8 whichParty, u8 partyIdx)
 static void BufferMovesString(u8 *str, u8 whichParty, u8 partyIdx)
 {
     u16 moves[MAX_MON_MOVES];
-    u16 i;
+    u32 i;
 
     if (!sTradeMenu->isEgg[whichParty][partyIdx])
     {
@@ -2005,7 +2005,7 @@ static void PrintPartyMonNickname(u8 whichParty, u8 windowId, u8 *nickname)
 
 static void PrintPartyNicknames(u8 whichParty)
 {
-    u8 i;
+    u32 i;
     u8 nickname[POKEMON_NAME_BUFFER_SIZE];
     u8 str[max(32, POKEMON_NAME_BUFFER_SIZE)];
     struct Pokemon *party = (whichParty == TRADE_PLAYER) ? gPlayerParty : gEnemyParty;
@@ -2338,7 +2338,7 @@ static void ComputePartyTradeableFlags(u8 whichParty)
 
 static void ComputePartyHPBarLevels(u8 whichParty)
 {
-    u16 i, curHp, maxHp;
+    u32 i, curHp, maxHp;
 
     switch (whichParty)
     {
@@ -4861,7 +4861,7 @@ static void Task_InGameTrade(u8 taskId)
 
 static void CheckPartnersMonForRibbons(void)
 {
-    u8 i;
+    u32 i;
     u8 numRibbons = 0;
     for (i = 0; i < (MON_DATA_UNUSED_RIBBONS - MON_DATA_CHAMPION_RIBBON); i++)
         numRibbons += GetMonData(&gEnemyParty[gSelectedTradeMonPositions[TRADE_PARTNER] % PARTY_SIZE], MON_DATA_CHAMPION_RIBBON + i);

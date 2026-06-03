@@ -18,7 +18,7 @@ void FieldEffectStop(struct Sprite *sprite, u8 id);
 u8 CreateTrainerSprite(u8 trainerSpriteID, s16 x, s16 y, u8 subpriority, u8 *buffer);
 void FldEff_TeleportWarpOut(void);
 void FieldEffectActiveListRemove(u8 id);
-void MultiplyInvertedPaletteRGBComponents(u16 i, u8 r, u8 g, u8 b);
+void MultiplyInvertedPaletteRGBComponents(u32 i, u8 r, u8 g, u8 b);
 void FieldEffectActiveListAdd(u8 id);
 void FieldEffectScript_LoadTiles(u8 **script);
 void FieldEffectScript_LoadFadedPalette(u8 **script);
@@ -42,7 +42,7 @@ void StartLavaridgeGym1FWarp(u8 priority);
 void SpriteCB_AshPuff(struct Sprite *sprite);
 void SpriteCB_AshLaunch(struct Sprite *sprite);
 
-void MultiplyPaletteRGBComponents(u16 i, u8 r, u8 g, u8 b);
+void MultiplyPaletteRGBComponents(u32 i, u8 r, u8 g, u8 b);
 void FreeResourcesAndDestroySprite(struct Sprite *sprite, u8 spriteId);
 u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority);
 void StartEscapeRopeFieldEffect(void);

@@ -380,7 +380,7 @@ static void HighlightOptionMenuItem(u8 index)
 static void DrawOptionMenuChoice(const u8 *text, u8 x, u8 y, u8 style)
 {
     u8 dst[16];
-    u16 i;
+    u32 i;
 
     for (i = 0; *text != EOS && i < ARRAY_COUNT(dst) - 1; i++)
         dst[i] = *(text++);
@@ -542,7 +542,7 @@ static void FrameType_DrawChoices(u8 selection)
 {
     u8 text[16];
     u8 n = selection + 1;
-    u16 i;
+    u32 i;
 
     for (i = 0; gText_FrameTypeNumber[i] != EOS && i <= 5; i++)
         text[i] = gText_FrameTypeNumber[i];
@@ -624,7 +624,7 @@ static void DrawHeaderText(void)
 
 static void DrawOptionMenuTexts(void)
 {
-    u8 i;
+    u32 i;
 
     FillWindowPixelBuffer(WIN_OPTIONS, PIXEL_FILL(1));
     for (i = 0; i < MENUITEM_COUNT; i++)

@@ -858,7 +858,7 @@ u8 GetBattlerPosition(u8 battler)
 
 u8 GetBattlerAtPosition(u8 position)
 {
-    u8 i;
+    u32 i;
 
     for (i = 0; i < gBattlersCount; i++)
     {
@@ -1625,7 +1625,7 @@ void AnimTravelDiagonally(struct Sprite *sprite)
 
 s16 CloneBattlerSpriteWithBlend(u8 animBattler)
 {
-    u16 i;
+    u32 i;
     u8 spriteId = GetAnimBattlerSpriteId(animBattler);
 
     if (spriteId != SPRITE_NONE)
@@ -1899,7 +1899,7 @@ static u16 GetBattlerYDeltaFromSpriteId(u8 spriteId)
     struct BattleSpriteInfo *spriteInfo;
     u8 battler = gSprites[spriteId].data[0];
     u16 species;
-    u16 i;
+    u32 i;
 
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {

@@ -762,7 +762,7 @@ static void WallyHandleGetRawMonData(void)
 static void WallyHandleSetMonData(void)
 {
     u8 monToCheck;
-    u8 i;
+    u32 i;
 
     if (gBattleBufferA[gActiveBattler][2] == 0)
     {

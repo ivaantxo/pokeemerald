@@ -1148,7 +1148,7 @@ static void MainTask(u8 taskId)
 
 static void SetNamesAndTextSpeed(struct BerryCrushGame *game)
 {
-    u8 i;
+    u32 i;
     for (i = 0; i < game->playerCount; i++)
         StringCopy(game->players[i].name, gLinkPlayers[i].name);
     for (; i < MAX_RFU_PLAYERS; i++)
@@ -1369,7 +1369,7 @@ static void ResetCrusherPos(struct BerryCrushGame *game)
 
 static void CreateBerrySprites(struct BerryCrushGame *game, struct BerryCrushGame_Gfx *gfx)
 {
-    u8 i;
+    u32 i;
     u8 spriteId;
     s16 distance, var1;
     s16 *data;
@@ -1450,7 +1450,7 @@ static void SpriteCB_DropBerryIntoCrusher(struct Sprite *sprite)
 
 static void BerryCrushFreeBerrySpriteGfx(struct BerryCrushGame *game, struct BerryCrushGame_Gfx *gfx)
 {
-    u8 i;
+    u32 i;
     for (i = 0; i < game->playerCount; i++)
     {
         FreeSpritePaletteByTag(sPlayerBerrySpriteTags[i]);
@@ -1462,7 +1462,7 @@ static void UpdateInputEffects(struct BerryCrushGame *game, struct BerryCrushGam
 {
     u8 numPlayersPressed;
     struct BerryCrushGame_LinkState *linkState;
-    u8 i;
+    u32 i;
     u16 temp1, xModifier;
 
     numPlayersPressed = 0;
@@ -1543,7 +1543,7 @@ static void UpdateInputEffects(struct BerryCrushGame *game, struct BerryCrushGam
 
 static bool32 AreEffectsFinished(struct BerryCrushGame *game, struct BerryCrushGame_Gfx *gfx)
 {
-    u8 i;
+    u32 i;
 
     // Are any impact sprites active
     for (i = 0; i < game->playerCount; i++)
@@ -1592,7 +1592,7 @@ static void PrintTextCentered(u8 windowId, u8 left, u8 colorId, const u8 *string
 
 static void PrintResultsText(struct BerryCrushGame *game, u8 page, u8 sp14, u8 baseY)
 {
-    u8 i, j;
+    u32 i, j;
     u8 playerId = 0;
     u8 ranking = 0;
     s32 x;
@@ -1887,7 +1887,7 @@ static void HideTimer(struct BerryCrushGame_Gfx *gfx)
 
 static void CreatePlayerNameWindows(struct BerryCrushGame *game)
 {
-    u8 i;
+    u32 i;
     for (i = 0; i < game->playerCount; i++)
     {
         game->gfx.playerCoords[i] = &sPlayerCoords[sPlayerIdToPosId[game->playerCount - 2][i]];
@@ -1899,7 +1899,7 @@ static void CreatePlayerNameWindows(struct BerryCrushGame *game)
 
 static void DrawPlayerNameWindows(struct BerryCrushGame *game)
 {
-    u8 i;
+    u32 i;
     for (i = 0; i < game->playerCount; i++)
     {
         PutWindowTilemap(game->gfx.nameWindowIds[i]);
@@ -2063,7 +2063,7 @@ static void SpriteCB_Impact(struct Sprite *sprite)
 
 static void SpriteCB_Sparkle_End(struct Sprite *sprite)
 {
-    u8 i;
+    u32 i;
     for (i = 0; i < ARRAY_COUNT(sprite->data); i++)
         sprite->data[i] = 0;
     sprite->x2 = 0;
@@ -2352,7 +2352,7 @@ static u32 Cmd_GoToBerryPouch(struct BerryCrushGame *game, u8 *args)
 
 static u32 Cmd_WaitForOthersToPickBerries(struct BerryCrushGame *game, u8 *args)
 {
-    u8 i;
+    u32 i;
 
     switch (game->cmdState)
     {
@@ -2985,7 +2985,7 @@ static u32 Cmd_HandleTimeUp(struct BerryCrushGame *game, u8 *args)
 
 static u32 Cmd_TabulateResults(struct BerryCrushGame *game, u8 *args)
 {
-    u8 i, j, tempPlayerId;
+    u32 i, j, tempPlayerId;
     s32 temp1, temp2;
     u16 tempStat;
 

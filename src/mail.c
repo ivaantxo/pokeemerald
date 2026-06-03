@@ -638,7 +638,7 @@ static void CB2_InitMailRead(void)
 
 static void BufferMailText(void)
 {
-    u16 i;
+    u32 i;
     u8 numWords;
     u8 *ptr;
 
@@ -667,7 +667,7 @@ static void BufferMailText(void)
 
 static void PrintMailText(void)
 {
-    u16 i;
+    u32 i;
     u8 signature[32];
     u8 y;
     u8 *bufptr;

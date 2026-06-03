@@ -103,7 +103,7 @@ void rfu_LMAN_initializeRFU(INIT_PARAM *init_parameters)
 
 static void rfu_LMAN_clearVariables(void)
 {
-    u8 i;
+    u32 i;
 
     lman.state = lman.next_state = LMAN_STATE_READY;
     lman.parent_child = MODE_NEUTRAL;
@@ -126,7 +126,7 @@ void rfu_LMAN_powerDownRFU(void)
 
 u8 rfu_LMAN_establishConnection(u8 parent_child, u16 connect_period, u16 name_accept_period, u16 *acceptable_serialNo_list)
 {
-    u8 i;
+    u32 i;
     u16 *serial_list;
 
     if (lman.state != LMAN_STATE_READY && (lman.state != LMAN_STATE_WAIT_RECV_CHILD_NAME || parent_child != MODE_PARENT))
@@ -185,7 +185,7 @@ u8 rfu_LMAN_establishConnection(u8 parent_child, u16 connect_period, u16 name_ac
 
 u8 rfu_LMAN_CHILD_connectParent(u16 parentId, u16 connect_period)
 {
-    u8 i;
+    u32 i;
 
     if (lman.state != LMAN_STATE_READY && (lman.state < 9 || lman.state > 11))
     {
@@ -233,7 +233,7 @@ u8 rfu_LMAN_CHILD_connectParent(u16 parentId, u16 connect_period)
 
 static void UNUSED rfu_LMAN_PARENT_stopWaitLinkRecoveryAndDisconnect(u8 bm_targetSlot)
 {
-    u8 i;
+    u32 i;
 
     if ((bm_targetSlot & lman.linkRecoveryTimer.active) == 0)
         return;
@@ -331,7 +331,7 @@ void rfu_LMAN_stopManager(u8 forced_stop_and_RFU_reset_flag)
 
 static bool8 rfu_LMAN_linkWatcher(u16 REQ_commandID)
 {
-    u8 i;
+    u32 i;
     u8 bm_linkLossSlot;
     u8 reason;
     u8 bm_linkRecoverySlot;
@@ -599,7 +599,7 @@ static void rfu_LMAN_REQ_callback(u16 reqCommandId, u16 reqResult)
 {
     u8 status;
     u8 *stwiRecvBuffer;
-    u8 i;
+    u32 i;
 
     if (lman.active != 0)
     {
@@ -1002,7 +1002,7 @@ static void rfu_LMAN_PARENT_checkRecvChildName(void)
 {
     u8 newSlot;
     u8 newAcceptSlot;
-    u8 i;
+    u32 i;
     u8 flags;
     u8 tgtSlot;
     const u16 *ptr;
@@ -1177,7 +1177,7 @@ static void rfu_LMAN_CHILD_linkRecoveryProcess(void)
 
 static u8 rfu_LMAN_CHILD_checkEnableParentCandidate(void)
 {
-    u8 i;
+    u32 i;
     u16 *serialNo;
     u8 flags = 0x00;
 
@@ -1214,7 +1214,7 @@ static void rfu_LMAN_disconnect(u8 bm_disconnectedSlot)
 
 static void rfu_LMAN_reflectCommunicationStatus(u8 bm_disconnectedSlot)
 {
-    u8 i;
+    u32 i;
 
     if (gRfuLinkStatus->sendSlotNIFlag)
     {
@@ -1251,8 +1251,8 @@ static void rfu_LMAN_reflectCommunicationStatus(u8 bm_disconnectedSlot)
 
 static void rfu_LMAN_checkNICommunicateStatus(void)
 {
-    u8 i;
-    u8 j;
+    u32 i;
+    u32 j;
     u8 flags;
 
     if (lman.NI_failCounter_limit)

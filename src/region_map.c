@@ -1568,7 +1568,7 @@ void TrySetPlayerIconBlink(void)
 u8 *GetMapName(u8 *dest, mapsec_u16_t regionMapId, u16 padLength)
 {
     u8 *str;
-    u16 i;
+    u32 i;
 
     if (regionMapId == MAPSEC_SECRET_BASE)
     {
@@ -1759,7 +1759,7 @@ static void SetFlyMapCallback(void callback(void))
 
 static void DrawFlyDestTextWindow(void)
 {
-    u16 i;
+    u32 i;
     bool32 namePrinted;
     const u8 *name;
 
@@ -1882,7 +1882,7 @@ static void CreateFlyDestIcons(void)
 // Only used for Battle Frontier, but set up to handle more
 static void TryCreateRedOutlineFlyDestIcons(void)
 {
-    u16 i;
+    u32 i;
     u16 x;
     u16 y;
     u16 width;

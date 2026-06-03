@@ -383,7 +383,7 @@ s32 Rfu_GetIndexOfNewestChild(u8 bits)
 
 static void SetLinkPlayerIdsFromSlots(s32 baseSlots, s32 addSlots)
 {
-    u8 i;
+    u32 i;
     u8 baseId = 1;
     s32 baseSlotsCopy = baseSlots;
     s32 newId = 0;
@@ -482,7 +482,7 @@ static void Task_ChildSearchForParent(u8 taskId)
 
 static void InitChildRecvBuffers(void)
 {
-    u8 i;
+    u32 i;
     u8 acceptSlot = lman.acceptSlot_flag;
     for (i = 0; i < RFU_CHILD_MAX; i++)
     {
@@ -604,7 +604,7 @@ static void MSCCallback_Parent(u16 REQ_commandID)
 
 void LinkRfu_Shutdown(void)
 {
-    u8 i;
+    u32 i;
 
     rfu_LMAN_powerDownRFU();
     if (gRfu.parentChild == MODE_PARENT)
@@ -701,7 +701,7 @@ void StopUnionRoomLinkManager(void)
 
 static void UNUSED ReadySendDataForSlots(u8 slots)
 {
-    u8 i;
+    u32 i;
 
     for (i = 0; i < RFU_CHILD_MAX; i++)
     {
@@ -823,10 +823,10 @@ static bool32 RfuMain1_Parent(void)
 
 static bool32 RfuMain2_Parent(void)
 {
-    u16 i;
+    u32 i;
     u16 flags;
     u8 r0;
-    u16 j;
+    u32 j;
     bool8 failed;
 
     if (gRfu.state >= RFUSTATE_FINALIZED && gRfu.runParentMain2 == TRUE)
@@ -928,8 +928,8 @@ static void ChildBuildSendCmd(u16 *sendCmd, u8 *dst)
 
 static bool32 RfuMain1_Child(void)
 {
-    u8 i;
-    u8 j;
+    u32 i;
+    u32 j;
     u8 recv[MAX_RFU_PLAYERS * (2 * (CMD_LENGTH - 1))];
     u8 send[2 * (CMD_LENGTH - 1)];
     u8 status;
@@ -1017,7 +1017,7 @@ void Rfu_ResetBlockReceivedFlag(u8 linkPlayerId)
 
 static u8 LoadLinkPlayerIds(const u8 *ids)
 {
-    u8 i;
+    u32 i;
     if (gRfu.parentChild == MODE_PARENT)
         return FALSE;
     for (i = 0; i < RFU_CHILD_MAX; i++)
@@ -1074,8 +1074,8 @@ void Rfu_SetBerryBlenderLinkCallback(void)
 
 static void RfuHandleReceiveCommand(u8 unused)
 {
-    u16 i;
-    u16 j;
+    u32 i;
+    u32 j;
 
     for (i = 0; i < MAX_RFU_PLAYERS; i++)
     {
@@ -1232,7 +1232,7 @@ u8 Rfu_GetBlockReceivedStatus(void)
 
 static void RfuPrepareSendBuffer(u16 command)
 {
-    u8 i;
+    u32 i;
     u8 *buff;
     u8 tmp;
 
@@ -1481,7 +1481,7 @@ void Rfu_SetCloseLinkCallback(void)
 static void SendReadyExitStandbyUntilAllReady(void)
 {
     u8 playerCount;
-    u8 i;
+    u32 i;
 
     if (GetMultiplayerId() != 0)
     {
@@ -1519,7 +1519,7 @@ static void LinkLeaderReadyToExitStandby(void)
 // RFU equivalent of LinkCB_Standby and LinkCB_StandbyForAll
 static void Rfu_LinkStandby(void)
 {
-    u8 i;
+    u32 i;
     u8 playerCount;
 
     if (GetMultiplayerId() != 0)
@@ -2178,7 +2178,7 @@ static void StartDisconnectNewChild(void)
 
 static void LinkManagerCB_Parent(u8 msg, u8 paramCount)
 {
-    u8 i;
+    u32 i;
     u8 disconnectFlag = 0;
     switch (msg)
     {
@@ -2352,7 +2352,7 @@ static void ParentResetChildRecvMetadata(s32 slot)
 static u8 GetNewChildrenInUnionRoomChat(s32 emptySlotMask)
 {
     u8 ret = 0;
-    u8 i;
+    u32 i;
 
     for (i = 0; i < RFU_CHILD_MAX; i++)
     {
@@ -2656,7 +2656,7 @@ static u16 ReadU16(const void *ptr)
 
 static u8 GetPartnerIndexByNameAndTrainerID(const u8 *name, u16 id)
 {
-    u8 i;
+    u32 i;
     u8 idx = 0xFF;
 
     for (i = 0; i < RFU_CHILD_MAX; i++)

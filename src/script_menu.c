@@ -124,7 +124,7 @@ static void DrawMultichoiceMenu(u8 left, u8 top, u8 multichoiceId, bool8 ignoreB
 
 static void InitMultichoiceCheckWrap(bool8 ignoreBPress, u8 count, u8 windowId, u8 multichoiceId)
 {
-    u8 i;
+    u32 i;
     u8 taskId;
     sProcessInputDelay = 2;
 
@@ -405,7 +405,7 @@ static void CreateLilycoveSSTidalMultichoice(void)
     u32 pixelWidth;
     u8 width;
     u8 windowId;
-    u8 i;
+    u32 i;
     u32 j;
 
     for (i = 0; i < SSTIDAL_SELECTION_COUNT; i++)

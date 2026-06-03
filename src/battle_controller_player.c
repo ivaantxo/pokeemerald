@@ -1915,7 +1915,7 @@ void PlayerHandleGetRawMonData(void)
     struct BattlePokemon battleMon;
     u8 *src = (u8 *)&gPlayerParty[gBattlerPartyIndexes[gActiveBattler]] + gBattleBufferA[gActiveBattler][1];
     u8 *dst = (u8 *)&battleMon + gBattleBufferA[gActiveBattler][1];
-    u8 i;
+    u32 i;
 
     for (i = 0; i < gBattleBufferA[gActiveBattler][2]; i++)
         dst[i] = src[i];
@@ -1927,7 +1927,7 @@ void PlayerHandleGetRawMonData(void)
 static void PlayerHandleSetMonData(void)
 {
     u8 monToCheck;
-    u8 i;
+    u32 i;
 
     if (gBattleBufferA[gActiveBattler][2] == 0)
     {
@@ -2167,7 +2167,7 @@ static void SetPlayerMonData(u8 monId)
 static void PlayerHandleSetRawMonData(void)
 {
     u8 *dst = (u8 *)&gPlayerParty[gBattlerPartyIndexes[gActiveBattler]] + gBattleBufferA[gActiveBattler][1];
-    u8 i;
+    u32 i;
 
     for (i = 0; i < gBattleBufferA[gActiveBattler][2]; i++)
         dst[i] = gBattleBufferA[gActiveBattler][3 + i];

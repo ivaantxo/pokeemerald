@@ -884,7 +884,7 @@ static u8 LeaderUpdateGroupMembership(struct RfuPlayerList *list)
 {
     struct WirelessLink_Leader *data = sWirelessLinkMain.leader;
     u8 ret = UNION_ROOM_SPAWN_NONE;
-    u8 i;
+    u32 i;
     s32 id;
 
     for (i = 1; i < MAX_RFU_PLAYERS; i++)
@@ -1402,7 +1402,7 @@ static u8 GetNewLeaderCandidate(void)
 {
     struct WirelessLink_Group *data = sWirelessLinkMain.group;
     u8 ret = 0;
-    u8 i;
+    u32 i;
     s32 id;
 
     for (i = 0; i < MAX_RFU_PLAYER_LIST_SIZE; i++)
@@ -3393,7 +3393,7 @@ bool16 BufferUnionRoomPlayerName(void)
 static u8 HandlePlayerListUpdate(void)
 {
     s32 i;
-    u8 j;
+    u32 j;
     struct WirelessLink_URoom *data = sWirelessLinkMain.uRoom;
     s32 retVal = PLIST_NONE;
 
@@ -4422,7 +4422,7 @@ static void StartScriptInteraction(void)
 static u8 GetActivePartnersInfo(struct WirelessLink_URoom *data)
 {
     u8 retVal = PINFO_ACTIVE_FLAG;
-    u8 i;
+    u32 i;
 
     for (i = 0; i < RFU_CHILD_MAX; i++)
     {

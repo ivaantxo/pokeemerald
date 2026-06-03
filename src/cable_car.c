@@ -788,7 +788,7 @@ static void SetBgRegs(bool8 active)
 static void CreateCableCarSprites(void)
 {
     u8 spriteId;
-    u8 i;
+    u32 i;
 
     u8 playerGraphicsIds[2] = {
         [MALE]   = OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL,
@@ -928,7 +928,7 @@ static void CreateCableCarSprites(void)
 
 static void BufferNextGroundSegment(void)
 {
-    u8 i, j, k;
+    u32 i, j, k;
     u8 offset;
 
     for (i = 0, k = 0, offset = 0x24 * (sCableCar->groundTilemapOffset + 2); i < 3; i++)

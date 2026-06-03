@@ -69,7 +69,7 @@ void ClearRoamerData(void)
 
 void ClearRoamerLocationData(void)
 {
-    u8 i;
+    u32 i;
 
     for (i = 0; i < ARRAY_COUNT(sLocationHistory); i++)
     {

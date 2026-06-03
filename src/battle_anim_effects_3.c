@@ -1908,7 +1908,7 @@ static void TormentAttacker_Step(u8 taskId)
 {
     int var0, var1;
     s16 x, y;
-    u16 i, j;
+    u32 i, j;
     u8 spriteId;
     struct Task *task = &gTasks[taskId];
 
@@ -3803,7 +3803,7 @@ static void AnimTask_SquishAndSweatDroplets_Step(u8 taskId)
 
 static void CreateSweatDroplets(u8 taskId, bool8 lowerDroplets)
 {
-    u8 i;
+    u32 i;
     s8 xOffset, yOffset;
     struct Task *task;
     s16 xCoords[4];
@@ -4016,7 +4016,7 @@ void AnimTask_GlareEyeDots(u8 taskId)
 
 static void AnimTask_GlareEyeDots_Step(u8 taskId)
 {
-    u8 i;
+    u32 i;
     s16 x, y;
     struct Task *task = &gTasks[taskId];
 

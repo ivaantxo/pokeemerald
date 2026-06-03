@@ -680,7 +680,7 @@ static u8 GetMailboxMailCount(void)
 static void Mailbox_CompactMailList(void)
 {
     struct Mail temp;
-    u8 i, j;
+    u32 i, j;
 
     for (i = PARTY_SIZE; i < MAIL_COUNT - 1; i++)
     {
@@ -984,7 +984,7 @@ static void ItemStorage_RemoveWindow(u8 i)
 
 void ItemStorage_RefreshListMenu(void)
 {
-    u16 i;
+    u32 i;
 
     // Copy item names for all entries but the last (which is Cancel)
     for(i = 0; i < gPlayerPCItemPageInfo.count - 1; i++)

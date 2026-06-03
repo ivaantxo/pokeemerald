@@ -5313,7 +5313,7 @@ u8 GetItemEffectParamOffset(u16 itemId, u8 effectByte, u8 effectBit)
     const u8 *itemEffect;
     u8 offset;
     int i;
-    u8 j;
+    u32 j;
     u8 effectFlags;
 
     offset = ITEM_EFFECT_ARG_START;
@@ -7007,7 +7007,7 @@ static bool8 ShouldSkipFriendshipChange(void)
 
 static void InitMonSpritesGfx_Battle(struct MonSpritesGfxManager *gfx)
 {
-    u16 i, j;
+    u32 i, j;
     for (i = 0; i < gfx->numSprites; i++)
     {
         gfx->templates[i] = gBattlerSpriteTemplates[i];
@@ -7020,7 +7020,7 @@ static void InitMonSpritesGfx_Battle(struct MonSpritesGfxManager *gfx)
 
 static void InitMonSpritesGfx_FullParty(struct MonSpritesGfxManager *gfx)
 {
-    u16 i, j;
+    u32 i, j;
     for (i = 0; i < gfx->numSprites; i++)
     {
         gfx->templates[i] = sSpriteTemplate_64x64;
@@ -7035,7 +7035,7 @@ static void InitMonSpritesGfx_FullParty(struct MonSpritesGfxManager *gfx)
 
 struct MonSpritesGfxManager *CreateMonSpritesGfxManager(u8 managerId, u8 mode)
 {
-    u8 i;
+    u32 i;
     u8 failureFlags;
     struct MonSpritesGfxManager *gfx;
 

@@ -221,7 +221,7 @@ static const struct ListMenuTemplate sRegistryListMenuTemplate =
 
 static void ClearSecretBase(struct SecretBase *secretBase)
 {
-    u16 i;
+    u32 i;
     CpuFastFill16(0, secretBase, sizeof(struct SecretBase));
     for (i = 0; i < PLAYER_NAME_LENGTH; i++)
         secretBase->trainerName[i] = EOS;
@@ -229,7 +229,7 @@ static void ClearSecretBase(struct SecretBase *secretBase)
 
 void ClearSecretBases(void)
 {
-    u16 i;
+    u32 i;
     for (i = 0; i < SECRET_BASES_COUNT; i++)
         ClearSecretBase(&gSaveBlock1Ptr->secretBases[i]);
 }
@@ -241,7 +241,7 @@ static void SetCurSecretBaseId(void)
 
 void TrySetCurSecretBaseIndex(void)
 {
-    u16 i;
+    u32 i;
 
     gSpecialVar_Result = FALSE;
     for (i = 0; i < SECRET_BASES_COUNT; i++)
@@ -320,7 +320,7 @@ static void FindMetatileIdMapCoords(s16 *x, s16 *y, u16 metatileId)
 // Opens or closes the secret base entrance metatile in front of the player.
 void ToggleSecretBaseEntranceMetatile(void)
 {
-    u16 i;
+    u32 i;
     s16 x, y;
     s16 metatileId;
 
@@ -352,7 +352,7 @@ void ToggleSecretBaseEntranceMetatile(void)
 
 static u8 GetNameLength(const u8 *secretBaseOwnerName)
 {
-    u8 i;
+    u32 i;
     for (i = 0; i < PLAYER_NAME_LENGTH; i++)
     {
         if (secretBaseOwnerName[i] == EOS)
@@ -364,7 +364,7 @@ static u8 GetNameLength(const u8 *secretBaseOwnerName)
 
 void SetPlayerSecretBase(void)
 {
-    u16 i;
+    u32 i;
 
     gSaveBlock1Ptr->secretBases[0].secretBaseId = sCurSecretBaseId;
     for (i = 0; i < TRAINER_ID_LENGTH; i++)
@@ -381,7 +381,7 @@ void SetPlayerSecretBase(void)
 void SetOccupiedSecretBaseEntranceMetatiles(struct MapEvents const *events)
 {
     u16 bgId;
-    u16 i, j;
+    u32 i, j;
 
     for (bgId = 0; bgId < events->bgEventCount; bgId++)
     {
@@ -551,7 +551,7 @@ void InitSecretBaseAppearance(bool8 hidePC)
 
 void InitSecretBaseDecorationSprites(void)
 {
-    u8 i;
+    u32 i;
     u8 *decorations;
     u8 *decorationPositions;
     u8 objectEventId;
@@ -770,7 +770,7 @@ static u8 GetAverageEVs(struct Pokemon *pokemon)
 
 void SetPlayerSecretBaseParty(void)
 {
-    u16 i;
+    u32 i;
     u16 moveIndex;
     u16 partyId;
     struct SecretBaseParty *party;
@@ -823,8 +823,8 @@ void MoveOutOfSecretBase(void)
 
 static void ClosePlayerSecretBaseEntrance(void)
 {
-    u16 i;
-    u16 j;
+    u32 i;
+    u32 j;
     s16 metatileId;
     const struct MapEvents *events = gMapHeader.events;
 
@@ -938,7 +938,7 @@ static void Task_ShowSecretBaseRegistryMenu(u8 taskId)
 static void BuildRegistryMenuItems(u8 taskId)
 {
     s16 *data;
-    u8 i;
+    u32 i;
     u8 count;
 
     data = gTasks[taskId].data;
@@ -1175,7 +1175,7 @@ void SetBattledOwnerFromResult(void)
 void GetSecretBaseOwnerAndState(void)
 {
     u16 secretBaseIdx;
-    u8 i;
+    u32 i;
 
     secretBaseIdx = VarGet(VAR_CURRENT_SECRET_BASE);
     if (!FlagGet(FLAG_DAILY_SECRET_BASE))
@@ -1359,7 +1359,7 @@ static void SaveSecretBase(u8 secretBaseIdx, struct SecretBase *secretBase, u32 
 
 static bool8 SecretBasesHaveSameTrainerId(struct SecretBase *secretBase1, struct SecretBase *secretBase2)
 {
-    u8 i;
+    u32 i;
     for (i = 0; i < TRAINER_ID_LENGTH; i++)
     {
         if (secretBase1->trainerId[i] != secretBase2->trainerId[i])
@@ -1371,7 +1371,7 @@ static bool8 SecretBasesHaveSameTrainerId(struct SecretBase *secretBase1, struct
 
 static bool8 SecretBasesHaveSameTrainerName(struct SecretBase *sbr1, struct SecretBase *sbr2)
 {
-    u8 i;
+    u32 i;
     for (i = 0; i < PLAYER_NAME_LENGTH && (sbr1->trainerName[i] != EOS || sbr2->trainerName[i] != EOS); i++)
     {
         if (sbr1->trainerName[i] != sbr2->trainerName[i])
@@ -1485,8 +1485,8 @@ static u8 TrySaveFriendsSecretBase(struct SecretBase *secretBase, u32 version, u
 // they won't be forgotten during record mixing.
 static void SortSecretBasesByRegistryStatus(void)
 {
-    u8 i;
-    u8 j;
+    u32 i;
+    u32 j;
     struct SecretBase *secretBases;
 
     secretBases = gSaveBlock1Ptr->secretBases;
@@ -1508,7 +1508,7 @@ static void SortSecretBasesByRegistryStatus(void)
 // registryStatus is so registered bases can be attempted first
 static void TrySaveFriendsSecretBases(struct SecretBaseRecordMixer *mixer, u8 registryStatus)
 {
-    u16 i;
+    u32 i;
     for (i = 1; i < SECRET_BASES_COUNT; i++)
     {
         if (mixer->secretBases[i].registryStatus == registryStatus)
@@ -1518,7 +1518,7 @@ static void TrySaveFriendsSecretBases(struct SecretBaseRecordMixer *mixer, u8 re
 
 static bool8 SecretBaseBelongsToPlayer(struct SecretBase *secretBase)
 {
-    u8 i;
+    u32 i;
 
     if (secretBase->secretBaseId == 0)
         return FALSE;
@@ -1548,7 +1548,7 @@ static bool8 SecretBaseBelongsToPlayer(struct SecretBase *secretBase)
 
 static void DeleteFirstOldBaseFromPlayerInRecordMixingFriendsRecords(struct SecretBase *basesA, struct SecretBase *basesB, struct SecretBase *basesC)
 {
-    u8 i;
+    u32 i;
     u8 sbFlags = 0;
 
     for (i = 0; i < SECRET_BASES_COUNT; i++)
@@ -1594,7 +1594,7 @@ static void DeleteFirstOldBaseFromPlayerInRecordMixingFriendsRecords(struct Secr
 // returns TRUE if secretBase was deleted, FALSE otherwise
 static bool8 ClearDuplicateOwnedSecretBase(struct SecretBase *secretBase, struct SecretBase *secretBases, u8 idx)
 {
-    u8 i;
+    u32 i;
 
     for (i = 0; i < SECRET_BASES_COUNT; i++)
     {
@@ -1626,7 +1626,7 @@ static bool8 ClearDuplicateOwnedSecretBase(struct SecretBase *secretBase, struct
 
 static void ClearDuplicateOwnedSecretBases(struct SecretBase *playersBases, struct SecretBase *friendsBasesA, struct SecretBase *friendsBasesB, struct SecretBase *friendsBasesC)
 {
-    u8 i;
+    u32 i;
 
     for (i = 1; i < SECRET_BASES_COUNT; i++)
     {
@@ -1683,7 +1683,7 @@ static void TrySaveRegisteredDuplicate(struct SecretBase *base, u32 version, u32
 
 static void TrySaveRegisteredDuplicates(struct SecretBaseRecordMixer *mixers)
 {
-    u16 i;
+    u32 i;
 
     for (i = 0; i < SECRET_BASES_COUNT; i++)
     {
@@ -1731,7 +1731,7 @@ static void SaveRecordMixBases(struct SecretBaseRecordMixer *mixers)
 void ReceiveSecretBasesData(void *secretBases, size_t recordSize, u8 linkIdx)
 {
     struct SecretBaseRecordMixer mixers[3];
-    u16 i;
+    u32 i;
 
     if (FlagGet(FLAG_RECEIVED_SECRET_POWER))
     {

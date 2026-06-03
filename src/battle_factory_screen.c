@@ -1288,7 +1288,7 @@ static void CB2_InitSelectScreen(void)
 
 static void Select_InitMonsData(void)
 {
-    u8 i;
+    u32 i;
 
     if (sFactorySelectScreen != NULL)
         return;
@@ -1308,7 +1308,7 @@ static void Select_InitMonsData(void)
 
 static void Select_InitAllSprites(void)
 {
-    u8 i, cursorPos;
+    u32 i, cursorPos;
     s16 x;
 
     for (i = 0; i < SELECTABLE_MONS_COUNT; i++)
@@ -1334,7 +1334,7 @@ static void Select_InitAllSprites(void)
 
 static void Select_DestroyAllSprites(void)
 {
-    u8 i;
+    u32 i;
 
     for (i = 0; i < SELECTABLE_MONS_COUNT; i++)
         DestroySprite(&gSprites[sFactorySelectScreen->mons[i].ballSpriteId]);
@@ -1410,7 +1410,7 @@ static void Select_UpdateYesNoCursorPosition(s8 direction)
 
 static void Select_HandleMonSelectionChange(void)
 {
-    u8 i, paletteNum;
+    u32 i, paletteNum;
     u8 cursorPos = sFactorySelectScreen->cursorPos;
     if (sFactorySelectScreen->mons[cursorPos].selectedId) // Deselect a mon.
     {
@@ -1455,7 +1455,7 @@ static void Select_SetBallSpritePaletteNum(u8 id)
 
 static void Select_Task_OpenSummaryScreen(u8 taskId)
 {
-    u8 i;
+    u32 i;
     u8 currMonId;
 
     switch (gTasks[taskId].tState)
@@ -1735,7 +1735,7 @@ static void Select_Task_HandleChooseMons(u8 taskId)
 
 static void CreateFrontierFactorySelectableMons(u8 firstMonId)
 {
-    u8 i, j = 0;
+    u32 i, j = 0;
     u8 ivs = 0;
     u8 level = 0;
     u8 friendship = 0;
@@ -1779,7 +1779,7 @@ static void CreateFrontierFactorySelectableMons(u8 firstMonId)
 
 static void CreateSlateportTentSelectableMons(u8 firstMonId)
 {
-    u8 i, j;
+    u32 i, j;
     u8 ivs = 0;
     u8 level = TENT_MIN_LEVEL;
     u8 friendship = 0;
@@ -1809,7 +1809,7 @@ static void CreateSlateportTentSelectableMons(u8 firstMonId)
 
 static void Select_CopyMonsToPlayerParty(void)
 {
-    u8 i, j;
+    u32 i, j;
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
@@ -2054,7 +2054,7 @@ static void Select_ReshowMonSprite(void)
 
 static void Select_CreateChosenMonsSprites(void)
 {
-    u8 i, j;
+    u32 i, j;
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
@@ -2254,7 +2254,7 @@ static void Select_SetWinRegs(s16 mWin0H, s16 nWin0H, s16 mWin0V, s16 nWin0V)
 
 static bool32 Select_AreSpeciesValid(u16 monId)
 {
-    u8 i, j;
+    u32 i, j;
     u32 species = gFacilityTrainerMons[monId].species;
     u8 selectState = sFactorySelectScreen->selectingMonsState;
 
@@ -2879,7 +2879,7 @@ static void Swap_Task_SlideCycleBalls(u8 taskId)
 
 static void Swap_Task_SlideButtonOnOffScreen(u8 taskId)
 {
-    u8 i, j;
+    u32 i, j;
     s32 posX = 0;
     s8 deltaX = gTasks[taskId].tXIncrement;
     bool8 sliding;
@@ -3195,7 +3195,7 @@ static void Swap_Task_ScreenInfoTransitionIn(u8 taskId)
 // For switching between the swap screens with the player's / enemy's parties
 static void Swap_Task_SwitchPartyScreen(u8 taskId)
 {
-    u8 i;
+    u32 i;
     if (sFactorySwapScreen->monPicAnimating == TRUE)
         return;
 
@@ -3436,7 +3436,7 @@ static void CB2_InitSwapScreen(void)
 
 static void Swap_InitAllSprites(void)
 {
-    u8 i;
+    u32 i;
     u8 x;
     struct SpriteTemplate spriteTemplate;
 
@@ -3530,7 +3530,7 @@ static void Swap_InitAllSprites(void)
 
 static void Swap_DestroyAllSprites(void)
 {
-    u8 i, j;
+    u32 i, j;
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
         DestroySprite(&gSprites[sFactorySwapScreen->ballSpriteIds[i]]);
@@ -3661,7 +3661,7 @@ static void Swap_UpdateMenuCursorPosition(s8 direction)
 
 static void Swap_HighlightActionButton(u8 actionId)
 {
-    u8 i;
+    u32 i;
 
     for (i = 0; i < ARRAY_COUNT(sFactorySwapScreen->pkmnForSwapButtonSpriteIds[0]); i++)
     {
@@ -3688,7 +3688,7 @@ static void Swap_HighlightActionButton(u8 actionId)
 
 static void Swap_HideActionButtonHighlights(void)
 {
-    u8 i;
+    u32 i;
 
     for (i = 0; i < ARRAY_COUNT(sFactorySwapScreen->pkmnForSwapButtonSpriteIds[0]); i++)
     {
@@ -4161,7 +4161,7 @@ static void Swap_TaskCantHaveSameMons(u8 taskId)
 
 static bool8 Swap_AlreadyHasSameSpecies(u8 monId)
 {
-    u8 i;
+    u32 i;
     u16 species = GetMonData(&gEnemyParty[monId], MON_DATA_SPECIES, NULL);
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)

@@ -555,7 +555,7 @@ static void BuyMenuFreeMemory(void)
 
 static void BuyMenuBuildListMenuTemplate(void)
 {
-    u16 i;
+    u32 i;
 
     sListMenuItems = Alloc((sMartInfo.itemCount + 1) * sizeof(*sListMenuItems));
     sItemNames = Alloc((sMartInfo.itemCount + 1) * sizeof(*sItemNames));
@@ -897,7 +897,7 @@ static void BuyMenuCollectObjectEventData(void)
 
 static void BuyMenuDrawObjectEvents(void)
 {
-    u8 i;
+    u32 i;
     u8 spriteId;
     const struct ObjectEventGraphicsInfo *graphicsInfo;
 
@@ -1218,7 +1218,7 @@ static void RecordItemPurchase(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 
-    u16 i;
+    u32 i;
 
     for (i = 0; i < ARRAY_COUNT(gMartPurchaseHistory); i++)
     {

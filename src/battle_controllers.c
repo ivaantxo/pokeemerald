@@ -869,7 +869,7 @@ static void Task_HandleSendLinkBuffersData(u8 taskId)
 // otherwise.
 void TryReceiveLinkBattleData(void)
 {
-    u8 i;
+    u32 i;
     s32 j;
     u8 *recvBuffer;
 

@@ -3299,7 +3299,7 @@ static void SpriteCB_GameFreakLogo(struct Sprite *sprite)
 
 static u8 CreateGameFreakLogoSprites(s16 x, s16 y, s16 unused)
 {
-    u16 i;
+    u32 i;
     u8 spriteId;
 
     // Create "Game Freak" letters

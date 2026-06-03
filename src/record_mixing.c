@@ -532,7 +532,7 @@ static void Task_CopyReceiveBuffer(u8 taskId)
 
     if (status == GetLinkPlayerCountAsBitFlags())
     {
-        u8 i;
+        u32 i;
         for (i = 0; i < GetLinkPlayerCount(); i++)
         {
             if ((status >> i) & 1)
@@ -759,7 +759,7 @@ static u8 GetDaycareMailRandSum(void)
 
 static void ReceiveDaycareMailData(struct RecordMixingDaycareMail *records, size_t recordSize, u8 multiplayerId, TVShow *shows)
 {
-    u16 i, j;
+    u32 i, j;
     u8 linkPlayerCount;
     u8 tableId;
     struct RecordMixingDaycareMail *mixMail;

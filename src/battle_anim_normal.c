@@ -886,7 +886,7 @@ static void AnimShakeMonOrBattlePlatforms(struct Sprite *sprite)
 
 static void AnimShakeMonOrBattlePlatforms_Step(struct Sprite *sprite)
 {
-    u8 i;
+    u32 i;
 
     if (sprite->sTimer > 0)
     {

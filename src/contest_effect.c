@@ -51,7 +51,7 @@ static void ContestEffect_DontExciteAudience(void);
 static void JamByMoveCategory(u8);
 static bool8 CanUnnerveContestant(u8);
 static u8 WasAtLeastOneOpponentJammed(void);
-static void JamContestant(u8, u8);
+static void JamContestant(u32 i, u8 jam);
 static s16 RoundTowardsZero(s16);
 static s16 RoundUp(s16);
 
@@ -1063,7 +1063,7 @@ static bool8 WasAtLeastOneOpponentJammed(void)
     return FALSE;
 }
 
-static void JamContestant(u8 i, u8 jam)
+static void JamContestant(u32 i, u8 jam)
 {
     eContestantStatus[i].appeal -= jam;
     eContestantStatus[i].jam += jam;
